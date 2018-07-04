@@ -1,3 +1,8 @@
+.idea/
+logs/
+/bin/*
+!bin/console
+!bin/symfony_requirements
 
 ###> symfony/framework-bundle ###
 /.env
@@ -6,5 +11,7 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-.idea/
-logs/
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
