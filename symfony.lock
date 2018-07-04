@@ -83,6 +83,15 @@
     "symfony/lts": {
         "version": "4-dev"
     },
+    "symfony/phpunit-bridge": {
+        "version": "4.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.1",
+            "ref": "2955e26d3818b803d82b5de05d91805df5994d3a"
+        }
+    },
     "symfony/polyfill-mbstring": {
         "version": "v1.8.0"
     },
