@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+    php:
+        container_name: ads-manager-php
+        build:
+            context: docker/php
+            args:
+                TIMEZONE: ${TIMEZONE}
+        volumes:
+            - ./:/ads-manager
+            - ./logs/ads-manager:/ads-manager/var/log
+        environment:
+            APP_ENV: ${APP_ENV}
+            APP_DEBUG: ${APP_DEBUG}
+            APP_SECRET: ${APP_SECRET}
+    nginx:
+        container_name: ads-manager-nginx
+        build:
+          context: docker/nginx
+        ports:
+            - 8080:80
+        links:
+            - php
+        volumes:
+            - ./logs/nginx/:/var/log/nginx
