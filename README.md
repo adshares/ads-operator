@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/adshares/ads-manager.svg?branch=travis-configuration)](https://travis-ci.org/adshares/ads-manager)
+[![Build Status](https://travis-ci.org/adshares/ads-manager.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager)
 
 # ADS Manager
 Backend application which connects ADS and ADS Panel. It contains two parts:
