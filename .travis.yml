@@ -1,23 +1,43 @@
-sudo: required
+# Project language
+language: php
 
-env:
-  DOCKER_COMPOSE_VERSION: 1.21.1
+# PHP version
+php:
+  - 7.2
 
-services:
-  - docker
+# Allows use container-based infrastructure
+sudo: false
 
-before_install:
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-  - docker-compose -v
-  - docker -v
-  - cp .env.dist .env
-  - cat docker-compose.yml
+# Cache composer packages so "composer install" is faster
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
-script:
-  - docker-compose build
-  - docker-compose up -d
-  - docker-compose ps
-  - docker-compose exec php composer install
-  - docker-compose exec php ls bin
+# Install composer dependencies,
+# Create database, schema and fixtures
+install:
+  - composer install --no-ansi --no-scripts
+  - composer run-script install-codestandards
+
+stages:
+  - build
+  - quality
+  - test
+
+jobs:
+  include:
+    # PHP Lint: check syntax errors in all PHP files
+    - stage: build
+      script: ./bin/parallel-lint --no-colors --blame --exclude vendor .
+
+    # PHP_CodeSniffer: check PHP compatibility
+    - stage: quality
+      script: ./bin/phpcs -s src --standard=PHPCompatibility
+
+    # PHP_CodeSniffer: check PSR2 standard
+    - stage: quality
+      script: ./bin/phpcs -s src --standard=PSR2
+
+    # PHP Static Analysis Tool
+    - stage: quality
+      script: ./bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src
