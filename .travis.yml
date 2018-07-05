@@ -50,7 +50,7 @@ jobs:
     - stage: quality
       script: ./bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src
 
-    # Sonar Qube
+    # SonarQube
     - stage: quality
       script: sonar-scanner
 
