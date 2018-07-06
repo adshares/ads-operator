@@ -3,6 +3,7 @@ logs/
 /bin/*
 !bin/console
 !bin/symfony_requirements
+/.scannerwork
 
 ###> symfony/framework-bundle ###
 /.env
