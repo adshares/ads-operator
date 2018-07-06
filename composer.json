@@ -24,15 +24,21 @@
         "symfony/yaml": "^4.1"
     },
     "require-dev": {
+        "dealerdirect/phpcodesniffer-composer-installer": "^0.4.4",
+        "jakub-onderka/php-parallel-lint": "^1.0",
+        "phpstan/phpstan": "^0.10.1",
         "sensiolabs/security-checker": "^4.1",
         "symfony/dotenv": "^4.1",
-        "symfony/phpunit-bridge": "^4.1"
+        "symfony/phpunit-bridge": "^4.1",
+        "wimg/php-compatibility": "^8.1"
     },
     "config": {
         "preferred-install": {
             "*": "dist"
         },
         "sort-packages": true,
+        "optimize-autoloader": true,
+        "bin-dir": "bin",
         "platform": {
             "ext-mongo": "1.6.16"
         }
@@ -65,6 +71,9 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "install-codestandards": [
+            "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
         ]
     },
     "conflict": {

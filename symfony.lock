@@ -98,6 +98,9 @@
             "ref": "421933bf8f0e75546ac8e00cb3eb12904fa2ac1a"
         }
     },
+    "squizlabs/php_codesniffer": {
+        "version": "3.3.0"
+    },
     "symfony/cache": {
         "version": "v4.1.1"
     },
@@ -199,5 +202,8 @@
     },
     "symfony/yaml": {
         "version": "v4.1.1"
+    },
+    "wimg/php-compatibility": {
+        "version": "8.1.0"
     }
 }
