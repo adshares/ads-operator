@@ -23,8 +23,6 @@ addons:
 
 before_install:
   - pecl install -f mongodb-1.5.0
-  - echo "extension = mongodb.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-  - cat ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 
 
 # Install composer dependencies
