@@ -23,7 +23,7 @@ addons:
 
 
 before_script:
-  - pecl install mongo
+  - pecl install mongodb
 
 # Install composer dependencies
 install:
