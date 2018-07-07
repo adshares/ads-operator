@@ -29,7 +29,6 @@ before_script:
 
 # Install composer dependencies
 install:
-  - pecl install
   - composer install --no-ansi --no-scripts
   - composer run-script install-codestandards
 
