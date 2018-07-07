@@ -23,7 +23,8 @@ addons:
 
 
 before_script:
-  - pecl install mongodb
+  - pecl install mongo && echo "extension = mongo.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
 
 # Install composer dependencies
 install:
