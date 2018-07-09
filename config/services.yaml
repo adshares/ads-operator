@@ -28,3 +28,23 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+
+
+    App\Service\SynchronizeADSData:
+        arguments:
+            $client: '@App\Adshares\Ads\AdsClient'
+            $database: "@doctrine_mongodb.odm.default_connection"
+
+
+    App\Adshares\Ads\Driver\CliDriver:
+        class: Adshares\Ads\Driver\CliDriver
+        arguments:
+            $address: '%env(ADS_ADDRESS)%'
+            $secret: '%env(ADS_SECRET)%'
+            $host: '%env(ADS_HOST)%'
+            $port: '%env(ADS_PORT)%'
+
+    App\Adshares\Ads\AdsClient:
+        class: Adshares\Ads\AdsClient
+        arguments:
+            $driver: '@App\Adshares\Ads\Driver\CliDriver'
