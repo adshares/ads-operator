@@ -18,7 +18,7 @@ class SynchronizeADSData
      */
     private $database;
 
-    public function __construct(?AdsClient $client, Connection $database)
+    public function __construct(AdsClient $client, Connection $database)
     {
         $this->client = $client;
         $this->database = $database;
@@ -26,6 +26,5 @@ class SynchronizeADSData
 
     public function sync()
     {
-
     }
 }
