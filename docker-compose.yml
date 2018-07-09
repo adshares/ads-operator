@@ -14,6 +14,8 @@ services:
             APP_ENV: ${APP_ENV}
             APP_DEBUG: ${APP_DEBUG}
             APP_SECRET: ${APP_SECRET}
+            MONGODB_URL: ${MONGODB_URL}
+            MONGODB_DB: ${MONGODB_DB}
     nginx:
         container_name: ads-manager-nginx
         build:
@@ -24,3 +26,8 @@ services:
             - php
         volumes:
             - ./logs/nginx/:/var/log/nginx
+    mongo:
+        container_name: ads-manager-mongo
+        image: mongo:latest
+        restart: always
+        restart: always
