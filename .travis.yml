@@ -51,14 +51,21 @@ install:
 
 stages:
   - build
-  - quality
   - test
+  - quality
 
 jobs:
   include:
     # PHP Lint: check syntax errors in all PHP files
     - stage: build
       script: ./bin/parallel-lint --no-colors --blame --exclude vendor .
+
+    # PHP unit tests
+    - stage: test
+      script:
+        - alias php='php -dzend_extension=xdebug.so'
+        - alias phpunit='php ./bin/phpunit'
+        - phpunit
 
     - stage: quality
       script:
@@ -70,13 +77,6 @@ jobs:
         - ./bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src
         # SonarQube
         - sonar-scanner
-
-    # PHP unit tests
-    - stage: test
-      script:
-        - alias php='php -dzend_extension=xdebug.so'
-        - alias phpunit='php ./bin/phpunit'
-        - phpunit
 
 # After a build, send email notification with the build results
 notifications:
