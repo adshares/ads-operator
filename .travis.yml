@@ -46,7 +46,7 @@ before_install:
 
 # Install composer dependencies
 install:
-  - composer install --no-ansi --no-scripts
+  - composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
   - composer run-script install-codestandards
 
 stages:
