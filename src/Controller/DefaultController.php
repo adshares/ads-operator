@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace Adshares\AdsManager\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
