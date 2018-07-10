@@ -1,4 +1,6 @@
-[![Build Status](https://travis-ci.org/adshares/ads-manager.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager)
+[![Quality Status](https://sonarcloud.io/api/project_badges/measure?project=adshares-ads-manager&metric=alert_status)](https://sonarcloud.io/dashboard?id=adshares-ads-manager)
+[![Build Status](https://travis-ci.org/adshares/ads-manager.svg?branch=master)](https://travis-ci.org/adshares/ads-manager#master "Master")
+[![Build Status](https://travis-ci.org/adshares/ads-manager.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager#develop "Develop")
 
 # ADS Manager
 Backend application which connects ADS and ADS Panel. It contains two parts:
