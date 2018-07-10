@@ -87,7 +87,6 @@
         "qa-check": [
             "security-checker security:check",
             "parallel-lint --no-colors --blame --exclude vendor .",
-            "parallel-lint --no-colors --blame --exclude vendor .",
             "phpcs -s src --standard=PHPCompatibility",
             "phpcs -s src --standard=PSR2",
             "phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src"
