@@ -56,9 +56,12 @@ stages:
 
 jobs:
   include:
-    # PHP Lint: check syntax errors in all PHP files
     - stage: build
-      script: ./bin/parallel-lint --no-colors --blame --exclude vendor .
+      script:
+        # PHP Lint: check syntax errors in all PHP files
+        - ./bin/parallel-lint --no-colors --blame --exclude vendor .
+        # Symfony Security Check
+        - ./bin/console --no-interaction security:check
 
     # PHP unit tests
     - stage: test
