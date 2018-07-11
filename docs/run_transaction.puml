@@ -1,0 +1,54 @@
+@startuml
+hide footbox
+title Run transaction
+
+participant Plugin
+participant Panel
+participant Operator
+participant "ADS Client" as ADS
+participant "ADS Node" as Node
+
+Panel -> Panel: fill form
+
+Panel -> Operator: prepare transaction
+activate Operator
+Operator -> Operator: validate
+Operator -> Operator: get account
+activate Operator
+deactivate Operator
+Operator -> ADS: dry run
+activate ADS
+ADS --> Operator: transaction info
+deactivate ADS
+Operator --> Panel: transaction info
+note right: fee, hash, msid
+deactivate Operator
+
+Panel -> Plugin: sign
+activate Plugin
+Plugin --> Panel: signature
+deactivate Plugin
+
+Panel -> Panel: 2FA
+
+Panel -> Operator: run transaction
+activate Operator
+Operator -> Operator: validate
+Operator -> ADS: dry run
+activate ADS
+ADS --> Operator: transaction bin
+deactivate ADS
+Operator -> Operator: 2FA check
+Operator -> ADS: run transaction
+activate ADS
+ADS -> Node: run transaction
+group 2FA check
+Node -> Node
+end
+Node --> ADS: transaction status
+ADS --> Operator: transaction status
+deactivate ADS
+Operator --> Panel: transaction status
+deactivate Operator
+
+@enduml
