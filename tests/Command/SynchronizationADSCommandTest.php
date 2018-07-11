@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class SynchronizationADSCommandTest extends KernelTestCase
+final class SynchronizationADSCommandTest extends KernelTestCase
 {
     public function testExecute()
     {

@@ -43,6 +43,10 @@ services:
             $secret: '%env(ADS_SECRET)%'
             $host: '%env(ADS_HOST)%'
             $port: '%env(ADS_PORT)%'
+        calls:
+            - method: setWorkingDir
+              arguments:
+                  - '/tmp/.ads7'
 
     App\Adshares\Ads\AdsClient:
         class: Adshares\Ads\AdsClient
