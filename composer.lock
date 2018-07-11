@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adshares/php-ads-client.git",
-                "reference": "64b77a5a95b3d983126646f1a299de884e8e75f8"
+                "reference": "ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/64b77a5a95b3d983126646f1a299de884e8e75f8",
-                "reference": "64b77a5a95b3d983126646f1a299de884e8e75f8",
+                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969",
+                "reference": "ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969",
                 "shasum": ""
             },
             "require": {
@@ -83,7 +83,7 @@
                 "issues": "https://github.com/adshares/php-ads-client/issues",
                 "source": "https://github.com/adshares/php-ads-client"
             },
-            "time": "2018-07-10T16:41:13+00:00"
+            "time": "2018-07-11T12:51:24+00:00"
         },
         {
             "name": "alcaeus/mongo-php-adapter",

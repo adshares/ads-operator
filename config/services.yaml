@@ -30,11 +30,14 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
+    Adshares\AdsManager\BlockExplorer\Database\MongoMigration:
+        arguments:
+            $connection: '@doctrine_mongodb.odm.default_connection'
+
     Adshares\AdsManager\Service\SynchronizeADSData:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
-            $database: "@doctrine_mongodb.odm.default_connection"
-
+            $databaseMigration: '@Adshares\AdsManager\BlockExplorer\Database\MongoMigration'
 
     Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver
