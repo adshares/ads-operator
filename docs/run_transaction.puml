@@ -38,12 +38,15 @@ Operator -> ADS: dry run
 activate ADS
 ADS --> Operator: transaction bin
 deactivate ADS
-Operator -> Operator: 2FA check
+Operator -> Operator: 2FA code check
 Operator -> ADS: run transaction
 activate ADS
 ADS -> Node: run transaction
-group 2FA check
-Node -> Node
+group 2FA verification
+Node -> Operator: verify transaction
+activate Operator
+Operator --> Node: verification status
+deactivate Operator
 end
 Node --> ADS: transaction status
 ADS --> Operator: transaction status
