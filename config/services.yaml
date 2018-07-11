@@ -30,13 +30,13 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
-    App\Service\SynchronizeADSData:
+    Adshares\AdsManager\Service\SynchronizeADSData:
         arguments:
-            $client: '@App\Adshares\Ads\AdsClient'
+            $client: '@Vendor\Adshares\Ads\AdsClient'
             $database: "@doctrine_mongodb.odm.default_connection"
 
 
-    App\Adshares\Ads\Driver\CliDriver:
+    Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver
         arguments:
             $address: '%env(ADS_ADDRESS)%'
@@ -48,7 +48,7 @@ services:
               arguments:
                   - '/tmp/.ads7'
 
-    App\Adshares\Ads\AdsClient:
+    Vendor\Adshares\Ads\AdsClient:
         class: Adshares\Ads\AdsClient
         arguments:
-            $driver: '@App\Adshares\Ads\Driver\CliDriver'
+            $driver: '@Vendor\Adshares\Ads\Driver\CliDriver'

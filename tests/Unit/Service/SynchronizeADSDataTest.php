@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Tests\Service;
+namespace Adshares\AdsManager\Tests\Unit\Service;
 
 use PHPUnit\Framework\TestCase;
 

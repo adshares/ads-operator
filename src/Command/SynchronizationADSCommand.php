@@ -1,9 +1,9 @@
 <?php
 
 
-namespace App\Command;
+namespace Adshares\AdsManager\Command;
 
-use App\Service\SynchronizeADSData;
+use Adshares\AdsManager\Service\SynchronizeADSData;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -22,7 +22,7 @@ class SynchronizationADSCommand extends ContainerAwareCommand
     protected function configure(): void
     {
         $this
-            ->setName('app:synchronize-ads')
+            ->setName('ads:synchronize')
             ->setDescription('Synchronize ADS data');
     }
     protected function execute(InputInterface $input, OutputInterface $output): void

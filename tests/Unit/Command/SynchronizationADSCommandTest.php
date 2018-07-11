@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Tests\Command;
+namespace Adshares\AdsManager\Tests\Unit\Command;
 
-use App\Command\SynchronizationADSCommand;
-use App\Service\SynchronizeADSData;
+use Adshares\AdsManager\Command\SynchronizationADSCommand;
+use Adshares\AdsManager\Service\SynchronizeADSData;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -18,7 +18,7 @@ final class SynchronizationADSCommandTest extends KernelTestCase
 
         $application->add(new SynchronizationADSCommand($this->createMock(SynchronizeADSData::class)));
 
-        $command = $application->find('app:synchronize-ads');
+        $command = $application->find('ads:synchronize');
         $commandTester = new CommandTester($command);
         $commandTester->execute(array(
             'command'  => $command->getName(),

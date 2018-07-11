@@ -1,13 +1,13 @@
 <?php
 
 
-namespace App\Service;
+namespace Adshares\AdsManager\Service;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\Ads\Response\GetBlockResponse;
 use Adshares\Ads\Response\GetBlocksResponse;
-use Adshares\Ads\Response\GetMessageListResponse;
+use Adshares\Ads\Response\GetPackageListResponse;
 use Doctrine\MongoDB\Connection;
 
 class SynchronizeADSData
@@ -36,20 +36,17 @@ class SynchronizeADSData
                 $this->parseBlocks($blocks->getBlocks());
             } while ($blocks instanceof GetBlocksResponse);
         } catch (CommandException $ex) {
-
         }
     }
 
 
     private function parseBlocks(array $blocks)
     {
-        foreach($blocks as $blockId) {
+        foreach ($blocks as $blockId) {
             $block = $this->client->getBlock($blockId);
             if ($block instanceof GetBlockResponse) {
-
-                $messageList = $this->client->getMessageList($blockId);
-                if ($messageList instanceof GetMessageListResponse) {
-
+                $messageList = $this->client->getPackageList($blockId);
+                if ($messageList instanceof GetPackageListResponse) {
                 }
             }
         }
