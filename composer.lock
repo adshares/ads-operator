@@ -12,16 +12,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adshares/php-ads-client.git",
-                "reference": "ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969"
+                "reference": "13726be943ec0423cc7d175a4e88def0bce85fd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969",
-                "reference": "ddde8d18f63f4c6cc0c8c2a6bce81b966fc5f969",
+                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/13726be943ec0423cc7d175a4e88def0bce85fd0",
+                "reference": "13726be943ec0423cc7d175a4e88def0bce85fd0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.2.0",
+                "psr/log": "^1.0",
                 "symfony/process": "^4.1"
             },
             "require-dev": {
@@ -67,8 +68,8 @@
             ],
             "authors": [
                 {
-                    "name": "Adshares",
-                    "homepage": "https://adshares.pl/team"
+                    "name": "Contributors",
+                    "homepage": "https://github.com/adshares/php-ads-client/graphs/contributors"
                 }
             ],
             "description": "PHP Client for ADS blockchain",
@@ -83,7 +84,7 @@
                 "issues": "https://github.com/adshares/php-ads-client/issues",
                 "source": "https://github.com/adshares/php-ads-client"
             },
-            "time": "2018-07-11T12:51:24+00:00"
+            "time": "2018-07-12T13:26:54+00:00"
         },
         {
             "name": "alcaeus/mongo-php-adapter",

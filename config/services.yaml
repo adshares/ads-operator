@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    entityMap:
+        Block: '\Adshares\AdsManager\Document\Block'
+        Package: '\Adshares\AdsManager\Document\Package'
+        Transaction: '\Adshares\AdsManager\Document\Transaction'
+
 
 services:
     # default configuration for services in *this* file
@@ -38,6 +43,9 @@ services:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
             $databaseMigration: '@Adshares\AdsManager\BlockExplorer\Database\MongoMigration'
+            $logger: '@logger'
+            $genesisTime: '%env(GENESIS_TIME)%'
+            $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
 
     Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver
@@ -46,6 +54,7 @@ services:
             $secret: '%env(ADS_SECRET)%'
             $host: '%env(ADS_HOST)%'
             $port: '%env(ADS_PORT)%'
+            $logger: '@logger'
         calls:
             - method: setWorkingDir
               arguments:
@@ -55,3 +64,7 @@ services:
         class: Adshares\Ads\AdsClient
         arguments:
             $driver: '@Vendor\Adshares\Ads\Driver\CliDriver'
+        calls:
+            - method: setEntityMap
+              arguments:
+                  - '%entityMap%'
