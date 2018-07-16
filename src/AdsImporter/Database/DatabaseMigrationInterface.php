@@ -3,8 +3,8 @@
 
 namespace Adshares\AdsManager\AdsImporter\Database;
 
-use Adshares\Ads\Entity\Account;
-use Adshares\Ads\Entity\Node;
+use Adshares\AdsManager\Document\Node;
+use Adshares\AdsManager\Document\Account;
 use Adshares\AdsManager\Document\Block;
 use Adshares\AdsManager\Document\Package;
 use Adshares\AdsManager\Document\Transaction;
