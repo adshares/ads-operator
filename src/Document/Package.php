@@ -22,7 +22,7 @@ class Package extends \Adshares\Ads\Entity\Package
         }
 
         if ($node) {
-            $this->node = $node;
+            $this->node = (string) $node;
         }
 
         if ($nodeMsid) {

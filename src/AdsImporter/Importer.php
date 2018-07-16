@@ -144,12 +144,11 @@ class Importer
     /**
      * @param Node $node
      *
-     * todo how we can generate hash (or something) of a node to not update anything if there is no changes
      */
     private function updateAccounts(Node $node): void
     {
-        $accountResponse = $this->client->getAccounts($node->getId());
-        $accounts = $accountResponse->getAccounts(); // todo check if `getAccounts` method always returns array
+        $accountResponse = $this->client->getAccounts((int)$node->getId());
+        $accounts = $accountResponse->getAccounts();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -179,7 +178,6 @@ class Importer
                 $blockTransactionsCount += $transactionsCount;
             }
         } catch (CommandException $ex) {
-            // @todo if there is no packages for a block ads client should NOT throw an exception
             $this->addExceptionToLog($ex, 'get_package_list', ['block' => $block->getId()]);
         }
 

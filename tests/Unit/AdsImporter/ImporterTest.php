@@ -207,7 +207,8 @@ final class ImporterTest extends TestCase
         );
         $this->assertEquals(2, $result);
 
-        $this->invokeMethod($importer,
+        $this->invokeMethod(
+            $importer,
             'addTransactionsFromPackage',
             [new Package('1', 1, 1), new Block(1)]
         );
@@ -249,7 +250,7 @@ final class ImporterTest extends TestCase
 
         $packageListResponse
             ->method('getPackages')
-            ->willReturn([new Package('1', 1, 1), new Package('2', 2,2)]);
+            ->willReturn([new Package('1', 1, 1), new Package('2', 2, 2)]);
 
         $adsClient
             ->method('getPackageList')
@@ -275,7 +276,7 @@ final class ImporterTest extends TestCase
 
         $packageListResponse
             ->method('getPackages')
-            ->willReturn([new Package('1', 1, 1), new Package('2', 2,2)]);
+            ->willReturn([new Package('1', 1, 1), new Package('2', 2, 2)]);
 
         $adsClient
             ->method('getPackageList')
