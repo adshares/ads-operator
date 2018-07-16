@@ -15,6 +15,21 @@ class Package extends \Adshares\Ads\Entity\Package
      */
     protected $transactionCount = 0;
 
+    public function __construct(string $id = null, int $node = null, int $nodeMsid = null)
+    {
+        if ($id) {
+            $this->id = $id;
+        }
+
+        if ($node) {
+            $this->node = $node;
+        }
+
+        if ($nodeMsid) {
+            $this->nodeMsid = $nodeMsid;
+        }
+    }
+
     public function generateId(): void
     {
         $this->id = str_pad(

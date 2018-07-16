@@ -1,24 +1,22 @@
 <?php
 
 
-namespace Adshares\AdsManager\Service;
+namespace Adshares\AdsManager\AdsImporter;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
-use Adshares\Ads\Entity\Account;
-use Adshares\Ads\Entity\Node;
-use Adshares\Ads\Response\GetAccountsResponse;
-use Adshares\Ads\Response\GetBlockResponse;
+use Adshares\AdsManager\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsManager\Document\Block;
 use Adshares\AdsManager\Document\Package;
+use Adshares\AdsManager\Document\Node;
+use Adshares\AdsManager\Document\Account;
 use Adshares\Ads\Exception\CommandException;
-use Adshares\Ads\Response\GetPackageListResponse;
-use Adshares\AdsManager\BlockExplorer\Database\DatabaseMigrationInterface;
+use Adshares\AdsManager\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsManager\Document\Transaction;
 use Adshares\AdsManager\Helper\NumericalTransformation;
 use Psr\Log\LoggerInterface;
 
-class SynchronizeADSData
+class Importer
 {
     /**
      * @var AdsClient
@@ -46,7 +44,12 @@ class SynchronizeADSData
     private $blockSeqTime = 32;
 
     /**
-     * SynchronizeADSData constructor.
+     * @var ImporterResult
+     */
+    private $importerResult;
+
+    /**
+     * Importer constructor.
      * @param AdsClient $client
      * @param DatabaseMigrationInterface $databaseMigration
      * @param LoggerInterface $logger
@@ -65,16 +68,16 @@ class SynchronizeADSData
         $this->logger = $logger;
         $this->genesisTime = $genesisTime;
         $this->blockSeqTime = $blockSeqTime;
+        $this->importerResult = new ImporterResult();
     }
 
-    public function sync(): void
+    public function import(): ImporterResult
     {
         $getMeResponse = $this->client->getMe();
         $startTime = $this->getStartTime();
         $endTime = (int)$getMeResponse->getPreviousBlockTime()->format('U');
 
         $blockId = NumericalTransformation::decToHex($startTime);
-        $transactions = 0;
 
         // update nodes
         $this->updateNodes();
@@ -82,25 +85,26 @@ class SynchronizeADSData
         do {
             try {
                 $blockResponse = $this->client->getBlock($blockId);
+                /** @var Block $block */
                 $block = $blockResponse->getBlock();
 
-                if ($block instanceof Block) {
-                    $blockTransactions = $this->addPackagesFromBlock($block);
+                $blockTransactions = $this->addPackagesFromBlock($block);
 
-                    $block->setTransactionCount($blockTransactions);
-                    $this->databaseMigration->addBlock($block);
-
-                    $transactions += $blockTransactions;
-                }
+                $block->setTransactionCount($blockTransactions);
+                $this->databaseMigration->addBlock($block);
+                ++$this->importerResult->blocks;
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
                     $this->addExceptionToLog($ex, 'get_block', ['block' => $blockId]);
                 }
             }
 
+
             $startTime += $this->blockSeqTime;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
+
+        return $this->importerResult;
     }
 
     private function getStartTime(): int
@@ -116,56 +120,66 @@ class SynchronizeADSData
 
     private function updateNodes(): void
     {
-        $blockResponse = $this->client->getBlock();
+        try {
+            $blockResponse = $this->client->getBlock();
+        } catch (CommandException $ex) {
+            throw new AdsClientException('Cannot proceed importing data');
+        }
 
-        if ($blockResponse instanceof GetBlockResponse) {
-            $nodes = $blockResponse->getBlock()->getNodes();
+        $nodes = $blockResponse->getBlock()->getNodes();
 
-            /** @var Node $node */
-            foreach ($nodes as $node) {
-                if ($node->getId() === '0000') { // special node
-                    continue;
-                }
-
-                $accountResponse = $this->client->getAccounts($node->getId());
-
-                if ($accountResponse instanceof GetAccountsResponse) {
-                    $accounts = $accountResponse->getAccounts();
-
-                    /** @var Account $account */
-                    foreach ($accounts as $account) {
-                        $this->databaseMigration->addOrUpdateAccount($account, $node);
-                    }
-                }
-
-                $this->databaseMigration->addOrUpdateNode($node);
+        /** @var Node $node */
+        foreach ($nodes as $node) {
+            if ($node->getId() === '0000') { // special node
+                continue;
             }
+
+            $this->updateAccounts($node);
+
+            $this->databaseMigration->addOrUpdateNode($node);
+            ++$this->importerResult->nodes;
         }
     }
 
-    private function addPackagesFromBlock(Block $block)
+    /**
+     * @param Node $node
+     *
+     * todo how we can generate hash (or something) of a node to not update anything if there is no changes
+     */
+    private function updateAccounts(Node $node): void
+    {
+        $accountResponse = $this->client->getAccounts($node->getId());
+        $accounts = $accountResponse->getAccounts(); // todo check if `getAccounts` method always returns array
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->databaseMigration->addOrUpdateAccount($account, $node);
+            ++$this->importerResult->accounts;
+        }
+    }
+
+    private function addPackagesFromBlock(Block $block): int
     {
         $blockTransactionsCount = 0;
 
         try {
             $packagesResponse = $this->client->getPackageList($block->getId());
+            $packages = $packagesResponse->getPackages();
 
-            if ($packagesResponse instanceof GetPackageListResponse) {
-                $packages = $packagesResponse->getPackages();
+            /** @var Package $package */
+            foreach ($packages as $package) {
+                $package->generateId();
 
+                $transactionsCount = $this->addTransactionsFromPackage($package, $block);
 
-                /** @var Package $package */
-                foreach ($packages as $package) {
-                    $package->generateId();
+                $package->setTransactionCount($transactionsCount);
+                $this->databaseMigration->addPackage($package, $block);
 
-                    $transactionsCount = $this->addTransactionsFromPackage($package, $block);
-                    $package->setTransactionCount($transactionsCount);
-                    $this->databaseMigration->addPackage($package, $block);
-
-                    $blockTransactionsCount += $transactionsCount;
-                }
+                ++$this->importerResult->packages;
+                $blockTransactionsCount += $transactionsCount;
             }
         } catch (CommandException $ex) {
+            // @todo if there is no packages for a block ads client should NOT throw an exception
             $this->addExceptionToLog($ex, 'get_package_list', ['block' => $block->getId()]);
         }
 
@@ -175,6 +189,7 @@ class SynchronizeADSData
     private function addTransactionsFromPackage(Package $package, Block $block): int
     {
         $transactionsCount = 0;
+
         try {
             $packageResponse = $this->client->getPackage(
                 $package->getNode(),
@@ -191,6 +206,7 @@ class SynchronizeADSData
                     $transaction->setPackageId($package->getId());
 
                     $this->databaseMigration->addTransaction($transaction);
+                    ++$this->importerResult->transactions;
                     ++$transactionsCount;
                 }
             }
@@ -220,5 +236,10 @@ class SynchronizeADSData
         ]);
 
         $this->logger->error(sprintf($message, $type, $exception->getMessage()), $context);
+    }
+
+    public function getResult(): ImporterResult
+    {
+        return $this->importerResult;
     }
 }

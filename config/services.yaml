@@ -8,7 +8,8 @@ parameters:
         Block: '\Adshares\AdsManager\Document\Block'
         Package: '\Adshares\AdsManager\Document\Package'
         Transaction: '\Adshares\AdsManager\Document\Transaction'
-
+        Account: '\Adshares\AdsManager\Document\Account'
+        Node: '\Adshares\AdsManager\Document\Node'
 
 services:
     # default configuration for services in *this* file
@@ -35,14 +36,14 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
-    Adshares\AdsManager\BlockExplorer\Database\MongoMigration:
+    Adshares\AdsManager\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
 
-    Adshares\AdsManager\Service\SynchronizeADSData:
+    Adshares\AdsManager\AdsImporter\Importer:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
-            $databaseMigration: '@Adshares\AdsManager\BlockExplorer\Database\MongoMigration'
+            $databaseMigration: '@Adshares\AdsManager\AdsImporter\Database\MongoMigration'
             $logger: '@logger'
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'

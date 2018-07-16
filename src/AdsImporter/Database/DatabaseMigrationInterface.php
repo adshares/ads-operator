@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\BlockExplorer\Database;
+namespace Adshares\AdsManager\AdsImporter\Database;
 
 use Adshares\Ads\Entity\Account;
 use Adshares\Ads\Entity\Node;
