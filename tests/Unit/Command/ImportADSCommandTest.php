@@ -52,23 +52,10 @@ final class ImportADSCommandTest extends KernelTestCase
         $kernel = static::bootKernel();
         $application = new Application($kernel->getName());
 
-        $result = new ImporterResult();
-        $result->blocks = 10;
-        $result->packages = 20;
-        $result->transactions = 111;
-        $result->nodes = 3;
-        $result->accounts = 10;
-
         $importer = $this->createMock(Importer::class);
         $importer
-            ->expects($this->at(0))
             ->method('import')
             ->will($this->throwException(new AdsClientException('')));
-
-        $importer
-            ->expects($this->at(1))
-            ->method('import')
-            ->willReturn($result);
 
         $application->add(new ImportADSCommand($importer));
 
@@ -80,10 +67,6 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains('10 blocks', $output);
-        $this->assertContains('20 packages', $output);
-        $this->assertContains('111 transactions', $output);
-        $this->assertContains('3 nodes', $output);
-        $this->assertContains('10 accounts', $output);
+        $this->assertContains('Import cannot be proceed', $output);
     }
 }

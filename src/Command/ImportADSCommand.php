@@ -34,8 +34,8 @@ class ImportADSCommand extends ContainerAwareCommand
             /** @var ImporterResult $result */
             $result = $this->adsImporter->import();
         } catch (AdsClientException $ex) {
-            sleep(3); // retry for new block
-            $result = $this->adsImporter->import();
+            $output->writeln('Import cannot be proceed');
+            return;
         }
 
         $output->writeln(sprintf(
