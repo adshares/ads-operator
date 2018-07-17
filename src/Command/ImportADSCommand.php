@@ -1,11 +1,11 @@
 <?php
 
 
-namespace Adshares\AdsManager\Command;
+namespace Adshares\AdsOperator\Command;
 
-use Adshares\AdsManager\AdsImporter\Exception\AdsClientException;
-use Adshares\AdsManager\AdsImporter\Importer;
-use Adshares\AdsManager\AdsImporter\ImporterResult;
+use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\AdsImporter\Importer;
+use Adshares\AdsOperator\AdsImporter\ImporterResult;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

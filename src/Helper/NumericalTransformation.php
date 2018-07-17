@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\Helper;
+namespace Adshares\AdsOperator\Helper;
 
 class NumericalTransformation
 {

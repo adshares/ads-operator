@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\Document;
+namespace Adshares\AdsOperator\Document;
 
 class Node extends \Adshares\Ads\Entity\Node
 {

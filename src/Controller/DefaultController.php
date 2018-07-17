@@ -1,6 +1,6 @@
 <?php
 
-namespace Adshares\AdsManager\Controller;
+namespace Adshares\AdsOperator\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
@@ -9,7 +9,7 @@ class DefaultController
     public function index()
     {
         return new Response(
-            '<html><body>Ads Manager</body></html>'
+            '<html><body>Ads Operator</body></html>'
         );
     }
 }

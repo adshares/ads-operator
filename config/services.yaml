@@ -5,11 +5,11 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     entityMap:
-        Block: '\Adshares\AdsManager\Document\Block'
-        Package: '\Adshares\AdsManager\Document\Package'
-        Transaction: '\Adshares\AdsManager\Document\Transaction'
-        Account: '\Adshares\AdsManager\Document\Account'
-        Node: '\Adshares\AdsManager\Document\Node'
+        Block: '\Adshares\AdsOperator\Document\Block'
+        Package: '\Adshares\AdsOperator\Document\Package'
+        Transaction: '\Adshares\AdsOperator\Document\Transaction'
+        Account: '\Adshares\AdsOperator\Document\Account'
+        Node: '\Adshares\AdsOperator\Document\Node'
 
 services:
     # default configuration for services in *this* file
@@ -22,13 +22,13 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    Adshares\AdsManager\:
+    Adshares\AdsOperator\:
         resource: '../src/*'
         exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    Adshares\AdsManager\Controller\:
+    Adshares\AdsOperator\Controller\:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
@@ -36,14 +36,14 @@ services:
     # please note that last definitions always *replace* previous ones
 
 
-    Adshares\AdsManager\AdsImporter\Database\MongoMigration:
+    Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
 
-    Adshares\AdsManager\AdsImporter\Importer:
+    Adshares\AdsOperator\AdsImporter\Importer:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
-            $databaseMigration: '@Adshares\AdsManager\AdsImporter\Database\MongoMigration'
+            $databaseMigration: '@Adshares\AdsOperator\AdsImporter\Database\MongoMigration'
             $logger: '@logger'
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'

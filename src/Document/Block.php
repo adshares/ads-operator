@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\Document;
+namespace Adshares\AdsOperator\Document;
 
 class Block extends \Adshares\Ads\Entity\Block
 {

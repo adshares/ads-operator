@@ -1,14 +1,14 @@
 <?php
 
 
-namespace Adshares\AdsManager\AdsImporter\Database;
+namespace Adshares\AdsOperator\AdsImporter\Database;
 
-use Adshares\AdsManager\Document\Node;
-use Adshares\AdsManager\Document\Account;
-use Adshares\AdsManager\Document\Block;
-use Adshares\AdsManager\Document\Package;
-use Adshares\AdsManager\Document\Transaction;
-use Adshares\AdsManager\Helper\NumericalTransformation;
+use Adshares\AdsOperator\Document\Node;
+use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Package;
+use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
 

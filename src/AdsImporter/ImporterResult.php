@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\AdsImporter;
+namespace Adshares\AdsOperator\AdsImporter;
 
 class ImporterResult
 {

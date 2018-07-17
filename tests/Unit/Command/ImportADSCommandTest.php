@@ -1,12 +1,12 @@
 <?php
 
 
-namespace Adshares\AdsManager\Tests\Unit\Command;
+namespace Adshares\AdsOperator\Tests\Unit\Command;
 
-use Adshares\AdsManager\AdsImporter\Exception\AdsClientException;
-use Adshares\AdsManager\AdsImporter\Importer;
-use Adshares\AdsManager\AdsImporter\ImporterResult;
-use Adshares\AdsManager\Command\ImportADSCommand;
+use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\AdsImporter\Importer;
+use Adshares\AdsOperator\AdsImporter\ImporterResult;
+use Adshares\AdsOperator\Command\ImportADSCommand;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Adshares\AdsManager\Tests\E2E;
+namespace Adshares\AdsOperator\Tests\E2E;
 
 use PHPUnit\Framework\TestCase;
 
