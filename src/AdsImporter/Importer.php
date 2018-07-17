@@ -1,19 +1,19 @@
 <?php
 
 
-namespace Adshares\AdsManager\AdsImporter;
+namespace Adshares\AdsOperator\AdsImporter;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
-use Adshares\AdsManager\AdsImporter\Exception\AdsClientException;
-use Adshares\AdsManager\Document\Block;
-use Adshares\AdsManager\Document\Package;
-use Adshares\AdsManager\Document\Node;
-use Adshares\AdsManager\Document\Account;
+use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Package;
+use Adshares\AdsOperator\Document\Node;
+use Adshares\AdsOperator\Document\Account;
 use Adshares\Ads\Exception\CommandException;
-use Adshares\AdsManager\AdsImporter\Database\DatabaseMigrationInterface;
-use Adshares\AdsManager\Document\Transaction;
-use Adshares\AdsManager\Helper\NumericalTransformation;
+use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
+use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Psr\Log\LoggerInterface;
 
 class Importer

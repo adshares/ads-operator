@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Adshares\AdsManager\Tests\Unit;
+namespace Adshares\AdsOperator\Tests\Unit;
 
 trait PrivateMethodTrait
 {

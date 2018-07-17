@@ -1,6 +1,6 @@
 <?php
 
-namespace Adshares\AdsManager;
+namespace Adshares\AdsOperator;
 
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;

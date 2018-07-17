@@ -63,12 +63,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Adshares\\AdsManager\\": "src/"
+            "Adshares\\AdsOperator\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Adshares\\AdsManager\\Tests\\": "tests/"
+            "Adshares\\AdsOperator\\Tests\\": "tests/"
         }
     },
     "replace": {

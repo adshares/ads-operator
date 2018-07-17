@@ -1,25 +1,25 @@
 <?php
 
 
-namespace Adshares\AdsManager\Tests\Unit\AdsImporter;
+namespace Adshares\AdsOperator\Tests\Unit\AdsImporter;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Command\CommandInterface;
 use Adshares\Ads\Response\GetMeResponse;
 use Adshares\Ads\Response\GetPackageListResponse;
 use Adshares\Ads\Response\GetPackageResponse;
-use Adshares\AdsManager\Document\Account;
-use Adshares\AdsManager\Document\Node;
+use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Node;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\Ads\Response\GetAccountsResponse;
 use Adshares\Ads\Response\GetBlockResponse;
-use Adshares\AdsManager\AdsImporter\Database\DatabaseMigrationInterface;
-use Adshares\AdsManager\AdsImporter\Exception\AdsClientException;
-use Adshares\AdsManager\AdsImporter\Importer;
-use Adshares\AdsManager\Document\Block;
-use Adshares\AdsManager\Document\Package;
-use Adshares\AdsManager\Document\Transaction;
-use Adshares\AdsManager\Tests\Unit\PrivateMethodTrait;
+use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
+use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\AdsImporter\Importer;
+use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Package;
+use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Tests\Unit\PrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
