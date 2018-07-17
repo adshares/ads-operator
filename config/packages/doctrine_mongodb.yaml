@@ -10,9 +10,10 @@ doctrine_mongodb:
         default:
             auto_mapping: true
             mappings:
-                App:
+                Adshares\AdsManager:
                     is_bundle: false
                     type: annotation
-                    dir: '%kernel.project_dir%/src/Document'
-                    prefix: App\Document\
-                    alias: App
+#                    dir: '%kernel.project_dir%/src/Document'
+                    dir: "%kernel.project_dir%/config/doctrine"
+                    prefix: Adshares\AdsManager\Document\
+                    alias: AdsManager
