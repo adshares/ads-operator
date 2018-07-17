@@ -56,7 +56,7 @@ class MongoMigration implements DatabaseMigrationInterface
         $collection = $this->db->createCollection(self::BLOCK_COLLECTION);
         $document = [
             "id" => $block->getId(),
-//            "dividendBalance" => $block->getDividendBalance(),
+            "dividendBalance" => $block->getDividendBalance(),
             "messageCount" => $block->getMessageCount(),
             "messageHash" => $block->getMessageCount(),
             "minHash" => $block->getMinhash(),
@@ -69,7 +69,6 @@ class MongoMigration implements DatabaseMigrationInterface
             "voteNo" => $block->getVoteNo(),
             "voteTotal" => $block->getVoteTotal(),
             "voteYes" => $block->getVoteYes(),
-            "timestamp" => NumericalTransformation::hexToDec($block->getId()),
             "transactionCount" => $block->getTransactionCount(),
         ];
 
@@ -137,7 +136,7 @@ class MongoMigration implements DatabaseMigrationInterface
     public function getNewestBlockTime(): ?int
     {
         $collection = $this->db->selectCollection('block');
-        $cursor = $collection->find()->sort(['timestamp' => -1])->limit(1);
+        $cursor = $collection->find()->sort(['time' => -1])->limit(1);
         $cursor->next();
         $document = $cursor->current();
 

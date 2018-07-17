@@ -81,8 +81,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "security-checker security:check": "script"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -96,8 +95,8 @@
         "qa-check": [
             "security-checker security:check",
             "parallel-lint --no-colors --blame --exclude vendor .",
-            "phpcs -s src --standard=PHPCompatibility src tests",
-            "phpcs -s src --standard=PSR2 src tests",
+            "phpcs -s --standard=PHPCompatibility src tests",
+            "phpcs -s --standard=PSR2 src tests",
             "phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src tests"
         ]
     },

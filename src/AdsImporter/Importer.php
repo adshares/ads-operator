@@ -76,10 +76,8 @@ class Importer
         $getMeResponse = $this->client->getMe();
         $startTime = $this->getStartTime();
         $endTime = (int)$getMeResponse->getPreviousBlockTime()->format('U');
-
         $blockId = NumericalTransformation::decToHex($startTime);
 
-        // update nodes
         $this->updateNodes();
 
         do {
@@ -95,10 +93,9 @@ class Importer
                 ++$this->importerResult->blocks;
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
-                    $this->addExceptionToLog($ex, 'get_block', ['block' => $blockId]);
+                    $this->addExceptionToLog($ex, sprintf('get_block (%s)', $blockId));
                 }
             }
-
 
             $startTime += $this->blockSeqTime;
             $blockId = NumericalTransformation::decToHex($startTime);
@@ -130,7 +127,7 @@ class Importer
 
         /** @var Node $node */
         foreach ($nodes as $node) {
-            if ($node->getId() === '0000') { // special node
+            if ($node->isSpecial()) {
                 continue;
             }
 
@@ -141,10 +138,6 @@ class Importer
         }
     }
 
-    /**
-     * @param Node $node
-     *
-     */
     private function updateAccounts(Node $node): void
     {
         $accountResponse = $this->client->getAccounts((int)$node->getId());
@@ -178,7 +171,7 @@ class Importer
                 $blockTransactionsCount += $transactionsCount;
             }
         } catch (CommandException $ex) {
-            $this->addExceptionToLog($ex, 'get_package_list', ['block' => $block->getId()]);
+            $this->addExceptionToLog($ex, 'get_package_list', $block);
         }
 
         return $blockTransactionsCount;
@@ -209,31 +202,26 @@ class Importer
                 }
             }
         } catch (CommandException $ex) {
-            $this->addExceptionToLog($ex, 'get_package', [
-                'block' => $block->getId(),
-                'package' => $package->getId(),
-                'node' => $package->getNode(),
-                'node_msid' => $package->getNodeMsid()
-            ]);
+            $this->addExceptionToLog($ex, 'get_package', $block);
         }
 
         return $transactionsCount;
     }
 
-    /**
-     * @param CommandException $exception
-     * @param string $type
-     * @param array $context
-     */
-    private function addExceptionToLog(CommandException $exception, string $type, array $context): void
+    private function addExceptionToLog(CommandException $exception, string $message, ?Block $block = null): void
     {
-        $message = '[ADS Synchronization] %s Failed: %s';
-        $context = array_merge($context, [
+        $context = [
             'error_code' => $exception->getCode(),
             'error_message' => CommandError::getMessageByCode($exception->getCode()),
-        ]);
+        ];
 
-        $this->logger->error(sprintf($message, $type, $exception->getMessage()), $context);
+        if ($block) {
+            $context['block'] = $block->getId();
+        }
+
+        $pattern = '[ADS Synchronization] %s - %s';
+
+        $this->logger->error(sprintf($pattern, $message, $exception->getMessage()), $context);
     }
 
     public function getResult(): ImporterResult
