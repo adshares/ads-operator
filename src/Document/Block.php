@@ -7,7 +7,7 @@ class Block extends \Adshares\Ads\Entity\Block
 {
     protected $transactionCount = 0;
 
-    public function __construct($id = null, array $nodes = [])
+    public function __construct($id = null, array $nodes = [], int $messageCount = null)
     {
         if ($id) {
             $this->id = $id;
@@ -15,6 +15,10 @@ class Block extends \Adshares\Ads\Entity\Block
 
         if ($nodes) {
             $this->nodes = $nodes;
+        }
+
+        if ($messageCount) {
+            $this->messageCount = $messageCount;
         }
     }
 

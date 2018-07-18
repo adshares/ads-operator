@@ -5,9 +5,12 @@ namespace Adshares\AdsOperator\Tests\Unit\AdsImporter;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Command\CommandInterface;
-use Adshares\Ads\Response\GetMeResponse;
-use Adshares\Ads\Response\GetPackageListResponse;
-use Adshares\Ads\Response\GetPackageResponse;
+use Adshares\Ads\Command\GetMessageCommand;
+use Adshares\Ads\Command\GetMessageIdsCommand;
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\Ads\Response\GetAccountResponse;
+use Adshares\Ads\Response\GetMessageIdsResponse;
+use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\Ads\Exception\CommandException;
@@ -17,10 +20,10 @@ use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\AdsImporter\Importer;
 use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Document\Package;
-use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Tests\Unit\PrivateMethodTrait;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
 final class ImporterTest extends TestCase
@@ -43,7 +46,7 @@ final class ImporterTest extends TestCase
         parent::__construct($name, $data, $dataName);
 
         $accounts = [new Account(), new Account(), new Account()];
-        $block = new Block(1, [new Node(1), new Node(2), new Node(3), new Node(4)]);
+        $block = new Block(1, [new Node(1), new Node(2), new Node(3), new Node(4)], 4);
 
         $accountsResponse = $this->createMock(GetAccountsResponse::class);
         $accountsResponse
@@ -58,7 +61,7 @@ final class ImporterTest extends TestCase
         $date = new \DateTime();
         $date->setTimestamp(self::PREVIOUS_BLOCK);
 
-        $getMeResponse = $this->createMock(GetMeResponse::class);
+        $getMeResponse = $this->createMock(GetAccountResponse::class);
         $getMeResponse
             ->method('getPreviousBlockTime')
             ->willReturn($date);
@@ -159,76 +162,34 @@ final class ImporterTest extends TestCase
         $this->assertEquals(3, $importer->getResult()->accounts);
     }
 
-    public function testAddTransactionFromPackageWhenPackageExistsButTransactionsDoNotExist()
+    public function testAddMessagesForBlockWhenTwoMessagesAndSixTransactionsExist()
     {
         $adsClient = $this->adsClient;
         $database = $this->createMock(DatabaseMigrationInterface::class);
-        $packageResponse = $this->createMock(GetPackageResponse::class);
+        $getMessageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
+        $messageResponse = $this->createMock(GetMessageResponse::class);
+        $transaction = $this->createMock(AbstractTransaction::class);
 
-        $packageResponse
+        $getMessageIdsResponse
+            ->method('getMessageIds')
+            ->willReturn(['1', '2']);
+
+        $adsClient
+            ->method('getMessageIds')
+            ->willReturn($getMessageIdsResponse);
+
+        $message = new Message(3);
+
+        $messageResponse
+            ->method('getMessage')
+            ->willReturn($message);
+        $messageResponse
             ->method('getTransactions')
-            ->willReturn([]);
+            ->willReturn([$transaction, $transaction, $transaction]);
 
         $adsClient
-            ->method('getPackage')
-            ->willReturn($packageResponse)
-        ;
-        $importer = new Importer($adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
-
-        $result = $this->invokeMethod(
-            $importer,
-            'addTransactionsFromPackage',
-            [new Package('1', 1, 1), new Block(1)]
-        );
-        $this->assertEquals(0, $result);
-    }
-
-    public function testAddTransactionFromPackageWhenPackageExistsAndTransactionsExist()
-    {
-        $adsClient = $this->adsClient;
-        $database = $this->createMock(DatabaseMigrationInterface::class);
-        $packageResponse = $this->createMock(GetPackageResponse::class);
-
-        $packageResponse
-            ->method('getTransactions')
-            ->willReturn([new Transaction(), new Transaction()]);
-
-        $adsClient
-            ->method('getPackage')
-            ->willReturn($packageResponse)
-        ;
-
-        $importer = new Importer($adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
-
-        $result = $this->invokeMethod(
-            $importer,
-            'addTransactionsFromPackage',
-            [new Package('1', 1, 1), new Block(1)]
-        );
-        $this->assertEquals(2, $result);
-
-        $this->invokeMethod(
-            $importer,
-            'addTransactionsFromPackage',
-            [new Package('1', 1, 1), new Block(1)]
-        );
-        $this->assertEquals(4, $importer->getResult()->transactions);
-    }
-
-
-    public function testAddPackagesFromBlockWhenPackagesAreEmpty(): void
-    {
-        $adsClient = $this->adsClient;
-        $database = $this->createMock(DatabaseMigrationInterface::class);
-        $packageListResponse = $this->createMock(GetPackageListResponse::class);
-
-        $packageListResponse
-            ->method('getPackages')
-            ->willReturn([]);
-
-        $adsClient
-            ->method('getPackageList')
-            ->willReturn($packageListResponse);
+            ->method('getMessage')
+            ->willReturn($messageResponse);
 
         $importer = new Importer(
             $adsClient,
@@ -238,23 +199,36 @@ final class ImporterTest extends TestCase
             self::BLOCK_SEQ_TIME
         );
 
-        $result = $this->invokeMethod($importer, 'addPackagesFromBlock', [new Block(1)]);
-        $this->assertEquals(0, $result);
+        $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
+        $this->assertEquals(6, $result); // 2 messages x 3 transactions
     }
 
-    public function testAddPackagesFromBlockWhenPackagesExist(): void
+    public function testAddMessagesForBlockWhenMessageExistsButTransactionsDoNotExist()
     {
         $adsClient = $this->adsClient;
         $database = $this->createMock(DatabaseMigrationInterface::class);
-        $packageListResponse = $this->createMock(GetPackageListResponse::class);
+        $messageResponse = $this->createMock(GetMessageResponse::class);
 
-        $packageListResponse
-            ->method('getPackages')
-            ->willReturn([new Package('1', 1, 1), new Package('2', 2, 2)]);
+        $getMessageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
+        $getMessageIdsResponse
+            ->method('getMessageIds')
+            ->willReturn(['1', '2']);
 
         $adsClient
-            ->method('getPackageList')
-            ->willReturn($packageListResponse);
+            ->method('getMessageIds')
+            ->willReturn($getMessageIdsResponse);
+
+        $message = new Message(0);
+        $messageResponse
+            ->method('getMessage')
+            ->willReturn($message);
+        $messageResponse
+            ->method('getTransactions')
+            ->willReturn([]);
+
+        $adsClient
+            ->method('getMessage')
+            ->willReturn($messageResponse);
 
         $importer = new Importer(
             $adsClient,
@@ -264,23 +238,147 @@ final class ImporterTest extends TestCase
             self::BLOCK_SEQ_TIME
         );
 
-        $this->invokeMethod($importer, 'addPackagesFromBlock', [new Block(1)]);
-        $this->assertEquals(2, $importer->getResult()->packages);
+        $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
+        $this->assertEquals(0, $result);
     }
 
-    public function testImport4Blocks(): void
+    public function testAddMessageFromBlockWhenAdsClientThrowsAnException()
     {
         $adsClient = $this->adsClient;
         $database = $this->createMock(DatabaseMigrationInterface::class);
-        $packageListResponse = $this->createMock(GetPackageListResponse::class);
-
-        $packageListResponse
-            ->method('getPackages')
-            ->willReturn([new Package('1', 1, 1), new Package('2', 2, 2)]);
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('error');
 
         $adsClient
-            ->method('getPackageList')
-            ->willReturn($packageListResponse);
+            ->method('getMessageIds')
+            ->will($this->throwException(new CommandException(new GetMessageIdsCommand('123'))));
+
+        $importer = new Importer(
+            $adsClient,
+            $database,
+            $logger,
+            time(),
+            self::BLOCK_SEQ_TIME
+        );
+
+        $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
+        $this->assertEquals(0, $result);
+    }
+
+    public function testGetMessageResponseWhenAdsClientReturnsMessage()
+    {
+        $messageId = '0001:0000003E';
+        $data = [
+            'node' => 1,
+        ];
+        $messageResponse = new GetMessageResponse($data);
+
+        $adsClient = $this->adsClient;
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+
+        $adsClient
+            ->method('getMessage')
+            ->willReturn($messageResponse);
+
+        $importer = new Importer(
+            $adsClient,
+            $database,
+            new NullLogger(),
+            time(),
+            self::BLOCK_SEQ_TIME
+        );
+
+        $result = $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
+        $this->assertEquals($messageResponse, $result);
+    }
+
+    public function testGetMessageResponseWhenAdsClientThrowsAnException()
+    {
+        $messageId = '0001:0000003E';
+        $adsClient = $this->adsClient;
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('error');
+
+        $adsClient
+            ->method('getMessage')
+            ->will($this->throwException(new CommandException(new GetMessageCommand($messageId))));
+
+        $importer = new Importer(
+            $adsClient,
+            $database,
+            $logger,
+            time(),
+            self::BLOCK_SEQ_TIME
+        );
+
+        $result = $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
+        $this->assertNull($result);
+    }
+
+    public function testAddTransactionsFromMessage()
+    {
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->exactly(4))
+            ->method('addTransaction')
+            ->willReturn(null);
+
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            time(),
+            self::BLOCK_SEQ_TIME
+        );
+
+        $transactions = [
+            $this->createMock(AbstractTransaction::class),
+            $this->createMock(AbstractTransaction::class),
+            $this->createMock(AbstractTransaction::class),
+            $this->createMock(AbstractTransaction::class),
+        ];
+
+        $result = $this->invokeMethod($importer, 'addTransactionsFromMessage', [$transactions]);
+        $this->assertNull($result);
+    }
+
+    public function testImport(): void
+    {
+        $adsClient = $this->adsClient;
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $messageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
+        $messageResponse = $this->createMock(GetMessageResponse::class);
+        $transaction = $this->createMock(AbstractTransaction::class);
+
+        $messageIdsResponse
+            ->method('getMessageIds')
+            ->willReturn(['0001:0000003E', '0001:0000003D']);
+
+        $adsClient
+            ->method('getMessageIds')
+            ->willReturn($messageIdsResponse);
+
+        $messageIdsResponse
+            ->method('getMessageIds')
+            ->willReturn(['1', '2']);
+
+        $message = new Message(2);
+
+        $messageResponse
+            ->method('getMessage')
+            ->willReturn($message);
+        $messageResponse
+            ->method('getTransactions')
+            ->willReturn([$transaction, $transaction, $transaction]);
+
+        $adsClient
+            ->method('getMessage')
+            ->willReturn($messageResponse);
 
         $importer = new Importer(
             $adsClient,
@@ -291,6 +389,11 @@ final class ImporterTest extends TestCase
         );
 
         $importer->import();
+
+        $this->assertEquals(24, $importer->getResult()->transactions); // 2 messages * 3 transactions * 4 blocks
         $this->assertEquals(4, $importer->getResult()->blocks);
+        $this->assertEquals(8, $importer->getResult()->messages);
+        $this->assertEquals(4, $importer->getResult()->nodes);
+        $this->assertEquals(12, $importer->getResult()->accounts); // 4 nodes * 3 accounts
     }
 }

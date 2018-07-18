@@ -3,12 +3,11 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Document\Package;
-use Adshares\AdsOperator\Document\Transaction;
-use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
 
@@ -16,7 +15,7 @@ class MongoMigration implements DatabaseMigrationInterface
 {
     const BLOCKEXPLORER_DATABASE = 'blockexplorer';
     const BLOCK_COLLECTION = 'block';
-    const PACKAGE_COLLECTION = 'package';
+    const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
     const NODE_COLLECTION = 'node';
     const ACCOUNT_COLLECTION = 'account';
@@ -37,15 +36,16 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->db = $this->connection->selectDatabase(self::BLOCKEXPLORER_DATABASE);
     }
 
-    public function addPackage(Package $package, Block $block): void
+    public function addMessage(Message $message): void
     {
-        $collection = $this->db->createCollection(self::PACKAGE_COLLECTION);
+        $collection = $this->db->createCollection(self::MESSAGE_COLLECTION);
         $document = [
-            "id" => $this->generatePackageId($package),
-            "nodeId" => $package->getNode(),
-            "number" => $package->getNodeMsid(),
-            "blockId" => $block->getId(),
-            "transactionCount" => $package->getTransactionCount(),
+            "id" => $message->getMessageId(),
+            "nodeId" => $message->getNodeId(),
+            "blockId" => $message->getBlockId(),
+            "transactionCount" => $message->getTransactionCount(),
+            "hash" => $message->getHash(),
+            "length" => $message->getLength(),
         ];
 
         $collection->insert($document);
@@ -79,14 +79,11 @@ class MongoMigration implements DatabaseMigrationInterface
         }
     }
 
-    public function addTransaction(Transaction $transaction): void
+    public function addTransaction(AbstractTransaction $transaction): void
     {
         $collection = $this->db->createCollection(self::TRANSACTION_COLLECTION);
         $document = [
             "id" => $transaction->getId(),
-            "blockId" => $transaction->getBlockId(),
-            "packageId" => $transaction->getPackageId(),
-            "data" => $transaction->getData(),
             "size" => $transaction->getSize(),
             "type" => $transaction->getType()
         ];
@@ -145,15 +142,5 @@ class MongoMigration implements DatabaseMigrationInterface
         }
 
         return null;
-    }
-
-    public function generatePackageId(Package $package): string
-    {
-        return str_pad(
-            dechex(((int)$package->getNode() << 32) + $package->getNodeMsid()),
-            12,
-            '0',
-            STR_PAD_LEFT
-        );
     }
 }

@@ -6,8 +6,7 @@
 parameters:
     entityMap:
         Block: '\Adshares\AdsOperator\Document\Block'
-        Package: '\Adshares\AdsOperator\Document\Package'
-        Transaction: '\Adshares\AdsOperator\Document\Transaction'
+        Message: '\Adshares\AdsOperator\Document\Message'
         Account: '\Adshares\AdsOperator\Document\Account'
         Node: '\Adshares\AdsOperator\Document\Node'
 

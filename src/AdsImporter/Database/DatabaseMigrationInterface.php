@@ -3,19 +3,18 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Document\Package;
-use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Document\Message;
 
 interface DatabaseMigrationInterface
 {
     /**
-     * @param Package $package
-     * @param Block $block
+     * @param Message $message
      */
-    public function addPackage(Package $package, Block $block): void;
+    public function addMessage(Message $message): void;
 
     /**
      * @param Block $block
@@ -23,9 +22,9 @@ interface DatabaseMigrationInterface
     public function addBlock(Block $block): void;
 
     /**
-     * @param Transaction $transaction
+     * @param AbstractTransaction $transaction
      */
-    public function addTransaction(Transaction $transaction): void;
+    public function addTransaction(AbstractTransaction $transaction): void;
 
     /**
      * @param Node $node

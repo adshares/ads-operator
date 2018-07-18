@@ -20,7 +20,7 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $result = new ImporterResult();
         $result->blocks = 10;
-        $result->packages = 20;
+        $result->messages = 20;
         $result->transactions = 111;
         $result->nodes = 3;
         $result->accounts = 10;
