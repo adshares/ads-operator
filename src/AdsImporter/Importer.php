@@ -193,15 +193,13 @@ class Importer
         return $blockTransactionsCount;
     }
 
-    private function getMessageResponse(string $messageId, Block $block):? GetMessageResponse
+    private function getMessageResponse(string $messageId, Block $block): GetMessageResponse
     {
         try {
             return $this->client->getMessage($messageId, $block->getId());
         } catch (CommandException $ex) {
             $this->addExceptionToLog($ex, sprintf('get_message (%s)', $messageId), $block);
         }
-
-        return null;
     }
 
     private function addTransactionsFromMessage(array $transactions): void
