@@ -1,0 +1,29 @@
+<?php
+
+namespace Adshares\AdsOperator\Document\Transaction;
+
+use Adshares\Ads\Entity\Transaction\SendManyTransaction as BaseSendManyTransaction;
+use Adshares\AdsOperator\Document\ArrayableInterface;
+
+class SendManyTransaction extends BaseSendManyTransaction implements ArrayableInterface
+{
+    public function toArray(): array
+    {
+        return [
+            "id" => $this->id,
+            "size" => $this->size,
+            "type" => $this->type,
+            "blockId" => $this->blockId,
+            "messageId" => $this->messageId,
+            "msgId" => $this->msgId,
+            "node" => $this->node,
+            "senderAddress" => $this->senderAddress,
+            "senderFee" => $this->senderFee,
+            "signature" => $this->signature,
+            "transactionCount" => $this->transactionCount,
+            "time" => $this->time,
+            "user" => $this->user,
+            "wires" => (array) $this->wires,
+        ];
+    }
+}

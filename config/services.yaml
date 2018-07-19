@@ -9,6 +9,15 @@ parameters:
         Message: '\Adshares\AdsOperator\Document\Message'
         Account: '\Adshares\AdsOperator\Document\Account'
         Node: '\Adshares\AdsOperator\Document\Node'
+        BroadcastTransaction: '\Adshares\AdsOperator\Document\Transaction\BroadcastTransaction'
+        ConnectionTransaction: '\Adshares\AdsOperator\Document\Transaction\ConnectionTransaction'
+        EmptyTransaction: '\Adshares\AdsOperator\Document\Transaction\EmptyTransaction'
+        KeyTransaction: '\Adshares\AdsOperator\Document\Transaction\KeyTransaction'
+        LogAccountTransaction: '\Adshares\AdsOperator\Document\Transaction\LogAccountTransaction'
+        NetworkTransaction: '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction'
+        SendManyTransaction: '\Adshares\AdsOperator\Document\Transaction\SendManyTransaction'
+        SendOneTransaction: '\Adshares\AdsOperator\Document\Transaction\SendOneTransaction'
+        StatusTransaction: '\Adshares\AdsOperator\Document\Transaction\StatusTransaction'
 
 services:
     # default configuration for services in *this* file
