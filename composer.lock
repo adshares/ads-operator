@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "999d3dd189650a44fe4faa165e87da0f",
+    "content-hash": "77f6a534976b30204e2d5325ec0da392",
     "packages": [
         {
             "name": "adshares/php-ads-client",
-            "version": "dev-add-message-entity",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/adshares/php-ads-client.git",
-                "reference": "e1faf3259f350ca98aa42e946ecf271c4285ed47"
+                "reference": "b0c12b92384efea1cae6bb0ee9d77859cdfcb8f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/e1faf3259f350ca98aa42e946ecf271c4285ed47",
-                "reference": "e1faf3259f350ca98aa42e946ecf271c4285ed47",
+                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/b0c12b92384efea1cae6bb0ee9d77859cdfcb8f5",
+                "reference": "b0c12b92384efea1cae6bb0ee9d77859cdfcb8f5",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "issues": "https://github.com/adshares/php-ads-client/issues",
                 "source": "https://github.com/adshares/php-ads-client"
             },
-            "time": "2018-07-18T12:46:42+00:00"
+            "time": "2018-07-19T10:40:35+00:00"
         },
         {
             "name": "alcaeus/mongo-php-adapter",
