@@ -10,7 +10,7 @@ use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
-use MongoDB\Collection;
+use Doctrine\MongoDB\Collection;
 
 class MongoMigration implements DatabaseMigrationInterface
 {

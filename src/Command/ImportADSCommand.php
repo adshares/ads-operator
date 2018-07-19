@@ -39,7 +39,7 @@ class ImportADSCommand extends ContainerAwareCommand
         }
 
         $output->writeln(sprintf(
-            'Imported %s blocks, %s packages, %s transactions, %s nodes, %s accounts',
+            'Imported %s blocks, %s messages, %s transactions, %s nodes, %s accounts',
             $result->blocks,
             $result->messages,
             $result->transactions,

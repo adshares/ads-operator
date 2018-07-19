@@ -316,8 +316,7 @@ final class ImporterTest extends TestCase
             self::BLOCK_SEQ_TIME
         );
 
-        $result = $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
-        $this->assertNull($result);
+        $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
     }
 
     public function testAddTransactionsFromMessage()
