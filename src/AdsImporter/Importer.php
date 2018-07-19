@@ -123,7 +123,11 @@ class Importer
         try {
             $blockResponse = $this->client->getBlock();
         } catch (CommandException $ex) {
-            throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
+            if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
+                throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
+            }
+
+            return;
         }
 
         $nodes = $blockResponse->getBlock()->getNodes();
@@ -166,18 +170,15 @@ class Importer
                 /** @var Message $message */
                 $message = $messageResponse->getMessage();
                 $transactions = $messageResponse->getTransactions();
+                $transactionsCount = count($transactions);
 
-                if ($message) {
-                    $transactionsCount = count($transactions);
+                $message->setTransactionCount($transactionsCount);
+                $this->databaseMigration->addMessage($message);
+                ++$this->importerResult->messages;
 
-                    $message->setTransactionCount($transactionsCount);
-                    $this->databaseMigration->addMessage($message);
-                    ++$this->importerResult->messages;
-
-                    if ($transactions) {
-                        $this->addTransactionsFromMessage($transactions);
-                        $blockTransactionsCount += $transactionsCount;
-                    }
+                if ($transactions) {
+                    $this->addTransactionsFromMessage($transactions);
+                    $blockTransactionsCount += $transactionsCount;
                 }
             }
         } catch (CommandException $ex) {
@@ -187,15 +188,13 @@ class Importer
         return $blockTransactionsCount;
     }
 
-    private function getMessageResponse(string $messageId, Block $block):? GetMessageResponse
+    private function getMessageResponse(string $messageId, Block $block): GetMessageResponse
     {
         try {
             return $this->client->getMessage($messageId, $block->getId());
         } catch (CommandException $ex) {
             $this->addExceptionToLog($ex, sprintf('get_message (%s)', $messageId), $block);
         }
-
-        return null;
     }
 
     private function addTransactionsFromMessage(array $transactions): void
