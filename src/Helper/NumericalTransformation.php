@@ -12,6 +12,6 @@ class NumericalTransformation
 
     public static function decToHex(int $dec): string
     {
-        return dechex($dec);
+        return sprintf("%04X", $dec);
     }
 }

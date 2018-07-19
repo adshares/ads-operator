@@ -12,6 +12,7 @@ use Adshares\Ads\Response\GetAccountResponse;
 use Adshares\Ads\Response\GetMessageIdsResponse;
 use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\Ads\Response\GetAccountsResponse;
@@ -168,7 +169,7 @@ final class ImporterTest extends TestCase
         $database = $this->createMock(DatabaseMigrationInterface::class);
         $getMessageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
         $messageResponse = $this->createMock(GetMessageResponse::class);
-        $transaction = $this->createMock(AbstractTransaction::class);
+        $transaction = $this->createMock(ArrayableInterface::class);
 
         $getMessageIdsResponse
             ->method('getMessageIds')
@@ -336,10 +337,10 @@ final class ImporterTest extends TestCase
         );
 
         $transactions = [
-            $this->createMock(AbstractTransaction::class),
-            $this->createMock(AbstractTransaction::class),
-            $this->createMock(AbstractTransaction::class),
-            $this->createMock(AbstractTransaction::class),
+            $this->createMock(ArrayableInterface::class),
+            $this->createMock(ArrayableInterface::class),
+            $this->createMock(ArrayableInterface::class),
+            $this->createMock(ArrayableInterface::class),
         ];
 
         $result = $this->invokeMethod($importer, 'addTransactionsFromMessage', [$transactions]);
@@ -352,7 +353,7 @@ final class ImporterTest extends TestCase
         $database = $this->createMock(DatabaseMigrationInterface::class);
         $messageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
         $messageResponse = $this->createMock(GetMessageResponse::class);
-        $transaction = $this->createMock(AbstractTransaction::class);
+        $transaction = $this->createMock(ArrayableInterface::class);
 
         $messageIdsResponse
             ->method('getMessageIds')

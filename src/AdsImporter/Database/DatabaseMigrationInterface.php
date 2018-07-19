@@ -3,7 +3,7 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
-use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
@@ -22,9 +22,9 @@ interface DatabaseMigrationInterface
     public function addBlock(Block $block): void;
 
     /**
-     * @param AbstractTransaction $transaction
+     * @param ArrayableInterface $transaction
      */
-    public function addTransaction(AbstractTransaction $transaction): void;
+    public function addTransaction(ArrayableInterface $transaction): void;
 
     /**
      * @param Node $node

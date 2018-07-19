@@ -3,15 +3,15 @@
 
 namespace Adshares\AdsOperator\AdsImporter;
 
-use Adshares\Ads\AdsClient;
-use Adshares\Ads\Driver\CommandError;
-use Adshares\Ads\Entity\Transaction\AbstractTransaction;
-use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\Ads\AdsClient;
+use Adshares\Ads\Driver\CommandError;
+use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
@@ -206,7 +206,7 @@ class Importer
 
     private function addTransactionsFromMessage(array $transactions): void
     {
-        /** @var AbstractTransaction $transaction */
+        /** @var ArrayableInterface $transaction */
         foreach ($transactions as $transaction) {
             $this->databaseMigration->addTransaction($transaction);
 

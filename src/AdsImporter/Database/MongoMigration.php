@@ -3,11 +3,14 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
-use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
+use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
+use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
 use Doctrine\MongoDB\Collection;
@@ -20,6 +23,7 @@ class MongoMigration implements DatabaseMigrationInterface
     const TRANSACTION_COLLECTION = 'transaction';
     const NODE_COLLECTION = 'node';
     const ACCOUNT_COLLECTION = 'account';
+    const ACCOUNT_TRANSACTION_COLLECTION = 'account_transaction';
 
     /**
      * @var Connection
@@ -56,6 +60,11 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $accountCollection;
 
+    /**
+     * @var Collection
+     */
+    private $accountTransactionCollection;
+
 
     public function __construct(Connection $connection)
     {
@@ -72,6 +81,7 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->transactionCollection = $this->db->createCollection(self::TRANSACTION_COLLECTION);
         $this->nodeCollection = $this->db->createCollection(self::NODE_COLLECTION);
         $this->accountCollection = $this->db->createCollection(self::ACCOUNT_COLLECTION);
+        $this->accountTransactionCollection = $this->db->createCollection(self::ACCOUNT_TRANSACTION_COLLECTION);
     }
 
     public function addMessage(Message $message): void
@@ -114,18 +124,51 @@ class MongoMigration implements DatabaseMigrationInterface
         }
     }
 
-    public function addTransaction(AbstractTransaction $transaction): void
+    public function addTransaction(ArrayableInterface $transaction): void
     {
-        $document = [
-            "id" => $transaction->getId(),
-            "size" => $transaction->getSize(),
-            "type" => $transaction->getType()
-        ];
+        $document = $transaction->toArray();
 
         try {
             $this->transactionCollection->insert($document);
         } catch (\Exception $ex) {
             // do nothing when a block exists in the database
+        }
+
+        if ($transaction instanceof SendOneTransaction) {
+            $data = [];
+
+            $data[] = [
+                "accountId" => $transaction->getSenderAddress(),
+                "transactionId" => $transaction->getId(),
+            ];
+
+            if ($transaction->getSenderAddress() !== $transaction->getTargetAddress()) {
+                $data[] = [
+                    "accountId" => $transaction->getTargetAddress(),
+                    "transactionId" => $transaction->getId(),
+                ];
+            }
+
+            $this->accountTransactionCollection->batchInsert($data);
+        }
+
+        if ($transaction instanceof SendManyTransaction) {
+            $data = [];
+
+            $data[] = [
+                "accountId" => $transaction->getSenderAddress(),
+                "transactionId" => $transaction->getId(),
+            ];
+
+            /** @var SendManyTransactionWire $singleTransaction */
+            foreach ($transaction->getWires() as $singleTransaction) {
+                $data[] = [
+                    "accountId" => $singleTransaction->getTargetAddress(),
+                    "transactionId" => $transaction->getId(),
+                ];
+            }
+
+            $this->accountTransactionCollection->batchInsert($data);
         }
     }
 
