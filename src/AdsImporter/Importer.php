@@ -5,14 +5,15 @@ namespace Adshares\AdsOperator\AdsImporter;
 
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Document\Package;
+use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
-use Adshares\AdsOperator\Document\Transaction;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Psr\Log\LoggerInterface;
 
@@ -86,11 +87,13 @@ class Importer
                 /** @var Block $block */
                 $block = $blockResponse->getBlock();
 
-                $blockTransactions = $this->addPackagesFromBlock($block);
+                if ($block->getMessageCount() > 0) {
+                    $blockTransactions = $this->addMessagesFromBlock($block);
 
-                $block->setTransactionCount($blockTransactions);
-                $this->databaseMigration->addBlock($block);
-                ++$this->importerResult->blocks;
+                    $block->setTransactionCount($blockTransactions);
+                    $this->databaseMigration->addBlock($block);
+                    ++$this->importerResult->blocks;
+                }
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
                     $this->addExceptionToLog($ex, sprintf('get_block (%s)', $blockId));
@@ -120,7 +123,11 @@ class Importer
         try {
             $blockResponse = $this->client->getBlock();
         } catch (CommandException $ex) {
-            throw new AdsClientException('Cannot proceed importing data');
+            if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
+                throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
+            }
+
+            return;
         }
 
         $nodes = $blockResponse->getBlock()->getNodes();
@@ -150,62 +157,61 @@ class Importer
         }
     }
 
-    private function addPackagesFromBlock(Block $block): int
+    private function addMessagesFromBlock(Block $block): int
     {
         $blockTransactionsCount = 0;
 
         try {
-            $packagesResponse = $this->client->getPackageList($block->getId());
-            $packages = $packagesResponse->getPackages();
+            $messageIdResponse = $this->client->getMessageIds($block->getId());
+            $messageIds = $messageIdResponse->getMessageIds();
 
-            /** @var Package $package */
-            foreach ($packages as $package) {
-                $package->generateId();
+            foreach ($messageIds as $messageId) {
+                $messageResponse = $this->getMessageResponse($messageId, $block);
 
-                $transactionsCount = $this->addTransactionsFromPackage($package, $block);
+                if (!$messageResponse) {
+                    continue;
+                }
 
-                $package->setTransactionCount($transactionsCount);
-                $this->databaseMigration->addPackage($package, $block);
+                /** @var Message $message */
+                $message = $messageResponse->getMessage();
+                $transactions = $messageResponse->getTransactions();
+                $transactionsCount = count($transactions);
 
-                ++$this->importerResult->packages;
-                $blockTransactionsCount += $transactionsCount;
+                $message->setTransactionCount($transactionsCount);
+                $this->databaseMigration->addMessage($message);
+                ++$this->importerResult->messages;
+
+                if ($transactions) {
+                    $this->addTransactionsFromMessage($transactions);
+                    $blockTransactionsCount += $transactionsCount;
+                }
             }
         } catch (CommandException $ex) {
-            $this->addExceptionToLog($ex, 'get_package_list', $block);
+            $this->addExceptionToLog($ex, 'get_message_ids', $block);
         }
 
         return $blockTransactionsCount;
     }
 
-    private function addTransactionsFromPackage(Package $package, Block $block): int
+    private function getMessageResponse(string $messageId, Block $block):? GetMessageResponse
     {
-        $transactionsCount = 0;
-
         try {
-            $packageResponse = $this->client->getPackage(
-                $package->getNode(),
-                $package->getNodeMsid(),
-                $block->getId()
-            );
-
-            $transactions = $packageResponse->getTransactions();
-
-            if (count($transactions) > 0) {
-                /** @var Transaction $transaction */
-                foreach ($transactions as &$transaction) {
-                    $transaction->setBlockId($block->getId());
-                    $transaction->setPackageId($package->getId());
-
-                    $this->databaseMigration->addTransaction($transaction);
-                    ++$this->importerResult->transactions;
-                    ++$transactionsCount;
-                }
-            }
+            return $this->client->getMessage($messageId, $block->getId());
         } catch (CommandException $ex) {
-            $this->addExceptionToLog($ex, 'get_package', $block);
+            $this->addExceptionToLog($ex, sprintf('get_message (%s)', $messageId), $block);
         }
 
-        return $transactionsCount;
+        return null;
+    }
+
+    private function addTransactionsFromMessage(array $transactions): void
+    {
+        /** @var AbstractTransaction $transaction */
+        foreach ($transactions as $transaction) {
+            $this->databaseMigration->addTransaction($transaction);
+
+            ++$this->importerResult->transactions;
+        }
     }
 
     private function addExceptionToLog(CommandException $exception, string $message, ?Block $block = null): void

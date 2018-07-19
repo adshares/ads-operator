@@ -3,20 +3,20 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Document\Package;
-use Adshares\AdsOperator\Document\Transaction;
-use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
+use Doctrine\MongoDB\Collection;
 
 class MongoMigration implements DatabaseMigrationInterface
 {
     const BLOCKEXPLORER_DATABASE = 'blockexplorer';
     const BLOCK_COLLECTION = 'block';
-    const PACKAGE_COLLECTION = 'package';
+    const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
     const NODE_COLLECTION = 'node';
     const ACCOUNT_COLLECTION = 'account';
@@ -31,41 +31,76 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $db;
 
+    /**
+     * @var Collection
+     */
+    private $blockCollection;
+
+    /**
+     * @var Collection
+     */
+    private $messageCollection;
+
+    /**
+     * @var Collection
+     */
+    private $transactionCollection;
+
+    /**
+     * @var Collection
+     */
+    private $nodeCollection;
+
+    /**
+     * @var Collection
+     */
+    private $accountCollection;
+
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
         $this->db = $this->connection->selectDatabase(self::BLOCKEXPLORER_DATABASE);
+
+        $this->prepareCollections();
     }
 
-    public function addPackage(Package $package, Block $block): void
+    private function prepareCollections(): void
     {
-        $collection = $this->db->createCollection(self::PACKAGE_COLLECTION);
+        $this->blockCollection = $this->db->createCollection(self::BLOCK_COLLECTION);
+        $this->messageCollection = $this->db->createCollection(self::MESSAGE_COLLECTION);
+        $this->transactionCollection = $this->db->createCollection(self::TRANSACTION_COLLECTION);
+        $this->nodeCollection = $this->db->createCollection(self::NODE_COLLECTION);
+        $this->accountCollection = $this->db->createCollection(self::ACCOUNT_COLLECTION);
+    }
+
+    public function addMessage(Message $message): void
+    {
         $document = [
-            "id" => $this->generatePackageId($package),
-            "nodeId" => $package->getNode(),
-            "number" => $package->getNodeMsid(),
-            "blockId" => $block->getId(),
-            "transactionCount" => $package->getTransactionCount(),
+            "id" => $message->getMessageId(),
+            "nodeId" => $message->getNodeId(),
+            "blockId" => $message->getBlockId(),
+            "transactionCount" => $message->getTransactionCount(),
+            "hash" => $message->getHash(),
+            "length" => $message->getLength(),
         ];
 
-        $collection->insert($document);
+        $this->messageCollection->insert($document);
     }
 
     public function addBlock(Block $block): void
     {
-        $collection = $this->db->createCollection(self::BLOCK_COLLECTION);
         $document = [
             "id" => $block->getId(),
             "dividendBalance" => $block->getDividendBalance(),
             "messageCount" => $block->getMessageCount(),
-            "messageHash" => $block->getMessageCount(),
-            "minHash" => $block->getMinhash(),
-            "msgHash" => $block->getMsghash(),
+            "minHash" => $block->getMinHash(),
+            "msgHash" => $block->getMsgHash(),
             "nodeCount" => $block->getNodeCount(),
-            "nowHash" => $block->getNowhash(),
-            "oldHash" => $block->getOldhash(),
+            "nowHash" => $block->getNowHash(),
+            "oldHash" => $block->getOldHash(),
             "time" => new UTCDateTime((int)$block->getTime()->format('U')*1000),
-            "vipHash" => $block->getViphash(),
+            "vipHash" => $block->getVipHash(),
             "voteNo" => $block->getVoteNo(),
             "voteTotal" => $block->getVoteTotal(),
             "voteYes" => $block->getVoteYes(),
@@ -73,26 +108,22 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         try {
-            $collection->insert($document);
+            $this->blockCollection->insert($document);
         } catch (\MongoDuplicateKeyException $ex) {
             // do nothing when a block exists in the database
         }
     }
 
-    public function addTransaction(Transaction $transaction): void
+    public function addTransaction(AbstractTransaction $transaction): void
     {
-        $collection = $this->db->createCollection(self::TRANSACTION_COLLECTION);
         $document = [
             "id" => $transaction->getId(),
-            "blockId" => $transaction->getBlockId(),
-            "packageId" => $transaction->getPackageId(),
-            "data" => $transaction->getData(),
             "size" => $transaction->getSize(),
             "type" => $transaction->getType()
         ];
 
         try {
-            $collection->insert($document);
+            $this->transactionCollection->insert($document);
         } catch (\Exception $ex) {
             // do nothing when a block exists in the database
         }
@@ -100,8 +131,6 @@ class MongoMigration implements DatabaseMigrationInterface
 
     public function addOrUpdateNode(Node $node): void
     {
-        $collection = $this->db->createCollection(self::NODE_COLLECTION);
-
         $document = [
             "id" => $node->getId(),
             "accountCount" => $node->getAccountCount(),
@@ -112,13 +141,11 @@ class MongoMigration implements DatabaseMigrationInterface
             "balance" => $node->getBalance(),
         ];
 
-        $collection->update(["id" => $node->getId()], $document, ['upsert' => true]);
+        $this->nodeCollection->update(["id" => $node->getId()], $document, ['upsert' => true]);
     }
 
     public function addOrUpdateAccount(Account $account, Node $node): void
     {
-        $collection = $this->db->createCollection(self::ACCOUNT_COLLECTION);
-
         $document = [
             "address" => $account->getAddress(),
             "balance" => $account->getBalance(),
@@ -130,12 +157,12 @@ class MongoMigration implements DatabaseMigrationInterface
             "nonce" => $account->getMsid(),
         ];
 
-        $collection->update(["address" => $account->getAddress()], $document, ['upsert' => true]);
+        $this->accountCollection->update(["address" => $account->getAddress()], $document, ['upsert' => true]);
     }
 
     public function getNewestBlockTime(): ?int
     {
-        $collection = $this->db->selectCollection('block');
+        $collection = $this->db->selectCollection(self::BLOCK_COLLECTION);
         $cursor = $collection->find()->sort(['time' => -1])->limit(1);
         $cursor->next();
         $document = $cursor->current();
@@ -145,15 +172,5 @@ class MongoMigration implements DatabaseMigrationInterface
         }
 
         return null;
-    }
-
-    public function generatePackageId(Package $package): string
-    {
-        return str_pad(
-            dechex(((int)$package->getNode() << 32) + $package->getNodeMsid()),
-            12,
-            '0',
-            STR_PAD_LEFT
-        );
     }
 }

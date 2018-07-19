@@ -20,7 +20,7 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $result = new ImporterResult();
         $result->blocks = 10;
-        $result->packages = 20;
+        $result->messages = 20;
         $result->transactions = 111;
         $result->nodes = 3;
         $result->accounts = 10;
@@ -41,7 +41,7 @@ final class ImportADSCommandTest extends KernelTestCase
         $output = $commandTester->getDisplay();
 
         $this->assertContains('10 blocks', $output);
-        $this->assertContains('20 packages', $output);
+        $this->assertContains('20 messages', $output);
         $this->assertContains('111 transactions', $output);
         $this->assertContains('3 nodes', $output);
         $this->assertContains('10 accounts', $output);
