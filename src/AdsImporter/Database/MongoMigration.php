@@ -3,6 +3,7 @@
 
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Message;
@@ -137,16 +138,10 @@ class MongoMigration implements DatabaseMigrationInterface
         if ($transaction instanceof SendOneTransaction) {
             $data = [];
 
-            $data[] = [
-                "accountId" => $transaction->getSenderAddress(),
-                "transactionId" => $transaction->getId(),
-            ];
+            $data[] = $this->getTransactionEntry($transaction->getSenderAddress(), $transaction->getId());
 
             if ($transaction->getSenderAddress() !== $transaction->getTargetAddress()) {
-                $data[] = [
-                    "accountId" => $transaction->getTargetAddress(),
-                    "transactionId" => $transaction->getId(),
-                ];
+                $data[] = $this->getTransactionEntry($transaction->getTargetAddress(), $transaction->getId());
             }
 
             $this->accountTransactionCollection->batchInsert($data);
@@ -155,21 +150,23 @@ class MongoMigration implements DatabaseMigrationInterface
         if ($transaction instanceof SendManyTransaction) {
             $data = [];
 
-            $data[] = [
-                "accountId" => $transaction->getSenderAddress(),
-                "transactionId" => $transaction->getId(),
-            ];
+            $data[] = $this->getTransactionEntry($transaction->getSenderAddress(), $transaction->getId());
 
             /** @var SendManyTransactionWire $singleTransaction */
             foreach ($transaction->getWires() as $singleTransaction) {
-                $data[] = [
-                    "accountId" => $singleTransaction->getTargetAddress(),
-                    "transactionId" => $transaction->getId(),
-                ];
+                $data[] = $this->getTransactionEntry($singleTransaction->getTargetAddress(), $transaction->getId());
             }
 
             $this->accountTransactionCollection->batchInsert($data);
         }
+    }
+
+    private function getTransactionEntry(string $accountAddress, string $transactionId): array
+    {
+        return [
+            "accountId" => $accountAddress,
+            "transactionId" => $transactionId,
+        ];
     }
 
     public function addOrUpdateNode(Node $node): void
