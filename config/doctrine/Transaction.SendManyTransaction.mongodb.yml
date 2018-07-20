@@ -1,0 +1,41 @@
+Adshares\AdsOperator\Document\Transaction\SendManyTransaction:
+    type: document
+    collection: transaction
+    embedOne:
+        wires:
+            targetDocument: SendManyTransactionWire
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        messageId:
+            unique: true
+            type: string
+        nodeId:
+            type: string
+        type:
+            type: string
+        size:
+            type: int
+        msgId:
+            type: string
+        node:
+            type: int
+        signature:
+            type: string
+        time:
+            type: date
+        user:
+            type: int
+        senderAddress:
+            type: string
+        senderFee:
+            type: int
+        transactionCount:
+            type: int
+        wires:
+            type: raw
+
