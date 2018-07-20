@@ -2,29 +2,51 @@
 
 namespace Adshares\AdsOperator\Tests\Unit\AdsImporter\Database;
 
+use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
 use Adshares\AdsOperator\AdsImporter\Database\MongoMigration;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
+use Adshares\AdsOperator\Document\Transaction\BroadcastTransaction;
+use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
 use Adshares\AdsOperator\Document\Transaction\EmptyTransaction;
+use Adshares\AdsOperator\Document\Transaction\KeyTransaction;
+use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
+use Adshares\AdsOperator\Document\Transaction\NetworkTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
+use Adshares\AdsOperator\Document\Transaction\StatusTransaction;
 use Doctrine\MongoDB\Collection;
 use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Cursor;
-use MongoDB\BSON\UTCDateTime;
 use MongoDB\Database;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 class MongoMigrationTest extends TestCase
 {
     private $connection;
 
+    /**
+     * @var MockObject
+     */
+    private $collection;
+
+    /**
+     * @var MockObject
+     */
+    private $database;
+
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
+    }
+
+    public function setUp()
+    {
+        parent::setUp();
 
         $database = $this->createMock(Database::class);
         $collection = $this->createMock(Collection::class);
@@ -38,35 +60,77 @@ class MongoMigrationTest extends TestCase
             ->method('selectDatabase')
             ->willReturn($database);
 
+        $this->collection = $collection;
+        $this->database = $database;
         $this->connection = $connection;
     }
 
-
     public function testAddMessage(): void
     {
+        $this->prepareConnectionMockWithMethod('insert');
         $message = $this->createMock(Message::class);
 
         $mongoMigration = new MongoMigration($this->connection);
         $mongoMigration->addMessage($message);
-        $this->assertTrue(true);
     }
 
     public function testAddBlock(): void
     {
+        $this->prepareConnectionMockWithMethod('insert');
         $block = $this->createMock(Block::class);
 
         $mongoMigration = new MongoMigration($this->connection);
         $mongoMigration->addBlock($block);
-        $this->assertTrue(true);
     }
 
-    public function testAddTransaction():void
+    private function prepareConnectionMockWithMethod(string $method)
     {
-        $transaction = $this->createMock(EmptyTransaction::class);
+        $this->collection
+            ->expects($this->once())
+            ->method($method);
 
-        $mongoMigration = new MongoMigration($this->connection);
-        $mongoMigration->addTransaction($transaction);
-        $this->assertTrue(true);
+        $this->database
+            ->method('createCollection')
+            ->willReturn($this->collection);
+
+        $this->connection
+            ->method('selectDatabase')
+            ->willReturn($this->database);
+    }
+
+    public function testAllTypesOfTransactions():void
+    {
+        $transactions = [
+            BroadcastTransaction::class,
+            ConnectionTransaction::class,
+            EmptyTransaction::class,
+            KeyTransaction::class,
+            LogAccountTransaction::class,
+            NetworkTransaction::class,
+            StatusTransaction::class,
+            SendOneTransaction::class,
+            SendManyTransaction::class,
+        ];
+
+        /** @var AbstractTransaction $transaction */
+        foreach ($transactions as $class) {
+            $transaction = $class::createFromRawData([
+                'senderAddress' => '1234',
+                'id' => '12312',
+                'target_address' => '1222',
+                'wires' => [
+                    [
+                        'amount' => 123,
+                        'target_address' => '123123',
+                        'target_node' => 1,
+                        'target_user' => 1,
+                    ],
+                ]
+            ]);
+            $mongoMigration = new MongoMigration($this->connection);
+            $mongoMigration->addTransaction($transaction);
+            $this->assertTrue(true);
+        }
     }
 
     public function testAddSendOneTransactionWhenSenderAndTargetAreDifferent(): void
@@ -132,21 +196,21 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNode():void
     {
+        $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
         $mongoMigration = new MongoMigration($this->connection);
         $mongoMigration->addOrUpdateNode($node);
-        $this->assertTrue(true);
     }
 
     public function testAddOrUpdateAccount():void
     {
+        $this->prepareConnectionMockWithMethod('update');
         $account = $this->createMock(Account::class);
         $node = $this->createMock(Node::class);
 
         $mongoMigration = new MongoMigration($this->connection);
         $mongoMigration->addOrUpdateAccount($account, $node);
-        $this->assertTrue(true);
     }
 
     public function testNewestBlockTimeWhenAtLeastOneBlockExists(): void
