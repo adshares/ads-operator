@@ -7,3 +7,8 @@ block_list:
     path: /blocks
     controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController:listAction
     methods: [GET]
+
+block_show:
+    path: /blocks/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController:showAction
+    methods: [GET]
