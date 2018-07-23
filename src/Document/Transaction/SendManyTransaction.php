@@ -21,7 +21,7 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
             "senderAddress" => $this->senderAddress,
             "senderFee" => $this->senderFee,
             "signature" => $this->signature,
-            "transactionCount" => $this->transactionCount,
+            "wireCount" => $this->wireCount,
             "time" => $this->time,
             "user" => $this->user,
             "wires" => $this->transformTransactionWiresToArray($this->wires),

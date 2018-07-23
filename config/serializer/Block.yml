@@ -1,0 +1,6 @@
+Adshares\AdsOperator\Document\Block:
+    exclusion_policy: ALL
+    properties:
+        transactionCount:
+            expose: true
+            type: int

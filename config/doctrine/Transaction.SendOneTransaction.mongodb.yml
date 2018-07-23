@@ -1,0 +1,43 @@
+Adshares\AdsOperator\Document\Transaction\SendOneTransaction:
+    type: document
+    collection: transaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        messageId:
+            unique: true
+            type: string
+        nodeId:
+            type: string
+        type:
+            type: string
+        size:
+            type: int
+        msgId:
+            type: string
+        node:
+            type: int
+        signature:
+            type: string
+        time:
+            type: date
+        user:
+            type: int
+        amount:
+            type: string
+        message:
+            type: int
+        senderAddress:
+            type: string
+        senderFee:
+            type: int
+        targetAddress:
+            type: string
+        targetNode:
+            type: int
+        targetUser:
+            type: int

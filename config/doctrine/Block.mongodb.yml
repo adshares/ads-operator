@@ -1,0 +1,41 @@
+Adshares\AdsOperator\Document\Block:
+    type: document
+    collection: block
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        dividendBalance:
+            type: int
+        dividendPay:
+            type: bool
+        messageCount:
+            type: int
+        minhash:
+            type: string
+        msghash:
+            type: string
+        nodeCount:
+            type: int
+        nodes:
+            type: collection
+        nodhash:
+            type: string
+        nowhash:
+            type: string
+        oldhash:
+            type: string
+        viphash:
+            type: string
+        time:
+            type: date
+        voteNo:
+            type: int
+        voteYes:
+            type: int
+        voteTotal:
+            type: int
+        transactionCount:
+            type: int
+

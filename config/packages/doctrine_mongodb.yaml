@@ -12,8 +12,7 @@ doctrine_mongodb:
             mappings:
                 Adshares\AdsOperator:
                     is_bundle: false
-                    type: annotation
-#                    dir: '%kernel.project_dir%/src/Document'
+                    type: yml
                     dir: "%kernel.project_dir%/config/doctrine"
-                    prefix: Adshares\AdsOperator\Document\
+                    prefix: Adshares\AdsOperator\Document
                     alias: AdsOperator

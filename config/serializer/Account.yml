@@ -1,0 +1,3 @@
+Adshares\AdsOperator\Document\Account:
+    exclusion_policy: ALL
+    properties:
