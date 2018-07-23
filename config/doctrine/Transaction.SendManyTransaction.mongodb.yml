@@ -34,7 +34,7 @@ Adshares\AdsOperator\Document\Transaction\SendManyTransaction:
             type: string
         senderFee:
             type: int
-        transactionCount:
+        wireCount:
             type: int
         wires:
             type: raw

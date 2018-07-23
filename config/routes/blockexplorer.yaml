@@ -1,14 +1,14 @@
 node_list:
     path: /nodes
-    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController:listAction
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::listAction
     methods: [GET]
 
 block_list:
     path: /blocks
-    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController:listAction
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::listAction
     methods: [GET]
 
 block_show:
     path: /blocks/{id}
-    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController:showAction
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::showAction
     methods: [GET]
