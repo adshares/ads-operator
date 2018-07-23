@@ -28,15 +28,6 @@ class NodeController extends ApiController
      */
     public function listAction()
     {
-
-        $content = [
-            "id" => "0F4A:1111:FDSA",
-            "balance" => 123123,
-        ];
-
-        $context = new DeserializationContext();
-//        $this->serializer->deserialize(json_encode($content), Node::class, 'json', $context);
-
         $node = new Node('123');
         return $this->response($this->serializer->serialize([$node, $node, $node], 'json'));
     }
