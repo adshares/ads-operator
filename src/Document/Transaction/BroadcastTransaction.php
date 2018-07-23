@@ -10,18 +10,18 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
     public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "size" => $this->size,
-            "type" => $this->type,
-            "blockId" => $this->blockId,
-            "messageId" => $this->messageId,
-            "message" => $this->message,
-            "messageLength" => $this->messageLength,
-            "msgId" => $this->msgId,
-            "node" => $this->node,
-            "signature" => $this->signature,
-            "time" => $this->time,
-            "user" => $this->user,
+            'id' => $this->id,
+            'size' => $this->size,
+            'type' => $this->type,
+            'blockId' => $this->blockId,
+            'messageId' => $this->messageId,
+            'message' => $this->message,
+            'messageLength' => $this->messageLength,
+            'msgId' => $this->msgId,
+            'node' => $this->node,
+            'signature' => $this->signature,
+            'time' => $this->time,
+            'user' => $this->user,
         ];
     }
 }

@@ -11,20 +11,20 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
     public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "size" => $this->size,
-            "type" => $this->type,
-            "blockId" => $this->blockId,
-            "messageId" => $this->messageId,
-            "msgId" => $this->msgId,
-            "node" => $this->node,
-            "senderAddress" => $this->senderAddress,
-            "senderFee" => $this->senderFee,
-            "signature" => $this->signature,
-            "wireCount" => $this->wireCount,
-            "time" => $this->time,
-            "user" => $this->user,
-            "wires" => $this->transformTransactionWiresToArray($this->wires),
+            'id' => $this->id,
+            'size' => $this->size,
+            'type' => $this->type,
+            'blockId' => $this->blockId,
+            'messageId' => $this->messageId,
+            'msgId' => $this->msgId,
+            'node' => $this->node,
+            'senderAddress' => $this->senderAddress,
+            'senderFee' => $this->senderFee,
+            'signature' => $this->signature,
+            'wireCount' => $this->wireCount,
+            'time' => $this->time,
+            'user' => $this->user,
+            'wires' => $this->transformTransactionWiresToArray($this->wires),
         ];
     }
 
@@ -35,10 +35,10 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
         /** @var SendManyTransactionWire $transaction */
         foreach ($wires as $transaction) {
             $transformed[] = [
-                "amount" => $transaction->getAmount(),
-                "targetAddress" => $transaction->getTargetAddress(),
-                "targetNode" => $transaction->getTargetNode(),
-                "targetUser" => $transaction->getTargetUser(),
+                'amount' => $transaction->getAmount(),
+                'targetAddress' => $transaction->getTargetAddress(),
+                'targetNode' => $transaction->getTargetNode(),
+                'targetUser' => $transaction->getTargetUser(),
             ];
         }
 

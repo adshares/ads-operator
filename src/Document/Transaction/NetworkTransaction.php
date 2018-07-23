@@ -10,18 +10,18 @@ class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInte
     public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "size" => $this->size,
-            "type" => $this->type,
-            "blockId" => $this->blockId,
-            "messageId" => $this->messageId,
-            "msgId" => $this->msgId,
-            "node" => $this->node,
-            "signature" => $this->signature,
-            "targetNode" => $this->targetNode,
-            "targetUser" => $this->targetUser,
-            "time" => $this->time,
-            "user" => $this->user,
+            'id' => $this->id,
+            'size' => $this->size,
+            'type' => $this->type,
+            'blockId' => $this->blockId,
+            'messageId' => $this->messageId,
+            'msgId' => $this->msgId,
+            'node' => $this->node,
+            'signature' => $this->signature,
+            'targetNode' => $this->targetNode,
+            'targetUser' => $this->targetUser,
+            'time' => $this->time,
+            'user' => $this->user,
         ];
     }
 }

@@ -10,11 +10,11 @@ class EmptyTransaction extends BaseEmptyTransaction implements ArrayableInterfac
     public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "size" => $this->size,
-            "type" => $this->type,
-            "blockId" => $this->blockId,
-            "messageId" => $this->messageId,
+            'id' => $this->id,
+            'size' => $this->size,
+            'type' => $this->type,
+            'blockId' => $this->blockId,
+            'messageId' => $this->messageId,
         ];
     }
 }
