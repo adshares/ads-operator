@@ -6,5 +6,8 @@ jms_serializer:
         auto_detection: false
         directories:
             entities:
-                namespace_prefix: "App"
+                namespace_prefix: Adshares\AdsOperator\Document
                 path: "%kernel.root_dir%/../config/serializer"
+            ads:
+                namespace_prefix: Adshares\Ads\Entity
+                path: "%kernel.root_dir%/../config/serializer/ads"

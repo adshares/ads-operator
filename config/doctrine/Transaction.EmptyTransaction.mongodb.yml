@@ -1,0 +1,18 @@
+Adshares\AdsOperator\Document\Transaction\EmptyTransaction:
+    type: document
+    collection: transaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        messageId:
+            type: string
+        nodeId:
+            type: string
+        type:
+            type: string
+        size:
+            type: int

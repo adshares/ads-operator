@@ -1,0 +1,52 @@
+Adshares\Ads\Entity\Block:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        dividendBalance:
+            expose: true
+            type: int
+        dividendPay:
+            expose: true
+            type: boolean
+        messageCount:
+            expose: true
+            type: int
+        minHash:
+            expose: true
+            type: string
+        msgHash:
+            expose: true
+            type: string
+        nodeCount:
+            expose: true
+            type: int
+        nodes:
+            expose: true
+            type: array<Adshares\AdsOperator\Document\Node>
+        nodehash:
+            expose: true
+            type: string
+        nowhash:
+            expose: true
+            type: string
+        oldhash:
+            expose: true
+            type: string
+        viphash:
+            expose: true
+            type: string
+        time:
+            expose: true
+            type: DateTime
+        voteNo:
+            expose: true
+            type: int
+        voteYes:
+            expose: true
+            type: int
+        voteTotal:
+            expose: true
+            type: int
+
