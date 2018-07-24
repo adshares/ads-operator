@@ -3,7 +3,7 @@
 namespace Adshares\AdsOperator\Controller;
 
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiController
 {
@@ -12,11 +12,11 @@ class ApiController
      */
     protected $serializer;
 
-    protected function response($data = null, int $status = JsonResponse::HTTP_OK, array $headers = []): JsonResponse
+    protected function response($data = null, int $status = Response::HTTP_OK, array $headers = []): Response
     {
         $headers = array_merge($headers, ['content-type' => 'application/json']);
 
-        return new JsonResponse($data, $status, $headers);
+        return new Response($data, $status, $headers);
     }
 
     public function setSerializer(SerializerInterface $serializer): void

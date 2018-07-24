@@ -10,17 +10,6 @@ use Doctrine\ODM\MongoDB\MongoDBException;
 
 class NodeRepository extends DocumentRepository implements NodeRepositoryInterface
 {
-    private $fields = [
-        '_id',
-        'id',
-        'accountCount',
-        'balance',
-        'ip',
-        'packCount',
-        'port',
-        'publickKey',
-    ];
-
     public function availableSortingFields(): array
     {
         return [
@@ -28,13 +17,11 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
         ];
     }
 
-    public function findNodes(Pagination $pagination):? array
+    public function findNodes(Pagination $pagination): array
     {
         try {
             $nodes = $this
                 ->createQueryBuilder()
-                ->hydrate(false)
-                ->select($this->fields)
                 ->sort($pagination->getSort(), $pagination->getOrder())
                 ->limit($pagination->getLimit())
                 ->skip($pagination->getOffset())
@@ -44,16 +31,7 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
             return [];
         }
 
-        if ($nodes) {
-            $results = [];
-            foreach ($nodes as $item) {
-                $results[] = $item;
-            }
-
-            return $results;
-        }
-
-        return [];
+        return $nodes->toArray();
     }
 
     public function getNode(string $nodeId): Node

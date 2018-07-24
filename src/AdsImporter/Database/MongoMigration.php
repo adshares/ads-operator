@@ -171,7 +171,6 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addOrUpdateNode(Node $node): void
     {
         $document = [
-            "id" => $node->getId(),
             "_id" => $node->getId(),
             "accountCount" => $node->getAccountCount(),
             "ip" => $node->getIpv4(),
@@ -181,7 +180,12 @@ class MongoMigration implements DatabaseMigrationInterface
             "balance" => $node->getBalance(),
         ];
 
-        $this->nodeCollection->update(["id" => $node->getId()], $document, ['upsert' => true]);
+        try {
+            $this->nodeCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            unset($document['_id']);
+            $this->nodeCollection->update(['_id' => $node->getId()], $document);
+        }
     }
 
     public function addOrUpdateAccount(Account $account, Node $node): void

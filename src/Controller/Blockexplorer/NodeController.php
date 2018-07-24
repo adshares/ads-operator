@@ -53,13 +53,13 @@ class NodeController extends ApiController
      *          name="limit",
      *          in="query",
      *          type="string",
-     *          description="The field used to limit nodes"
+     *          description="The field used to limit number of nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
      *          type="string",
-     *          description="The field used to offset nodes"
+     *          description="The field used to specify nodes offset"
      *      )
      * )
      *
@@ -68,8 +68,8 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        $nodes = $this->repository->findNodes(new Pagination($request));
+        $nodes = $this->repository->findNodes(new Pagination($request, $this->repository->availableSortingFields()));
 
-        return $this->response($nodes, Response::HTTP_OK);
+        return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
     }
 }

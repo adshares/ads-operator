@@ -7,7 +7,7 @@ use Adshares\AdsOperator\Document\Node;
 
 interface NodeRepositoryInterface
 {
-    public function findNodes(Pagination $pagination) :? array;
+    public function findNodes(Pagination $pagination): array;
 
     public function getNode(string $nodeId): Node;
 
