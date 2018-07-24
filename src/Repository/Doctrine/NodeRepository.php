@@ -4,7 +4,6 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
-use Adshares\AdsOperator\Request\Pagination;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
@@ -17,14 +16,14 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
         ];
     }
 
-    public function findNodes(Pagination $pagination): array
+    public function findNodes(string $sort, string $order, int $limit = 100, int $offset = 0): array
     {
         try {
             $nodes = $this
                 ->createQueryBuilder()
-                ->sort($pagination->getSort(), $pagination->getOrder())
-                ->limit($pagination->getLimit())
-                ->skip($pagination->getOffset())
+                ->sort($sort, $order)
+                ->limit($limit)
+                ->skip($offset)
                 ->getQuery()
                 ->execute();
         } catch (MongoDBException $ex) {

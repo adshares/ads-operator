@@ -68,7 +68,13 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        $nodes = $this->repository->findNodes(new Pagination($request, $this->repository->availableSortingFields()));
+        $pagination = new Pagination($request, $this->repository->availableSortingFields());
+        $nodes = $this->repository->findNodes(
+            $pagination->getSort(),
+            $pagination->getOrder(),
+            $pagination->getLimit(),
+            $pagination->getOffset()
+        );
 
         return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
     }
