@@ -10,13 +10,13 @@ class ConnectionTransaction extends BaseConnectionTransaction implements Arrayab
     public function toArray(): array
     {
         return [
-            "id" => $this->id,
-            "size" => $this->size,
-            "type" => $this->type,
-            "blockId" => $this->blockId,
-            "messageId" => $this->messageId,
-            "ipAddress" => $this->ipAddress,
-            "port" => $this->port,
+            'id' => $this->id,
+            'size' => $this->size,
+            'type' => $this->type,
+            'blockId' => $this->blockId,
+            'messageId' => $this->messageId,
+            'ipAddress' => $this->ipAddress,
+            'port' => $this->port,
         ];
     }
 }
