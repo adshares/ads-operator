@@ -87,12 +87,12 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addMessage(Message $message): void
     {
         $document = [
-            'id' => $message->getMessageId(),
-            'nodeId' => $message->getNodeId(),
-            'blockId' => $message->getBlockId(),
-            'transactionCount' => $message->getTransactionCount(),
-            'hash' => $message->getHash(),
-            'length' => $message->getLength(),
+            "id" => $message->getMessageId(),
+            "nodeId" => $message->getNodeId(),
+            "blockId" => $message->getBlockId(),
+            "transactionCount" => $message->getTransactionCount(),
+            "hash" => $message->getHash(),
+            "length" => $message->getLength(),
         ];
 
         $this->messageCollection->insert($document);
@@ -101,20 +101,20 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addBlock(Block $block): void
     {
         $document = [
-            'id' => $block->getId(),
-            'dividendBalance' => $block->getDividendBalance(),
-            'messageCount' => $block->getMessageCount(),
-            'minHash' => $block->getMinHash(),
-            'msgHash' => $block->getMsgHash(),
-            'nodeCount' => $block->getNodeCount(),
-            'nowHash' => $block->getNowHash(),
-            'oldHash' => $block->getOldHash(),
-            'time' => new UTCDateTime((int)$block->getTime()->format('U')*1000),
-            'vipHash' => $block->getVipHash(),
-            'voteNo' => $block->getVoteNo(),
-            'voteTotal' => $block->getVoteTotal(),
-            'voteYes' => $block->getVoteYes(),
-            'transactionCount' => $block->getTransactionCount(),
+            "id" => $block->getId(),
+            "dividendBalance" => $block->getDividendBalance(),
+            "messageCount" => $block->getMessageCount(),
+            "minHash" => $block->getMinHash(),
+            "msgHash" => $block->getMsgHash(),
+            "nodeCount" => $block->getNodeCount(),
+            "nowHash" => $block->getNowHash(),
+            "oldHash" => $block->getOldHash(),
+            "time" => new UTCDateTime((int)$block->getTime()->format('U')*1000),
+            "vipHash" => $block->getVipHash(),
+            "voteNo" => $block->getVoteNo(),
+            "voteTotal" => $block->getVoteTotal(),
+            "voteYes" => $block->getVoteYes(),
+            "transactionCount" => $block->getTransactionCount(),
         ];
 
         try {
@@ -163,40 +163,41 @@ class MongoMigration implements DatabaseMigrationInterface
     private function getTransactionEntry(string $accountAddress, string $transactionId): array
     {
         return [
-            'accountId' => $accountAddress,
-            'transactionId' => $transactionId,
+            "accountId" => $accountAddress,
+            "transactionId" => $transactionId,
         ];
     }
 
     public function addOrUpdateNode(Node $node): void
     {
         $document = [
-            'id' => $node->getId(),
-            'accountCount' => $node->getAccountCount(),
-            'ip' => $node->getIpv4(),
-            'packCount' => $node->getMsid(),
-            'port' => $node->getPort(),
-            'publicKey' => $node->getPublicKey(),
-            'balance' => $node->getBalance(),
+            "id" => $node->getId(),
+            "_id" => $node->getId(),
+            "accountCount" => $node->getAccountCount(),
+            "ip" => $node->getIpv4(),
+            "packCount" => $node->getMsid(),
+            "port" => $node->getPort(),
+            "publicKey" => $node->getPublicKey(),
+            "balance" => $node->getBalance(),
         ];
 
-        $this->nodeCollection->update(['id' => $node->getId()], $document, ['upsert' => true]);
+        $this->nodeCollection->update(["id" => $node->getId()], $document, ['upsert' => true]);
     }
 
     public function addOrUpdateAccount(Account $account, Node $node): void
     {
         $document = [
-            'address' => $account->getAddress(),
-            'balance' => $account->getBalance(),
-            'nodeId' => $account->getNode(),
-            'number' => $account->getId(),
-            'publicKey' => $account->getPublicKey(),
-            'hash' => $account->getHash(),
-            'time' => $account->getTime(),
-            'nonce' => $account->getMsid(),
+            "address" => $account->getAddress(),
+            "balance" => $account->getBalance(),
+            "nodeId" => $account->getNode(),
+            "number" => $account->getId(),
+            "publicKey" => $account->getPublicKey(),
+            "hash" => $account->getHash(),
+            "time" => $account->getTime(),
+            "nonce" => $account->getMsid(),
         ];
 
-        $this->accountCollection->update(['address' => $account->getAddress()], $document, ['upsert' => true]);
+        $this->accountCollection->update(["address" => $account->getAddress()], $document, ['upsert' => true]);
     }
 
     public function getNewestBlockTime(): ?int

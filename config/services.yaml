@@ -44,6 +44,8 @@ services:
         public: true
         autowire: false
         autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\NodeRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\BlockController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -54,6 +56,11 @@ services:
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
+
+    Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Node']
 
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:
