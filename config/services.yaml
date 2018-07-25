@@ -35,6 +35,11 @@ services:
         resource: '../src/*'
         exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
 
+    Adshares\AdsOperator\EventListener\ApiExceptionListener:
+        arguments:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
     Adshares\AdsOperator\Controller\ApiController:
         calls:
             - [setSerializer, ['@jms_serializer']]
@@ -91,4 +96,3 @@ services:
             - method: setEntityMap
               arguments:
                   - '%entityMap%'
-

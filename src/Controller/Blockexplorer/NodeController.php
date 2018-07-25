@@ -4,7 +4,6 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
-use Adshares\AdsOperator\Request\Pagination;
 use Adshares\AdsOperator\Document\Node;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
@@ -68,14 +67,14 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        $pagination = new Pagination($request, $this->repository->availableSortingFields());
-        $nodes = $this->repository->findNodes(
-            $pagination->getSort(),
-            $pagination->getOrder(),
-            $pagination->getLimit(),
-            $pagination->getOffset()
-        );
+        $this->validateRequest($request, $this->repository->availableSortingFields());
 
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $nodes = $this->repository->findNodes($sort, $order, $limit, $offset);
         return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
     }
 }

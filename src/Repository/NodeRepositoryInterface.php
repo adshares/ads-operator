@@ -6,7 +6,7 @@ use Adshares\AdsOperator\Document\Node;
 
 interface NodeRepositoryInterface
 {
-    public function findNodes(string $sort, string $order, int $limit = 100, int $offset = 0): array;
+    public function findNodes(string $sort, string $order, int $limit, int $offset): array;
 
     public function getNode(string $nodeId): Node;
 

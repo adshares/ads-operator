@@ -13,24 +13,33 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
     {
         return [
             'id',
+            'balance',
         ];
     }
 
-    public function findNodes(string $sort, string $order, int $limit = 100, int $offset = 0): array
+    public function findNodes(string $sort, string $order, int $limit, int $offset): array
     {
+        $nodes = [];
+
         try {
-            $nodes = $this
+            $cursor = $this
                 ->createQueryBuilder()
                 ->sort($sort, $order)
                 ->limit($limit)
                 ->skip($offset)
                 ->getQuery()
                 ->execute();
+
+            $data = $cursor->toArray();
+
+            foreach ($data as $id => $node) {
+                $nodes[] = $node;
+            }
         } catch (MongoDBException $ex) {
             return [];
         }
 
-        return $nodes->toArray();
+        return $nodes;
     }
 
     public function getNode(string $nodeId): Node
