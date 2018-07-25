@@ -2,6 +2,10 @@
 
 namespace Adshares\AdsOperator\Document;
 
+/**
+ * Class Message
+ * @package Adshares\AdsOperator\Document
+ */
 class Message extends \Adshares\Ads\Entity\Message
 {
     /**
@@ -9,6 +13,10 @@ class Message extends \Adshares\Ads\Entity\Message
      */
     protected $transactionCount;
 
+    /**
+     * Message constructor.
+     * @param int|null $transactionCount
+     */
     public function __construct(?int $transactionCount = 0)
     {
         if ($transactionCount) {
@@ -16,11 +24,17 @@ class Message extends \Adshares\Ads\Entity\Message
         }
     }
 
+    /**
+     * @param int $count
+     */
     public function setTransactionCount(int $count): void
     {
         $this->transactionCount = $count;
     }
 
+    /**
+     * @return int
+     */
     public function getTransactionCount(): int
     {
         return $this->transactionCount;

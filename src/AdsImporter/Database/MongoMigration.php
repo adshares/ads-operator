@@ -15,6 +15,11 @@ use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
 use Doctrine\MongoDB\Collection;
 
+/**
+ * Class MongoMigration
+ *
+ * @package Adshares\AdsOperator\AdsImporter\Database
+ */
 class MongoMigration implements DatabaseMigrationInterface
 {
     const BLOCKEXPLORER_DATABASE = 'blockexplorer';
@@ -66,6 +71,11 @@ class MongoMigration implements DatabaseMigrationInterface
     private $accountTransactionCollection;
 
 
+    /**
+     * MongoMigration constructor.
+     *
+     * @param Connection $connection
+     */
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -74,6 +84,9 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->prepareCollections();
     }
 
+    /**
+     * @return void
+     */
     private function prepareCollections(): void
     {
         $this->blockCollection = $this->db->createCollection(self::BLOCK_COLLECTION);
@@ -84,6 +97,10 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->accountTransactionCollection = $this->db->createCollection(self::ACCOUNT_TRANSACTION_COLLECTION);
     }
 
+    /**
+     * @param Message $message
+     * @return void
+     */
     public function addMessage(Message $message): void
     {
         $document = [
@@ -98,6 +115,10 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->messageCollection->insert($document);
     }
 
+    /**
+     * @param Block $block
+     * @return void
+     */
     public function addBlock(Block $block): void
     {
         $document = [
@@ -124,6 +145,9 @@ class MongoMigration implements DatabaseMigrationInterface
         }
     }
 
+    /**
+     * @param ArrayableInterface $transaction
+     */
     public function addTransaction(ArrayableInterface $transaction): void
     {
         $document = $transaction->toArray();
@@ -160,6 +184,11 @@ class MongoMigration implements DatabaseMigrationInterface
         }
     }
 
+    /**
+     * @param string $accountAddress
+     * @param string $transactionId
+     * @return array
+     */
     private function getTransactionEntry(string $accountAddress, string $transactionId): array
     {
         return [
@@ -168,10 +197,13 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
     }
 
+    /**
+     * @param Node $node
+     */
     public function addOrUpdateNode(Node $node): void
     {
         $document = [
-            'id' => $node->getId(),
+            '_id' => $node->getId(),
             'accountCount' => $node->getAccountCount(),
             'ip' => $node->getIpv4(),
             'packCount' => $node->getMsid(),
@@ -180,9 +212,18 @@ class MongoMigration implements DatabaseMigrationInterface
             'balance' => $node->getBalance(),
         ];
 
-        $this->nodeCollection->update(['id' => $node->getId()], $document, ['upsert' => true]);
+        try {
+            $this->nodeCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            unset($document['_id']);
+            $this->nodeCollection->update(['_id' => $node->getId()], $document);
+        }
     }
 
+    /**
+     * @param Account $account
+     * @param Node $node
+     */
     public function addOrUpdateAccount(Account $account, Node $node): void
     {
         $document = [
@@ -199,6 +240,11 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->accountCollection->update(['address' => $account->getAddress()], $document, ['upsert' => true]);
     }
 
+    /**
+     * Gets newest block's time from database.
+     *
+     * @return int|null
+     */
     public function getNewestBlockTime(): ?int
     {
         $collection = $this->db->selectCollection(self::BLOCK_COLLECTION);

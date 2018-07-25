@@ -1,7 +1,3 @@
-index:
-    path: /
-    controller: Adshares\AdsOperator\Controller\DefaultController::index
-
 blockexplorer:
     resource: "./routes/blockexplorer.yaml"
     type:     yaml

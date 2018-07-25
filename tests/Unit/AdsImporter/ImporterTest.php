@@ -7,7 +7,6 @@ use Adshares\Ads\AdsClient;
 use Adshares\Ads\Command\CommandInterface;
 use Adshares\Ads\Command\GetMessageCommand;
 use Adshares\Ads\Command\GetMessageIdsCommand;
-use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\Ads\Response\GetAccountResponse;
 use Adshares\Ads\Response\GetMessageIdsResponse;
 use Adshares\Ads\Response\GetMessageResponse;
@@ -47,7 +46,7 @@ final class ImporterTest extends TestCase
         parent::__construct($name, $data, $dataName);
 
         $accounts = [new Account(), new Account(), new Account()];
-        $block = new Block(1, [new Node(1), new Node(2), new Node(3), new Node(4)], 4);
+        $block = new Block('1', [new Node('1'), new Node('2'), new Node('3'), new Node('4')], 4);
 
         $accountsResponse = $this->createMock(GetAccountsResponse::class);
         $accountsResponse

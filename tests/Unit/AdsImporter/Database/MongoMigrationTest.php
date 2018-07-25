@@ -23,6 +23,7 @@ use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Cursor;
 use MongoDB\Database;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 
 class MongoMigrationTest extends TestCase
@@ -83,11 +84,16 @@ class MongoMigrationTest extends TestCase
         $mongoMigration->addBlock($block);
     }
 
-    private function prepareConnectionMockWithMethod(string $method)
+    private function prepareConnectionMockWithMethod(string $method, $return = null)
     {
+        if (!$return) {
+            $return = $this->createMock(Stub::class);
+        }
+
         $this->collection
             ->expects($this->once())
-            ->method($method);
+            ->method($method)
+            ->will($return);
 
         $this->database
             ->method('createCollection')
@@ -196,12 +202,23 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNode():void
     {
+        $this->prepareConnectionMockWithMethod('insert');
+        $node = $this->createMock(Node::class);
+
+        $mongoMigration = new MongoMigration($this->connection);
+        $mongoMigration->addOrUpdateNode($node);
+    }
+
+    public function testAddOrUpdateNodeWhenMongoExceptionIsThrown():void
+    {
+        $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
         $mongoMigration = new MongoMigration($this->connection);
         $mongoMigration->addOrUpdateNode($node);
     }
+
 
     public function testAddOrUpdateAccount():void
     {

@@ -10,10 +10,23 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Command used to import data from ADS network.
+ *
+ * @package Adshares\AdsOperator\Command
+ */
 class ImportADSCommand extends ContainerAwareCommand
 {
+    /**
+     * @var Importer
+     */
     private $adsImporter;
 
+    /**
+     * ImportADSCommand constructor.
+     *
+     * @param Importer $adsImporter
+     */
     public function __construct(Importer $adsImporter)
     {
         $this->adsImporter = $adsImporter;
@@ -21,6 +34,9 @@ class ImportADSCommand extends ContainerAwareCommand
         parent::__construct();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configure(): void
     {
         $this
@@ -28,6 +44,9 @@ class ImportADSCommand extends ContainerAwareCommand
             ->setDescription('Importing data from ADS client');
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         try {

@@ -53,7 +53,8 @@
         "phpstan/phpstan": "^0.10",
         "sensiolabs/security-checker": "^4.1",
         "symfony/dotenv": "^4.1",
-        "phpstan/phpstan-phpunit": "^0.10.0"
+        "phpstan/phpstan-phpunit": "^0.10.0",
+        "phpstan/phpstan-doctrine": "^0.10.0"
     },
     "config": {
         "preferred-install": {

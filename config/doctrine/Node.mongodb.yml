@@ -1,6 +1,7 @@
 Adshares\AdsOperator\Document\Node:
     type: document
     collection: node
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\NodeRepository
     fields:
         id:
             id: true
