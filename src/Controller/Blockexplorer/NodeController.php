@@ -51,13 +51,13 @@ class NodeController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="string",
+     *          type="int",
      *          description="The field used to limit number of nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="string",
+     *          type="int",
      *          description="The field used to specify nodes offset"
      *      )
      * )
@@ -75,6 +75,7 @@ class NodeController extends ApiController
         $offset = $this->getOffset($request);
 
         $nodes = $this->repository->findNodes($sort, $order, $limit, $offset);
+
         return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
     }
 }

@@ -114,7 +114,7 @@ final class ApiControllerTest extends TestCase
         $apiController = new ApiController();
         $this->invokeMethod($apiController, 'validateRequest', [$request, []]);
         $limit = $this->invokeMethod($apiController, 'getLimit', [$request]);
-        $this->assertEquals(500, $limit);
+        $this->assertEquals(25, $limit);
     }
 
     public function testGetOffsetWhenIsNotSetByUser(): void

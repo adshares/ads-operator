@@ -14,12 +14,13 @@ class ApiExceptionListener
         $exception = $event->getException();
 
         if ($exception instanceof HttpExceptionInterface) {
-            $data = [
-                'code' => $exception->getStatusCode(),
-                'message' => $exception->getMessage(),
-            ];
-
-            $response = new JsonResponse($data, $exception->getStatusCode());
+            $response = new JsonResponse(
+                [
+                    'code' => $exception->getStatusCode(),
+                    'message' => $exception->getMessage(),
+                ],
+                $exception->getStatusCode()
+            );
         } else {
             $response = new JsonResponse(
                 [

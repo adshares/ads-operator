@@ -22,7 +22,7 @@ class ApiController
     /**
      * @var int
      */
-    protected $defaultLimit = 500;
+    protected $defaultLimit = 25;
 
     /**
      * @var int
@@ -32,12 +32,12 @@ class ApiController
     /**
      * @var int
      */
-    protected $maxLimit = 1000;
+    protected $maxLimit = 100;
 
     /**
      * @var int
      */
-    protected $maxOffset = 100;
+    protected $maxOffset = PHP_INT_MAX;
 
     /**
      * @var SerializerInterface
@@ -63,14 +63,22 @@ class ApiController
         $limit = $request->get('limit');
         $offset = $request->get('offset');
 
-        if ($order && !in_array(strtolower($order), ['asc', 'desc'])) {
+        if ($sort !== null && (!is_string($sort) || !in_array($sort, $availableSortingFields))) {
+            throw new BadRequestHttpException(sprintf(
+                'Sort value `%s` is invalid. Only %s values are supported.',
+                $sort,
+                implode(', ', $availableSortingFields)
+            ));
+        }
+
+        if ($order !== null && (!is_string($order) || !in_array(strtolower($order), ['asc', 'desc']))) {
             throw new BadRequestHttpException(sprintf(
                 'Order value `%s` is invalid. Only `desc` and `asc` values are supported.',
                 $order
             ));
         }
 
-        if ($offset < 0 || $offset > $this->maxOffset) {
+        if ($offset !== null && (!is_numeric($offset) || ($offset < 0 || $offset > $this->maxOffset))) {
             throw new BadRequestHttpException(sprintf(
                 'Offset value `%s` is invalid. Value must be between %s and %s',
                 $offset,
@@ -79,20 +87,12 @@ class ApiController
             ));
         }
 
-        if ($limit !== null && ($limit < 1 || $limit > $this->maxLimit)) {
+        if ($limit !== null && (!is_numeric($limit) || ($limit < 1 || $limit > $this->maxLimit))) {
             throw new BadRequestHttpException(sprintf(
                 'Limit value `%s` is invalid. Value must be between %s and %s',
                 $limit,
                 1,
                 $this->maxLimit
-            ));
-        }
-
-        if ($sort && !in_array($sort, $availableSortingFields)) {
-            throw new BadRequestHttpException(sprintf(
-                'Sort value `%s` is invalid. Only %s values are supported.',
-                $sort,
-                implode(', ', $availableSortingFields)
             ));
         }
     }
