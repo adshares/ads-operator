@@ -5,8 +5,15 @@ namespace Adshares\AdsOperator\Document\Transaction;
 use Adshares\Ads\Entity\Transaction\StatusTransaction as BaseStatusTransaction;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 
+/**
+ * Class StatusTransaction
+ * @package Adshares\AdsOperator\Document\Transaction
+ */
 class StatusTransaction extends BaseStatusTransaction implements ArrayableInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
         return [

@@ -7,8 +7,15 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 
+/**
+ * ApiExceptionListener listens for every exception and transform it as a JSON response.
+ * @package Adshares\AdsOperator\EventListener
+ */
 class ApiExceptionListener
 {
+    /**
+     * @param GetResponseForExceptionEvent $event
+     */
     public function onKernelException(GetResponseForExceptionEvent $event): void
     {
         $exception = $event->getException();

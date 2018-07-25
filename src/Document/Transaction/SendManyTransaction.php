@@ -6,8 +6,15 @@ use Adshares\Ads\Entity\Transaction\SendManyTransaction as BaseSendManyTransacti
 use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 
+/**
+ * Class SendManyTransaction
+ * @package Adshares\AdsOperator\Document\Transaction
+ */
 class SendManyTransaction extends BaseSendManyTransaction implements ArrayableInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
         return [
@@ -28,6 +35,10 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
         ];
     }
 
+    /**
+     * @param array $wires
+     * @return array
+     */
     private function transformTransactionWiresToArray(array $wires): array
     {
         $transformed = [];

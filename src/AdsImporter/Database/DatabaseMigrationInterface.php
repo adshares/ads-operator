@@ -9,6 +9,11 @@ use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 
+/**
+ * DatabaseMigrationInterface should be implemented by every database engine.
+ *
+ * @package Adshares\AdsOperator\AdsImporter\Database
+ */
 interface DatabaseMigrationInterface
 {
     /**

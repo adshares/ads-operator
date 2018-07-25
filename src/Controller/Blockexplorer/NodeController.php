@@ -18,6 +18,10 @@ class NodeController extends ApiController
      */
     private $repository;
 
+    /**
+     * NodeController constructor.
+     * @param NodeRepositoryInterface $repository
+     */
     public function __construct(NodeRepositoryInterface $repository)
     {
         $this->repository = $repository;

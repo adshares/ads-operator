@@ -7,8 +7,15 @@ use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
+/**
+ * Class NodeRepository
+ * @package Adshares\AdsOperator\Repository\Doctrine
+ */
 class NodeRepository extends DocumentRepository implements NodeRepositoryInterface
 {
+    /**
+     * @return array
+     */
     public function availableSortingFields(): array
     {
         return [
@@ -17,6 +24,9 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
         ];
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function findNodes(string $sort, string $order, int $limit, int $offset): array
     {
         $nodes = [];
@@ -42,6 +52,10 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
         return $nodes;
     }
 
+    /**
+     * @param string $nodeId
+     * @return Node
+     */
     public function getNode(string $nodeId): Node
     {
         /** @var Node $node */

@@ -17,6 +17,11 @@ use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
 use Psr\Log\LoggerInterface;
 
+/**
+ * Imports network's data using ADS Client.
+ *
+ * @package Adshares\AdsOperator\AdsImporter
+ */
 class Importer
 {
     /**
@@ -72,6 +77,9 @@ class Importer
         $this->importerResult = new ImporterResult();
     }
 
+    /**
+     * @return ImporterResult
+     */
     public function import(): ImporterResult
     {
         $getMeResponse = $this->client->getMe();
@@ -107,6 +115,9 @@ class Importer
         return $this->importerResult;
     }
 
+    /**
+     * @return int
+     */
     private function getStartTime(): int
     {
         $from = $this->databaseMigration->getNewestBlockTime();
@@ -118,6 +129,9 @@ class Importer
         return $this->genesisTime;
     }
 
+    /**
+     * @return void
+     */
     private function updateNodes(): void
     {
         try {
@@ -145,6 +159,9 @@ class Importer
         }
     }
 
+    /**
+     * @param Node $node
+     */
     private function updateAccounts(Node $node): void
     {
         $accountResponse = $this->client->getAccounts((int)$node->getId());
@@ -157,6 +174,10 @@ class Importer
         }
     }
 
+    /**
+     * @param Block $block
+     * @return int
+     */
     private function addMessagesFromBlock(Block $block): int
     {
         $blockTransactionsCount = 0;
@@ -193,6 +214,11 @@ class Importer
         return $blockTransactionsCount;
     }
 
+    /**
+     * @param string $messageId
+     * @param Block $block
+     * @return GetMessageResponse|null
+     */
     private function getMessageResponse(string $messageId, Block $block):? GetMessageResponse
     {
         try {
@@ -204,6 +230,9 @@ class Importer
         return null;
     }
 
+    /**
+     * @param array $transactions
+     */
     private function addTransactionsFromMessage(array $transactions): void
     {
         /** @var ArrayableInterface $transaction */
@@ -214,6 +243,11 @@ class Importer
         }
     }
 
+    /**
+     * @param CommandException $exception
+     * @param string $message
+     * @param Block|null $block
+     */
     private function addExceptionToLog(CommandException $exception, string $message, ?Block $block = null): void
     {
         $context = [
@@ -230,6 +264,9 @@ class Importer
         $this->logger->error(sprintf($pattern, $message, $exception->getMessage()), $context);
     }
 
+    /**
+     * @return ImporterResult
+     */
     public function getResult(): ImporterResult
     {
         return $this->importerResult;

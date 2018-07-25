@@ -7,6 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
+/**
+ * Base class for REST API controllers.
+ *
+ * @package Adshares\AdsOperator\Controller
+ */
 class ApiController
 {
     /**
@@ -44,18 +49,31 @@ class ApiController
      */
     protected $serializer;
 
+    /**
+     * @param SerializerInterface $serializer
+     */
     public function setSerializer(SerializerInterface $serializer): void
     {
         $this->serializer = $serializer;
     }
 
-    protected function response($data = null, int $status = Response::HTTP_OK, array $headers = []): Response
+    /**
+     * @param string|null $data
+     * @param int $status
+     * @param array $headers
+     * @return Response
+     */
+    protected function response(string $data = null, int $status = Response::HTTP_OK, array $headers = []): Response
     {
         $headers = array_merge($headers, ['content-type' => 'application/json']);
 
         return new Response($data, $status, $headers);
     }
 
+    /**
+     * @param Request $request
+     * @param array $availableSortingFields
+     */
     protected function validateRequest(Request $request, array $availableSortingFields): void
     {
         $sort = $request->get('sort');
@@ -97,6 +115,10 @@ class ApiController
         }
     }
 
+    /**
+     * @param Request $request
+     * @return int
+     */
     protected function getLimit(Request $request): int
     {
         $limit = $request->get('limit');
@@ -108,6 +130,10 @@ class ApiController
         return $limit;
     }
 
+    /**
+     * @param Request $request
+     * @return int
+     */
     protected function getOffset(Request $request): int
     {
         $offset = $request->get('offset');
@@ -119,6 +145,10 @@ class ApiController
         return $offset;
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     */
     protected function getSort(Request $request): string
     {
         $sort = $request->get('sort');
@@ -130,6 +160,10 @@ class ApiController
         return $sort;
     }
 
+    /**
+     * @param Request $request
+     * @return string
+     */
     protected function getOrder(Request $request): string
     {
         $order = $request->get('order');

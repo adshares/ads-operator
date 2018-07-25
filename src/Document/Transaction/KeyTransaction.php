@@ -5,8 +5,15 @@ namespace Adshares\AdsOperator\Document\Transaction;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\Ads\Entity\Transaction\KeyTransaction as BaseKeyTransaction;
 
+/**
+ * Class KeyTransaction
+ * @package Adshares\AdsOperator\Document\Transaction
+ */
 class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
         return [

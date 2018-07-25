@@ -5,8 +5,15 @@ namespace Adshares\AdsOperator\Document\Transaction;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\Ads\Entity\Transaction\BroadcastTransaction as BaseBroadcastTransaction;
 
+/**
+ * Class BroadcastTransaction
+ * @package Adshares\AdsOperator\Document\Transaction
+ */
 class BroadcastTransaction extends BaseBroadcastTransaction implements ArrayableInterface
 {
+    /**
+     * {@inheritdoc}
+     */
     public function toArray(): array
     {
         return [
