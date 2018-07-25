@@ -32,7 +32,7 @@ class NodeRepository extends DocumentRepository implements NodeRepositoryInterfa
 
             $data = $cursor->toArray();
 
-            foreach ($data as $id => $node) {
+            foreach ($data as $node) {
                 $nodes[] = $node;
             }
         } catch (MongoDBException $ex) {
