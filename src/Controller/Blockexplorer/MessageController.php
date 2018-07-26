@@ -66,6 +66,6 @@ class MessageController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        return parent::listAction($request);
+        return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
     }
 }

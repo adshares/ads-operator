@@ -10,6 +10,7 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class NodeController extends ApiController
 {
@@ -66,6 +67,6 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        return parent::listAction($request);
+        return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
     }
 }

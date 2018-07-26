@@ -35,31 +35,44 @@ class ApiExceptionListener
         $exception = $event->getException();
 
         if ($exception instanceof HttpExceptionInterface) {
-            $data = [
-                'code' => $exception->getStatusCode(),
-                'message' => $exception->getMessage(),
-            ];
+            $data = $this->prepareResponse($exception->getStatusCode(), $exception->getMessage());
 
-            $response = new JsonResponse(
-                $data,
-                $exception->getStatusCode()
-            );
+            $response = new JsonResponse($data, $exception->getStatusCode());
         } else {
-            $data = [
-                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                'message' => 'Internal server error',
-            ];
+            $data = $this->prepareResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error');
 
             if ($this->environment === 'dev') {
-                $data['dev'] = [
-                    'message' => $exception->getMessage(),
-                    'stack' => $exception->getTraceAsString(),
-                ];
+                $data['dev'] = $this->getDevBlock($exception);
             }
 
             $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event->setResponse($response);
+    }
+
+    /**
+     * @param int $code
+     * @param string $message
+     * @return array
+     */
+    private function prepareResponse(int $code, string $message): array
+    {
+        return [
+            'code' => $code,
+            'message' => $message,
+        ];
+    }
+
+    /**
+     * @param \Throwable $exception
+     * @return array
+     */
+    private function getDevBlock(\Throwable $exception): array
+    {
+        return [
+            'message' => $exception->getMessage(),
+            'stack' => $exception->getTraceAsString(),
+        ];
     }
 }

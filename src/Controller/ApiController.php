@@ -183,9 +183,9 @@ class ApiController
 
     /**
      * @param Request $request
-     * @return Response
+     * @return array
      */
-    protected function listAction(Request $request): Response
+    protected function getList(Request $request): array
     {
         $this->validateRequest($request, $this->repository->availableSortingFields());
 
@@ -194,8 +194,6 @@ class ApiController
         $limit = $this->getLimit($request);
         $offset = $this->getOffset($request);
 
-        $data = $this->repository->fetchList($sort, $order, $limit, $offset);
-
-        return $this->response($this->serializer->serialize($data, 'json'), Response::HTTP_OK);
+        return $this->repository->fetchList($sort, $order, $limit, $offset);
     }
 }
