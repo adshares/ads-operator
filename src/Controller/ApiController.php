@@ -181,6 +181,10 @@ class ApiController
         return $order;
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     protected function listAction(Request $request): Response
     {
         $this->validateRequest($request, $this->repository->availableSortingFields());
