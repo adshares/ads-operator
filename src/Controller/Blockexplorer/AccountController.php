@@ -3,28 +3,28 @@
 namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
-use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Repository\BlockRepositoryInterface;
+use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Repository\AccountRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class BlockController extends ApiController
+class AccountController extends ApiController
 {
     /**
-     * BlockController constructor.
-     * @param BlockRepositoryInterface $repository
+     * AccountController constructor.
+     * @param AccountRepositoryInterface $repository
      */
-    public function __construct(BlockRepositoryInterface $repository)
+    public function __construct(AccountRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     /**
      * @Operation(
-     *     summary="List of blocks",
+     *     summary="List of accounts",
      *     tags={"Blockexplorer"},
      *
      *     @SWG\Response(
@@ -32,32 +32,32 @@ class BlockController extends ApiController
      *          description="Returned when operation is successful",
      *          @SWG\Schema(
      *              type="array",
-     *              @SWG\Items(ref=@Model(type=Block::class))
+     *              @SWG\Items(ref=@Model(type=Account::class))
      *          )
      *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order blocks"
+     *          description="The field used to order accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort blocks"
+     *          description="The field used to sort accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
      *          type="int",
-     *          description="The field used to limit number of blocks"
+     *          description="The field used to limit number of accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
      *          type="int",
-     *          description="The field used to specify blocks offset"
+     *          description="The field used to specify accounts offset"
      *      )
      * )
      *

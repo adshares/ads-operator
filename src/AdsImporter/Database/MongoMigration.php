@@ -151,6 +151,9 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addTransaction(ArrayableInterface $transaction): void
     {
         $document = $transaction->toArray();
+        if (isset($document['time']) && $document['time'] instanceof \DateTime) {
+            $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
+        }
 
         try {
             $this->transactionCollection->insert($document);
@@ -227,13 +230,14 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addOrUpdateAccount(Account $account, Node $node): void
     {
         $document = [
+            '_id' => $account->getAddress(),
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
             'nodeId' => $account->getNode(),
             'number' => $account->getId(),
             'publicKey' => $account->getPublicKey(),
             'hash' => $account->getHash(),
-            'time' => $account->getTime(),
+            'time' => new UTCDateTime((int)$account->getTime()->format('U')*1000),
             'nonce' => $account->getMsid(),
         ];
 

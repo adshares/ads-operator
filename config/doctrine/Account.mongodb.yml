@@ -1,6 +1,7 @@
 Adshares\AdsOperator\Document\Account:
     type: document
     collection: account
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\AccountRepository
     fields:
         id:
             id: true

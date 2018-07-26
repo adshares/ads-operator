@@ -11,6 +11,11 @@ class Message extends \Adshares\Ads\Entity\Message
     /**
      * @var int
      */
+    protected $id;
+
+    /**
+     * @var int
+     */
     protected $transactionCount;
 
     /**
@@ -38,5 +43,15 @@ class Message extends \Adshares\Ads\Entity\Message
     public function getTransactionCount(): int
     {
         return $this->transactionCount;
+    }
+
+    public function setId(int $id): void
+    {
+        $this->id = $id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

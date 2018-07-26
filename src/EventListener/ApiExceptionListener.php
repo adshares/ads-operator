@@ -14,6 +14,20 @@ use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 class ApiExceptionListener
 {
     /**
+     * @var string
+     */
+    private $environment;
+
+    /**
+     * ApiExceptionListener constructor.
+     * @param string $environment
+     */
+    public function __construct(string $environment)
+    {
+        $this->environment = $environment;
+    }
+
+    /**
      * @param GetResponseForExceptionEvent $event
      */
     public function onKernelException(GetResponseForExceptionEvent $event): void
@@ -21,21 +35,29 @@ class ApiExceptionListener
         $exception = $event->getException();
 
         if ($exception instanceof HttpExceptionInterface) {
+            $data = [
+                'code' => $exception->getStatusCode(),
+                'message' => $exception->getMessage(),
+            ];
+
             $response = new JsonResponse(
-                [
-                    'code' => $exception->getStatusCode(),
-                    'message' => $exception->getMessage(),
-                ],
+                $data,
                 $exception->getStatusCode()
             );
         } else {
-            $response = new JsonResponse(
-                [
-                    'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
-                    'message' => 'Internal server error',
-                ],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
+            $data = [
+                'code' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Internal server error',
+            ];
+
+            if ($this->environment === 'dev') {
+                $data['dev'] = [
+                    'message' => $exception->getMessage(),
+                    'stack' => $exception->getTraceAsString(),
+                ];
+            }
+
+            $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         $event->setResponse($response);

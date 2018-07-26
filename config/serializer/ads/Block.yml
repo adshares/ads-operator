@@ -23,7 +23,7 @@ Adshares\Ads\Entity\Block:
             expose: true
             type: int
         nodes:
-            expose: true
+            expose: false
             type: array<Adshares\AdsOperator\Document\Node>
         nodehash:
             expose: true

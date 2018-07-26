@@ -3,28 +3,28 @@
 namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
-use Adshares\AdsOperator\Document\Block;
-use Adshares\AdsOperator\Repository\BlockRepositoryInterface;
+use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
+use Adshares\AdsOperator\Document\Transaction;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class BlockController extends ApiController
+class TransactionController extends ApiController
 {
     /**
-     * BlockController constructor.
-     * @param BlockRepositoryInterface $repository
+     * TransactionController constructor.
+     * @param TransactionRepositoryInterface $repository
      */
-    public function __construct(BlockRepositoryInterface $repository)
+    public function __construct(TransactionRepositoryInterface $repository)
     {
         $this->repository = $repository;
     }
 
     /**
      * @Operation(
-     *     summary="List of blocks",
+     *     summary="List of transactions",
      *     tags={"Blockexplorer"},
      *
      *     @SWG\Response(
@@ -32,32 +32,32 @@ class BlockController extends ApiController
      *          description="Returned when operation is successful",
      *          @SWG\Schema(
      *              type="array",
-     *              @SWG\Items(ref=@Model(type=Block::class))
+     *              @SWG\Items(ref=@Model(type=Transaction::class))
      *          )
      *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order blocks"
+     *          description="The field used to order transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort blocks"
+     *          description="The field used to sort transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
      *          type="int",
-     *          description="The field used to limit number of blocks"
+     *          description="The field used to limit number of transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
      *          type="int",
-     *          description="The field used to specify blocks offset"
+     *          description="The field used to specify transactions offset"
      *      )
      * )
      *

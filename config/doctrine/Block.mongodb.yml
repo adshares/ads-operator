@@ -1,6 +1,7 @@
 Adshares\AdsOperator\Document\Block:
     type: document
     collection: block
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\BlockRepository
     fields:
         id:
             id: true

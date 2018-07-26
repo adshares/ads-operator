@@ -14,11 +14,6 @@ use Symfony\Component\HttpFoundation\Response;
 class NodeController extends ApiController
 {
     /**
-     * @var NodeRepositoryInterface
-     */
-    private $repository;
-
-    /**
      * NodeController constructor.
      * @param NodeRepositoryInterface $repository
      */
@@ -30,7 +25,7 @@ class NodeController extends ApiController
     /**
      * @Operation(
      *     summary="List of nodes",
-     *     tags={"Node"},
+     *     tags={"Blockexplorer"},
      *
      *     @SWG\Response(
      *          response=200,
@@ -71,15 +66,6 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        $this->validateRequest($request, $this->repository->availableSortingFields());
-
-        $sort = $this->getSort($request);
-        $order = $this->getOrder($request);
-        $limit = $this->getLimit($request);
-        $offset = $this->getOffset($request);
-
-        $nodes = $this->repository->findNodes($sort, $order, $limit, $offset);
-
-        return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
+        return parent::listAction($request);
     }
 }

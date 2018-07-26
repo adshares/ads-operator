@@ -2,6 +2,7 @@
 
 namespace Adshares\AdsOperator\Controller;
 
+use Adshares\AdsOperator\Repository\ListRepositoryInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,6 +15,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class ApiController
 {
+    /**
+     * @var ListRepositoryInterface
+     */
+    protected $repository;
+
     /**
      * @var string
      */
@@ -173,5 +179,19 @@ class ApiController
         }
 
         return $order;
+    }
+
+    protected function listAction(Request $request): Response
+    {
+        $this->validateRequest($request, $this->repository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $data = $this->repository->fetchList($sort, $order, $limit, $offset);
+
+        return $this->response($this->serializer->serialize($data, 'json'), Response::HTTP_OK);
     }
 }

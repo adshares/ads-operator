@@ -1,0 +1,23 @@
+Adshares\AdsOperator\Document\Message:
+    type: document
+    collection: message
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\MessageRepository
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        node:
+            type: string
+        blockId:
+            type: string
+        hash:
+            type: string
+        length:
+            type: string
+        transactionCount:
+            type: int
+
+
+
+

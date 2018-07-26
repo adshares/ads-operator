@@ -1,0 +1,21 @@
+Adshares\Ads\Entity\Message:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        nodeId:
+            expose: true
+            type: string
+        blockId:
+            expose: true
+            type: string
+        hash:
+            expose: true
+            type: string
+        length:
+            expose: true
+            type: int
+        transactionCount:
+            expose: true
+            type: int
