@@ -50,4 +50,13 @@ class Block extends \Adshares\Ads\Entity\Block
     {
         return $this->transactionCount;
     }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public static function validateId(string $id): bool
+    {
+        return (bool) preg_match('/^[0-9A-Z]{8}$/', $id);
+    }
 }

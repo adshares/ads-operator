@@ -3,6 +3,7 @@
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Repository\BlockRepositoryInterface;
+use Adshares\AdsOperator\Document\Block;
 
 /**
  * Class BlockRepository
@@ -19,5 +20,19 @@ class BlockRepository extends BaseRepository implements BlockRepositoryInterface
             'id',
             'time',
         ];
+    }
+
+    /**
+     * @param string $blockId
+     * @return Block|null
+     * @throws \Doctrine\ODM\MongoDB\LockException
+     * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
+     */
+    public function getBlock(string $blockId):? Block
+    {
+        /** @var Block $block */
+        $block = $this->find($blockId);
+
+        return $block;
     }
 }

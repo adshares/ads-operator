@@ -10,6 +10,8 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class BlockController extends ApiController
 {
@@ -67,5 +69,40 @@ class BlockController extends ApiController
     public function listAction(Request $request): Response
     {
         return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Returns block resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=200,
+     *          @Model(type=Block::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Block Id (hexadecimal number, e.g. 5B596520)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Block::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $block = $this->repository->getBlock($id);
+
+        if (!$block) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($block, 'json'), Response::HTTP_OK);
     }
 }

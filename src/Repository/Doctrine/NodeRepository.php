@@ -26,7 +26,7 @@ class NodeRepository extends BaseRepository implements NodeRepositoryInterface
      * @param string $nodeId
      * @return Node
      */
-    public function getNode(string $nodeId): Node
+    public function getNode(string $nodeId):? Node
     {
         /** @var Node $node */
         $node = $this->findOneBy(['id' => $nodeId]);

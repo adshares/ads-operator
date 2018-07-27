@@ -10,6 +10,8 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class MessageController extends ApiController
 {
@@ -67,5 +69,40 @@ class MessageController extends ApiController
     public function listAction(Request $request): Response
     {
         return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Returns message resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=200,
+     *          @Model(type=Message::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Message Id (hexadecimal number, e.g. 0001:00000001)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Message::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $message = $this->repository->getMessage($id);
+
+        if (!$message) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($message, 'json'), Response::HTTP_OK);
     }
 }

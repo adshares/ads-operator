@@ -14,5 +14,5 @@ interface NodeRepositoryInterface extends ListRepositoryInterface
      * @param string $nodeId
      * @return Node
      */
-    public function getNode(string $nodeId): Node;
+    public function getNode(string $nodeId):? Node;
 }

@@ -7,6 +7,7 @@ use Adshares\Ads\AdsClient;
 use Adshares\Ads\Command\CommandInterface;
 use Adshares\Ads\Command\GetMessageCommand;
 use Adshares\Ads\Command\GetMessageIdsCommand;
+use Adshares\Ads\Driver\CommandError;
 use Adshares\Ads\Response\GetAccountResponse;
 use Adshares\Ads\Response\GetMessageIdsResponse;
 use Adshares\Ads\Response\GetMessageResponse;
@@ -46,7 +47,7 @@ final class ImporterTest extends TestCase
         parent::__construct($name, $data, $dataName);
 
         $accounts = [new Account(), new Account(), new Account()];
-        $block = new Block('1', [new Node('1'), new Node('2'), new Node('3'), new Node('4')], 4);
+        $block = new Block('1', [new Node('1'), new Node('2'), new Node('3'), new Node('4'), new Node('0000')], 4);
 
         $accountsResponse = $this->createMock(GetAccountsResponse::class);
         $accountsResponse
@@ -127,6 +128,35 @@ final class ImporterTest extends TestCase
             ->will($this->throwException(new CommandException($this->createMock(CommandInterface::class))));
 
         $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->never())
+            ->method('addOrUpdateNode');
+
+        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
+        $this->invokeMethod($importer, 'updateNodes');
+    }
+
+    public function testUpdateNodesWhenGetBlockCannotBeProceedAndBlockIsUnavailable()
+    {
+        $adsClient = $this->adsClient;
+        $adsClient
+            ->expects($this->once())
+            ->method('getBlock')
+            ->will(
+                $this->throwException(
+                    new CommandException(
+                        $this->createMock(CommandInterface::class),
+                        '',
+                        CommandError::GET_BLOCK_INFO_UNAVAILABLE
+                    )
+                )
+            );
+
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->never())
+            ->method('addOrUpdateNode');
+
 
         $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
         $this->invokeMethod($importer, 'updateNodes');
@@ -229,6 +259,36 @@ final class ImporterTest extends TestCase
         $adsClient
             ->method('getMessage')
             ->willReturn($messageResponse);
+
+        $importer = new Importer(
+            $adsClient,
+            $database,
+            new NullLogger(),
+            time(),
+            self::BLOCK_SEQ_TIME
+        );
+
+        $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
+        $this->assertEquals(0, $result);
+    }
+
+    public function testAddMessagesForBlockWhenMessagesDoNotExist()
+    {
+        $adsClient = $this->adsClient;
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $getMessageIdsResponse = $this->createMock(GetMessageIdsResponse::class);
+
+        $getMessageIdsResponse
+            ->method('getMessageIds')
+            ->willReturn(['1', '2']);
+
+        $adsClient
+            ->method('getMessageIds')
+            ->willReturn($getMessageIdsResponse);
+
+        $adsClient
+            ->method('getMessage')
+            ->will($this->throwException($this->createMock(CommandException::class)));
 
         $importer = new Importer(
             $adsClient,

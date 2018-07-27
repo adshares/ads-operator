@@ -104,7 +104,7 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addMessage(Message $message): void
     {
         $document = [
-            'id' => $message->getMessageId(),
+            '_id' => $message->getMessageId(),
             'nodeId' => $message->getNodeId(),
             'blockId' => $message->getBlockId(),
             'transactionCount' => $message->getTransactionCount(),
@@ -122,7 +122,7 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addBlock(Block $block): void
     {
         $document = [
-            'id' => $block->getId(),
+            '_id' => $block->getId(),
             'dividendBalance' => $block->getDividendBalance(),
             'messageCount' => $block->getMessageCount(),
             'minHash' => $block->getMinHash(),
@@ -151,15 +151,12 @@ class MongoMigration implements DatabaseMigrationInterface
     public function addTransaction(ArrayableInterface $transaction): void
     {
         $document = $transaction->toArray();
+
         if (isset($document['time']) && $document['time'] instanceof \DateTime) {
             $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
         }
 
-        try {
-            $this->transactionCollection->insert($document);
-        } catch (\Exception $ex) {
-            // do nothing when a block exists in the database
-        }
+        $this->transactionCollection->insert($document);
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];

@@ -10,6 +10,8 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class AccountController extends ApiController
 {
@@ -67,5 +69,41 @@ class AccountController extends ApiController
     public function listAction(Request $request): Response
     {
         return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
+
+
+    /**
+     * @Operation(
+     *     summary="Returns account resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=200,
+     *          @Model(type=Account::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Account Id (hexadecimal number, e.g. 0001-00000000-9B6F)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Account::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $account = $this->repository->getAccount($id);
+
+        if (!$account) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($account, 'json'), Response::HTTP_OK);
     }
 }

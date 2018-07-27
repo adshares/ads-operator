@@ -11,6 +11,9 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class NodeController extends ApiController
 {
@@ -68,5 +71,40 @@ class NodeController extends ApiController
     public function listAction(Request $request): Response
     {
         return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Returns node resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=200,
+     *          @Model(type=Node::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Node Id (hexadecimal number, e.g. 0001)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Node::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $node = $this->repository->getNode($id);
+
+        if (!$node) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($node, 'json'), Response::HTTP_OK);
     }
 }

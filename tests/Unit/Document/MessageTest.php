@@ -11,7 +11,25 @@ final class MessageTest extends TestCase
     {
         $transactionCount = 10;
         $message = new Message($transactionCount);
+        $message->setId(10);
 
         $this->assertEquals($transactionCount, $message->getTransactionCount());
+        $this->assertEquals(10, $message->getId());
+    }
+
+    public function testValidation()
+    {
+        $ids = [
+            "1234:12341234" => true,
+            "1234:123412345" => false,
+            "1234-12341234" => false,
+            "1234-1234-1234" => false,
+            "1234:1234" => false,
+            "1234" => false,
+        ];
+
+        foreach ($ids as $id => $expected) {
+            $this->assertEquals($expected, Message::validateId((string)$id));
+        }
     }
 }

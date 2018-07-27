@@ -10,6 +10,8 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TransactionController extends ApiController
 {
@@ -67,5 +69,41 @@ class TransactionController extends ApiController
     public function listAction(Request $request): Response
     {
         return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
+
+
+    /**
+     * @Operation(
+     *     summary="Returns transaction resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=200,
+     *          @Model(type=Transaction::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Transaction Id (hexadecimal number, e.g. 0001:00000001:0001)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Transaction::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $transaction = $this->repository->getTransaction($id);
+
+        if (!$transaction) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($transaction, 'json'), Response::HTTP_OK);
     }
 }

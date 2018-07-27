@@ -2,7 +2,6 @@
 
 namespace Adshares\AdsOperator\Controller;
 
-use Adshares\AdsOperator\Repository\ListRepositoryInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ApiController
 {
     /**
-     * @var ListRepositoryInterface
+     * @var mixed
      */
     protected $repository;
 

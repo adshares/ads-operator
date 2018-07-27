@@ -28,4 +28,21 @@ final class BlockTest extends TestCase
         $block->setTransactionCount(100);
         $this->assertEquals(100, $block->getTransactionCount());
     }
+
+    public function testValidation()
+    {
+        $ids = [
+            "12341234" => true,
+            "123AF234" => true,
+            "F2341230" => true,
+            "F23412302" => false,
+            "1234-1234-1234" => false,
+            "1234:1234" => false,
+            "1234" => false,
+        ];
+
+        foreach ($ids as $id => $expected) {
+            $this->assertEquals($expected, Block::validateId((string)$id));
+        }
+    }
 }

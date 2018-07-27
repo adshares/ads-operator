@@ -18,7 +18,7 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
             'blockId' => $this->blockId,

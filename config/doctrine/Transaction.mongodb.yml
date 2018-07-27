@@ -13,3 +13,8 @@ Adshares\AdsOperator\Document\Transaction:
         send_one: Adshares\AdsOperator\Document\Transaction\SendOneTransaction
         send_many: Adshares\AdsOperator\Document\Transaction\SendManyTransaction
         status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
