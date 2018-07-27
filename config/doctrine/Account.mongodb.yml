@@ -31,4 +31,7 @@ Adshares\AdsOperator\Document\Account:
             type: int
         time:
             type: date
-
+    indexes:
+        nodeid:
+            keys:
+                nodeId: desc
