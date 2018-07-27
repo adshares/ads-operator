@@ -332,6 +332,7 @@ final class ImporterTest extends TestCase
         $messageId = '0001:0000003E';
         $data = [
             'node' => 1,
+            'message_id' => '"0001:00000001"',
         ];
         $messageResponse = new GetMessageResponse($data);
 

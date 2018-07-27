@@ -11,10 +11,8 @@ final class MessageTest extends TestCase
     {
         $transactionCount = 10;
         $message = new Message($transactionCount);
-        $message->setId(10);
 
         $this->assertEquals($transactionCount, $message->getTransactionCount());
-        $this->assertEquals(10, $message->getId());
     }
 
     public function testValidation()

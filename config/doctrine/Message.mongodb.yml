@@ -7,7 +7,7 @@ Adshares\AdsOperator\Document\Message:
             id: true
             strategy: NONE
             type: string
-        node:
+        nodeId:
             type: string
         blockId:
             type: string

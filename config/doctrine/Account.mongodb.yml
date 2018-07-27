@@ -19,8 +19,8 @@ Adshares\AdsOperator\Document\Account:
             type: int
         node:
             type: int
-        pairedId:
-            type: int
+        pairedAddress:
+            type: string
         pairedNode:
             type: int
         publicKey:
