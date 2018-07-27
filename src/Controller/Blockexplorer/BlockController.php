@@ -29,6 +29,10 @@ class BlockController extends ApiController
      *     summary="List of blocks",
      *     tags={"Blockexplorer"},
      *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
      *     @SWG\Response(
      *          response=200,
      *          description="Returned when operation is successful",
@@ -52,13 +56,13 @@ class BlockController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to limit number of blocks"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to specify blocks offset"
      *      )
      * )
@@ -77,7 +81,16 @@ class BlockController extends ApiController
      *     tags={"Blockexplorer"},
      *
      *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Block Id is invalid"
+     *      ),
+     *      @SWG\Response(
+     *          response=404,
+     *          description="Returned when Block resource does not exist"
+     *      ),
+     *      @SWG\Response(
      *          response=200,
+     *          description="Returned when operation is successful",
      *          @Model(type=Block::class)
      *     ),
      *     @SWG\Parameter(

@@ -29,6 +29,10 @@ class AccountController extends ApiController
      *     summary="List of accounts",
      *     tags={"Blockexplorer"},
      *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
      *     @SWG\Response(
      *          response=200,
      *          description="Returned when operation is successful",
@@ -52,13 +56,13 @@ class AccountController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to limit number of accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to specify accounts offset"
      *      )
      * )
@@ -78,7 +82,16 @@ class AccountController extends ApiController
      *     tags={"Blockexplorer"},
      *
      *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Account Id is invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=404,
+     *          description="Returned when Account resource does not exist"
+     *     ),
+     *     @SWG\Response(
      *          response=200,
+     *          description="Returned when operation is successful",
      *          @Model(type=Account::class)
      *     ),
      *     @SWG\Parameter(

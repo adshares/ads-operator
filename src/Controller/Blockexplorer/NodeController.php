@@ -31,6 +31,10 @@ class NodeController extends ApiController
      *     summary="List of nodes",
      *     tags={"Blockexplorer"},
      *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
      *     @SWG\Response(
      *          response=200,
      *          description="Returned when operation is successful",
@@ -54,13 +58,13 @@ class NodeController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to limit number of nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to specify nodes offset"
      *      )
      * )
@@ -79,7 +83,16 @@ class NodeController extends ApiController
      *     tags={"Blockexplorer"},
      *
      *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Node Id is invalid"
+     *      ),
+     *      @SWG\Response(
+     *          response=404,
+     *          description="Returned when Node resource does not exist"
+     *      ),
+     *      @SWG\Response(
      *          response=200,
+     *          description="Returned when operation is successful",
      *          @Model(type=Node::class)
      *     ),
      *     @SWG\Parameter(

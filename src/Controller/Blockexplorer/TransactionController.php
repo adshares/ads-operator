@@ -29,6 +29,10 @@ class TransactionController extends ApiController
      *     summary="List of transactions",
      *     tags={"Blockexplorer"},
      *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
      *     @SWG\Response(
      *          response=200,
      *          description="Returned when operation is successful",
@@ -52,13 +56,13 @@ class TransactionController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to limit number of transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to specify transactions offset"
      *      )
      * )
@@ -78,7 +82,16 @@ class TransactionController extends ApiController
      *     tags={"Blockexplorer"},
      *
      *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Transaction Id is invalid"
+     *      ),
+     *      @SWG\Response(
+     *          response=404,
+     *          description="Returned when Transaction resource does not exist"
+     *      ),
+     *      @SWG\Response(
      *          response=200,
+     *          description="Returned when operation is successful",
      *          @Model(type=Transaction::class)
      *     ),
      *     @SWG\Parameter(
