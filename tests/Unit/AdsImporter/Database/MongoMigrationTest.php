@@ -53,7 +53,7 @@ class MongoMigrationTest extends TestCase
         $collection = $this->createMock(Collection::class);
 
         $database
-            ->method('createCollection')
+            ->method('selectCollection')
             ->willReturn($collection);
 
         $connection = $this->createMock(Connection::class);
@@ -106,7 +106,7 @@ class MongoMigrationTest extends TestCase
             ->will($return);
 
         $this->database
-            ->method('createCollection')
+            ->method('selectCollection')
             ->willReturn($this->collection);
 
         $this->connection
@@ -266,7 +266,7 @@ class MongoMigrationTest extends TestCase
             ->willReturn($cursor);
 
         $database
-            ->method('createCollection')
+            ->method('selectCollection')
             ->willReturn($collection);
 
         $database
@@ -309,7 +309,7 @@ class MongoMigrationTest extends TestCase
             ->willReturn($cursor);
 
         $database
-            ->method('createCollection')
+            ->method('selectCollection')
             ->willReturn($collection);
 
         $database
@@ -338,7 +338,7 @@ class MongoMigrationTest extends TestCase
             ->willReturn(null);
 
         $database
-            ->method('createCollection')
+            ->method('selectCollection')
             ->willReturn($collection);
 
         $connection = $this->createMock(Connection::class);

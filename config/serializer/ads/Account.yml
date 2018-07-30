@@ -22,9 +22,9 @@ Adshares\Ads\Entity\Account:
         node:
             expose: true
             type: int
-        pairedId:
+        pairedAddress:
             expose: true
-            type: int
+            type: string
         pairedNode:
             expose: true
             type: int

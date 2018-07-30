@@ -12,7 +12,6 @@ Adshares\AdsOperator\Document\Transaction\LogAccountTransaction:
         blockId:
             type: string
         messageId:
-            unique: true
             type: string
         nodeId:
             type: string

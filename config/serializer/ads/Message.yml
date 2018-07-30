@@ -4,9 +4,9 @@ Adshares\Ads\Entity\Message:
         id:
             expose: true
             type: string
-        nodeId:
-            expose: true
-            type: string
+        node:
+            expose: false
+            type: int
         blockId:
             expose: true
             type: string

@@ -9,7 +9,6 @@ Adshares\AdsOperator\Document\Transaction\StatusTransaction:
         blockId:
             type: string
         messageId:
-            unique: true
             type: string
         nodeId:
             type: string
