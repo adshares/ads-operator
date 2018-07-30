@@ -1,0 +1,6 @@
+services:
+  Adshares\AdsOperator\GuzzleHttp\ApiClient:
+    class: GuzzleHttp\Client
+    arguments: [ base_uri: '%env(API_URI)%' ]
+    public: true
+

@@ -122,11 +122,6 @@ services:
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
 
-    Adshares\AdsOperator\GuzzleHttp\ApiClient:
-        class: GuzzleHttp\Client
-        arguments: [ base_uri: 'http://ads-operator.ads' ]
-        public: true
-
     Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver
         arguments:
