@@ -15,6 +15,11 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ApiController
 {
     /**
+     * @var mixed
+     */
+    protected $repository;
+
+    /**
      * @var string
      */
     protected $defaultSort = 'id';
@@ -98,7 +103,7 @@ class ApiController
 
         if ($offset !== null && (!is_numeric($offset) || ($offset < 0 || $offset > $this->maxOffset))) {
             throw new BadRequestHttpException(sprintf(
-                'Offset value `%s` is invalid. Value must be between %s and %s',
+                'Offset value `%s` is invalid. Value must be between %s and %s.',
                 $offset,
                 0,
                 $this->maxOffset
@@ -107,7 +112,7 @@ class ApiController
 
         if ($limit !== null && (!is_numeric($limit) || ($limit < 1 || $limit > $this->maxLimit))) {
             throw new BadRequestHttpException(sprintf(
-                'Limit value `%s` is invalid. Value must be between %s and %s',
+                'Limit value `%s` is invalid. Value must be between %s and %s.',
                 $limit,
                 1,
                 $this->maxLimit
@@ -173,5 +178,21 @@ class ApiController
         }
 
         return $order;
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    protected function getList(Request $request): array
+    {
+        $this->validateRequest($request, $this->repository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        return $this->repository->fetchList($sort, $order, $limit, $offset);
     }
 }

@@ -15,16 +15,16 @@ Adshares\Ads\Entity\Account:
             type: string
         localChange:
             expose: true
-            type: date
+            type: DateTime
         msid:
             expose: true
             type: int
         node:
             expose: true
             type: int
-        pairedId:
+        pairedAddress:
             expose: true
-            type: int
+            type: string
         pairedNode:
             expose: true
             type: int
@@ -33,10 +33,10 @@ Adshares\Ads\Entity\Account:
             type: string
         remoteChange:
             expose: true
-            type: date
+            type: DateTime
         status:
             expose: true
             type: int
         time:
             expose: true
-            type: date
+            type: DateTime

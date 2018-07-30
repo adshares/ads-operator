@@ -17,7 +17,7 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
+            '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
             'blockId' => $this->blockId,

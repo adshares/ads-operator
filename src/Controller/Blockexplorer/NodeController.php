@@ -10,14 +10,13 @@ use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class NodeController extends ApiController
 {
-    /**
-     * @var NodeRepositoryInterface
-     */
-    private $repository;
-
     /**
      * NodeController constructor.
      * @param NodeRepositoryInterface $repository
@@ -30,8 +29,12 @@ class NodeController extends ApiController
     /**
      * @Operation(
      *     summary="List of nodes",
-     *     tags={"Node"},
+     *     tags={"Blockexplorer"},
      *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
      *     @SWG\Response(
      *          response=200,
      *          description="Returned when operation is successful",
@@ -55,13 +58,13 @@ class NodeController extends ApiController
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to limit number of nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
-     *          type="int",
+     *          type="integer",
      *          description="The field used to specify nodes offset"
      *      )
      * )
@@ -71,15 +74,50 @@ class NodeController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        $this->validateRequest($request, $this->repository->availableSortingFields());
+        return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+    }
 
-        $sort = $this->getSort($request);
-        $order = $this->getOrder($request);
-        $limit = $this->getLimit($request);
-        $offset = $this->getOffset($request);
+    /**
+     * @Operation(
+     *     summary="Returns node resource",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Node Id is invalid"
+     *      ),
+     *      @SWG\Response(
+     *          response=404,
+     *          description="Returned when Node resource does not exist"
+     *      ),
+     *      @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @Model(type=Node::class)
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="Node Id (hexadecimal number, e.g. 0001)"
+     *     )
+     * )
+     *
+     * @param string $id
+     * @return Response
+     */
+    public function showAction(string $id): Response
+    {
+        if (!Node::validateId($id)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
 
-        $nodes = $this->repository->findNodes($sort, $order, $limit, $offset);
+        $node = $this->repository->getNode($id);
 
-        return $this->response($this->serializer->serialize($nodes, 'json'), Response::HTTP_OK);
+        if (!$node) {
+            throw new NotFoundHttpException(sprintf('The requested resource: %s was not found', $id));
+        }
+
+        return $this->response($this->serializer->serialize($node, 'json'), Response::HTTP_OK);
     }
 }

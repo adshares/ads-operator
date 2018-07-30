@@ -28,4 +28,13 @@ class Node extends \Adshares\Ads\Entity\Node
     {
         return $this->getId() === self::SPECIAL_NODE;
     }
+
+    /**
+     * @param string $id
+     * @return bool
+     */
+    public static function validateId(string $id): bool
+    {
+        return (bool) preg_match('/^[0-9A-Z]{4}$/', $id);
+    }
 }

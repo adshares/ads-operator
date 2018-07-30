@@ -1,6 +1,7 @@
 Adshares\AdsOperator\Document\Block:
     type: document
     collection: block
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\BlockRepository
     fields:
         id:
             id: true
@@ -12,21 +13,21 @@ Adshares\AdsOperator\Document\Block:
             type: bool
         messageCount:
             type: int
-        minhash:
+        minHash:
             type: string
-        msghash:
+        msgHash:
             type: string
         nodeCount:
             type: int
         nodes:
             type: collection
-        nodhash:
+        nodHash:
             type: string
-        nowhash:
+        nowHash:
             type: string
-        oldhash:
+        oldHash:
             type: string
-        viphash:
+        vipHash:
             type: string
         time:
             type: date

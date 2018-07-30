@@ -1,7 +1,7 @@
 Adshares\AdsOperator\Document\Transaction\SendManyTransaction:
     type: document
     collection: transaction
-    embedOne:
+    embedMany:
         wires:
             targetDocument: SendManyTransactionWire
     fields:
@@ -12,7 +12,6 @@ Adshares\AdsOperator\Document\Transaction\SendManyTransaction:
         blockId:
             type: string
         messageId:
-            unique: true
             type: string
         nodeId:
             type: string
@@ -36,6 +35,3 @@ Adshares\AdsOperator\Document\Transaction\SendManyTransaction:
             type: int
         wireCount:
             type: int
-        wires:
-            type: raw
-

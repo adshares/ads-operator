@@ -8,7 +8,42 @@ block_list:
     controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::listAction
     methods: [GET]
 
+account_list:
+    path: /accounts
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::listAction
+    methods: [GET]
+
+message_list:
+    path: /messages
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\MessageController::listAction
+    methods: [GET]
+
+transaction_list:
+    path: /transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\TransactionController::listAction
+    methods: [GET]
+
+node_show:
+    path: /nodes/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::showAction
+    methods: [GET]
+
 block_show:
     path: /blocks/{id}
     controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::showAction
+    methods: [GET]
+
+account_show:
+    path: /accounts/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::showAction
+    methods: [GET]
+
+message_show:
+    path: /messages/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\MessageController::showAction
+    methods: [GET]
+
+transaction_show:
+    path: /transactions/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\TransactionController::showAction
     methods: [GET]

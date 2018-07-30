@@ -23,18 +23,18 @@ Adshares\Ads\Entity\Block:
             expose: true
             type: int
         nodes:
-            expose: true
+            expose: false
             type: array<Adshares\AdsOperator\Document\Node>
-        nodehash:
+        nodeHash:
             expose: true
             type: string
-        nowhash:
+        nowHash:
             expose: true
             type: string
-        oldhash:
+        oldHash:
             expose: true
             type: string
-        viphash:
+        vipHash:
             expose: true
             type: string
         time:

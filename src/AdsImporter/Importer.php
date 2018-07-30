@@ -92,6 +92,7 @@ class Importer
         do {
             try {
                 $blockResponse = $this->client->getBlock($blockId);
+
                 /** @var Block $block */
                 $block = $blockResponse->getBlock();
 

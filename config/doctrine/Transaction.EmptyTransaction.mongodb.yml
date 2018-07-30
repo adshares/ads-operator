@@ -16,3 +16,10 @@ Adshares\AdsOperator\Document\Transaction\EmptyTransaction:
             type: string
         size:
             type: int
+    indexes:
+        blockid:
+            keys:
+                blockId: desc
+        messageid:
+            keys:
+                messageId: desc

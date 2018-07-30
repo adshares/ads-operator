@@ -37,6 +37,7 @@ services:
 
     Adshares\AdsOperator\EventListener\ApiExceptionListener:
         arguments:
+          $environment: '%env(APP_ENV)%'
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
@@ -57,6 +58,32 @@ services:
         public: true
         autowire: false
         autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\BlockRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\AccountController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\MessageController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\TransactionController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
@@ -66,6 +93,26 @@ services:
         class: Doctrine\ODM\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Node']
+
+    Adshares\AdsOperator\Repository\Doctrine\BlockRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Block']
+
+    Adshares\AdsOperator\Repository\Doctrine\AccountRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Account']
+
+    Adshares\AdsOperator\Repository\Doctrine\MessageRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Message']
+
+    Adshares\AdsOperator\Repository\Doctrine\TransactionRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Transaction']
 
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:

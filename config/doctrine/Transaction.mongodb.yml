@@ -1,0 +1,20 @@
+Adshares\AdsOperator\Document\Transaction:
+    type: mappedSuperclass
+    collection: transaction
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\TransactionRepository
+    inheritanceType: SINGLE_COLLECTION
+    discriminatorField: type
+    discriminatorMap:
+        broadcast: Adshares\AdsOperator\Document\Transaction\BroadcastTransaction
+        connection: Adshares\AdsOperator\Document\Transaction\ConnectionTransaction
+        empty: Adshares\AdsOperator\Document\Transaction\EmptyTransaction
+        key: Adshares\AdsOperator\Document\Transaction\KeyTransaction
+        log_account: Adshares\AdsOperator\Document\Transaction\LogAccountTransaction
+        send_one: Adshares\AdsOperator\Document\Transaction\SendOneTransaction
+        send_many: Adshares\AdsOperator\Document\Transaction\SendManyTransaction
+        status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string

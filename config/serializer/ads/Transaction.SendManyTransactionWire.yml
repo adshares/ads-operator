@@ -1,0 +1,15 @@
+Adshares\Ads\Entity\Transaction\SendManyTransactionWire:
+    exclusion_policy: ALL
+    properties:
+        amount:
+            expose: true
+            type: string
+        targetAddress:
+            expose: true
+            type: string
+        targetNode:
+            expose: true
+            type: int
+        targetUser:
+            expose: true
+            type: int
