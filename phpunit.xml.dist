@@ -21,6 +21,8 @@
         <directory suffix=".php">./src</directory>
         <exclude>
             <file>./src/Kernel.php</file>
+            <directory>./src/Controller</directory> <!-- Controller tests are handled by Behat -->
+            <directory>./src/Repository</directory> <!-- Repository tests are handled by Behat in controllers -->
         </exclude>
     </whitelist>
 </filter>
