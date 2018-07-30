@@ -103,7 +103,7 @@ class ApiController
 
         if ($offset !== null && (!is_numeric($offset) || ($offset < 0 || $offset > $this->maxOffset))) {
             throw new BadRequestHttpException(sprintf(
-                'Offset value `%s` is invalid. Value must be between %s and %s',
+                'Offset value `%s` is invalid. Value must be between %s and %s.',
                 $offset,
                 0,
                 $this->maxOffset
@@ -112,7 +112,7 @@ class ApiController
 
         if ($limit !== null && (!is_numeric($limit) || ($limit < 1 || $limit > $this->maxLimit))) {
             throw new BadRequestHttpException(sprintf(
-                'Limit value `%s` is invalid. Value must be between %s and %s',
+                'Limit value `%s` is invalid. Value must be between %s and %s.',
                 $limit,
                 1,
                 $this->maxLimit

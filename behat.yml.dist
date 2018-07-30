@@ -1,0 +1,15 @@
+default:
+    suites:
+        default:
+            paths: [ "%paths.base%/features" ]
+            contexts:
+                - DoctrineContext:
+                    - '@doctrine.odm.mongodb.document_manager'
+                - ApiContext
+                    - '@App\GuzzleHttp\ApiClient'
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: Adshares\AdsOperator\Kernel
