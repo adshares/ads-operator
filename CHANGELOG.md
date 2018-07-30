@@ -6,4 +6,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 - Importer command to synchronize data with ADS blockchain network
-- Blockexplorer Restful API to display data from ADS blockchain network
+- Block Explorer RESTful API to display data from ADS blockchain network
