@@ -110,4 +110,4 @@ This work is licensed under the Creative Commons Attribution-NoDerivatives 4.0 I
 this license, visit http://creativecommons.org/licenses/by-nd/4.0/ or send a letter to Creative Commons, PO Box 1866, 
 Mountain View, CA 94042, USA.
  
-See the [LICENSE](LICENSE.txt) file for details.
+See the [LICENSE](LICENSE) file for details.
