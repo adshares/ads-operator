@@ -5,8 +5,8 @@ default:
             contexts:
                 - DoctrineContext:
                     - '@doctrine.odm.mongodb.document_manager'
-                - ApiContext
-                    - '@App\GuzzleHttp\ApiClient'
+                - ApiContext:
+                    - '@Adshares\AdsOperator\GuzzleHttp\ApiClient'
 
     extensions:
         Behat\Symfony2Extension:
