@@ -12,6 +12,7 @@ RESTful API to operate ADS blockchain data.
 1. Make sure you're using PHP (+mongodb module) 7.1 or higher and have Composer installed
 1. Clone repository: `git clone https://github.com/adshares/ads-operator.git`
 1. Create configuration file `.env` based on `.env.dist` in the root of the application
+1. Create Behat configuration file `behat.yml` based on `behat.yml.dist` in the root of the application
 1. Install all dependencies using composer: `composer install`
 1. Add `127.0.0.1 ads-operator.ads` entry to your hosts
 
@@ -109,4 +110,4 @@ This work is licensed under the Creative Commons Attribution-NoDerivatives 4.0 I
 this license, visit http://creativecommons.org/licenses/by-nd/4.0/ or send a letter to Creative Commons, PO Box 1866, 
 Mountain View, CA 94042, USA.
  
-See the [LICENSE](LICENSE) file for details.
+See the [LICENSE](LICENSE.txt) file for details.
