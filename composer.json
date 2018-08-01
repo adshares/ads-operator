@@ -20,17 +20,10 @@
           "homepage": "https://adshares.pl/team"
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/adshares/php-ads-client"
-        }
-    ],
     "require": {
         "php": "^7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "adshares/php-ads-client": "dev-master",
         "alcaeus/mongo-php-adapter": "^1.1",
         "doctrine/mongodb-odm-bundle": " ^3.0",
         "jms/serializer-bundle": "^2.4",
@@ -42,7 +35,8 @@
         "symfony/yaml": "^4.1",
         "nelmio/api-doc-bundle": "^3.2",
         "symfony/twig-bundle": "^4.1",
-        "symfony/asset": "^4.1"
+        "symfony/asset": "^4.1",
+        "adshares/php-ads-client": "^1.0@dev"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0",
