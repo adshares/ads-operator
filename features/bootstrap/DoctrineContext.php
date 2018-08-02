@@ -53,7 +53,7 @@ class DoctrineContext implements Context
     {
         $map = [
             'accounts' => Account::class,
-            'message' => Message::class,
+            'messages' => Message::class,
             'nodes' => Node::class,
         ];
 
