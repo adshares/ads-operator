@@ -18,8 +18,10 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Message;
+use Adshares\AdsOperator\Document\Node;
+
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -40,21 +42,6 @@ class DoctrineContext implements Context
     }
 
     /**
-     * @Given nodes exist in application:
-     *
-     * @param TableNode $table
-     */
-    public function nodesExistInApplication(TableNode $table): void
-    {
-        foreach ($table->getHash() as $data) {
-            $node = Node::createFromRawData($data);
-            $this->documentManger->persist($node);
-        }
-
-        $this->documentManger->flush();
-    }
-
-    /**
      * @Given :entity exist in application:
      *
      * @param string $entity
@@ -66,6 +53,7 @@ class DoctrineContext implements Context
     {
         $map = [
             'accounts' => Account::class,
+            'message' => Message::class,
             'nodes' => Node::class,
         ];
 
@@ -78,10 +66,8 @@ class DoctrineContext implements Context
 
         foreach ($table->getHash() as $data) {
             $node = $class::createFromRawData($data);
-//            var_dump($node->getBalance());
             $this->documentManger->persist($node);
         }
-//die();
         $this->documentManger->flush();
     }
 
