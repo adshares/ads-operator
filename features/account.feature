@@ -309,7 +309,7 @@ Feature: Accounts
         }
       ]
     """
-  Scenario: List all available accounts with sort by id asc
+  Scenario: List all available accounts with sort by id
     Given I want to get the list of "blockexplorer/accounts"
     And I want to limit to 2
     And I want to sort by "id"
@@ -347,7 +347,7 @@ Feature: Accounts
       ]
     """
 
-  Scenario: List all available accounts with sort by id asc
+  Scenario: List all available accounts with sort by asc
     Given I want to get the list of "blockexplorer/accounts"
     And I want to limit to 2
     And I want to order by "asc"
@@ -525,19 +525,19 @@ Feature: Accounts
     """
 
   Scenario: Unable to get non-existent resource
-    Given I want to get the resource "blockexplorer/nodes" with id "1111"
+    Given I want to get the resource "blockexplorer/accounts" with id "0011-00000000-9B6F"
     When I request resource
     Then the response status code should be 404
     And the response should contain:
     """
         {
           "code": 404,
-          "message": "The requested resource: 1111 was not found"
+          "message": "The requested resource: 0011-00000000-9B6F was not found"
         }
     """
 
   Scenario: Unable to get the resource by invalid id
-    Given I want to get the resource "blockexplorer/nodes" with id "123-22"
+    Given I want to get the resource "blockexplorer/accounts" with id "123-22"
     When I request resource
     Then the response status code should be 422
     And the response should contain:
@@ -549,7 +549,7 @@ Feature: Accounts
     """
 
   Scenario: Unable to get the resource by invalid id
-    Given I want to get the resource "blockexplorer/nodes" with id "0001*"
+    Given I want to get the resource "blockexplorer/accounts" with id "0001*"
     When I request resource
     Then the response status code should be 422
     And the response should contain:
