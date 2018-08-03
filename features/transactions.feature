@@ -5,8 +5,8 @@ Feature: Transactions
 
   Background:
     Given "emptyTransactions" exist in application:
-      | id                 | blockId | messageId | nodeId | type | size |
-      | 0001               | 0001    | 0001      | 0001   | 0    | 0    |
+      | id   | blockId | messageId | nodeId | type | size |
+      | 0001 | 0001    | 0001      | 0001   | 0    | 0    |
 
   Scenario: List all available transaction without sort and pagination
     Given I want to get the list of "blockexplorer/emptyTransactions"
