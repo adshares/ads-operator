@@ -19,6 +19,7 @@
  */
 
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 
@@ -53,6 +54,7 @@ class DoctrineContext implements Context
     {
         $map = [
             'accounts' => Account::class,
+            'blocks' => Block::class,
             'messages' => Message::class,
             'nodes' => Node::class,
         ];
