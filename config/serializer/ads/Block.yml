@@ -25,7 +25,7 @@ Adshares\Ads\Entity\Block:
         nodes:
             expose: false
             type: array<Adshares\AdsOperator\Document\Node>
-        nodeHash:
+        nodHash:
             expose: true
             type: string
         nowHash:
