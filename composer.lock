@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/adshares/php-ads-client.git",
-                "reference": "726c8c8a799d584dbebe67af53d3951468da2ee6"
+                "reference": "e7758f16a720e143503b8273ec37993bd765b15d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/726c8c8a799d584dbebe67af53d3951468da2ee6",
-                "reference": "726c8c8a799d584dbebe67af53d3951468da2ee6",
+                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/e7758f16a720e143503b8273ec37993bd765b15d",
+                "reference": "e7758f16a720e143503b8273ec37993bd765b15d",
                 "shasum": ""
             },
             "require": {
@@ -34,10 +34,10 @@
                 "squizlabs/php_codesniffer": "^3.3",
                 "wimg/php-compatibility": "^8.1"
             },
-            "type": "project",
+            "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.1.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -45,46 +45,30 @@
                     "Adshares\\Ads\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Adshares\\Ads\\Tests\\": "tests/"
-                }
-            },
-            "scripts": {
-                "install-codestandards": [
-                    "Dealerdirect\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
-                ],
-                "qa-check": [
-                    "security-checker security:check",
-                    "parallel-lint --no-colors --blame --exclude vendor .",
-                    "parallel-lint --no-colors --blame --exclude vendor .",
-                    "phpcs -s src --standard=PHPCompatibility",
-                    "phpcs -s src --standard=PSR2",
-                    "phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "proprietary"
+                "GPL-3.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "Adshares",
+                    "homepage": "https://adshares.pl"
+                },
                 {
                     "name": "Contributors",
                     "homepage": "https://github.com/adshares/php-ads-client/graphs/contributors"
                 }
             ],
-            "description": "PHP Client for ADS blockchain",
+            "description": "PHP 7.2 client for the ADS blockchain",
             "homepage": "https://github.com/adshares/php-ads-client",
             "keywords": [
                 "ads",
                 "adshares",
+                "blockchain",
                 "esc",
                 "php"
             ],
-            "support": {
-                "issues": "https://github.com/adshares/php-ads-client/issues",
-                "source": "https://github.com/adshares/php-ads-client"
-            },
-            "time": "2018-07-26T13:43:25+00:00"
+            "time": "2018-08-01T08:54:20+00:00"
         },
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -2817,16 +2801,16 @@
         },
         {
             "name": "symfony/http-foundation",
-            "version": "v4.1.1",
+            "version": "v4.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/http-foundation.git",
-                "reference": "4f9c7cf962e635b0b26b14500ac046e07dbef7f3"
+                "reference": "7d93e3547660ec7ee3dad1428ba42e8076a0e5f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/4f9c7cf962e635b0b26b14500ac046e07dbef7f3",
-                "reference": "4f9c7cf962e635b0b26b14500ac046e07dbef7f3",
+                "url": "https://api.github.com/repos/symfony/http-foundation/zipball/7d93e3547660ec7ee3dad1428ba42e8076a0e5f1",
+                "reference": "7d93e3547660ec7ee3dad1428ba42e8076a0e5f1",
                 "shasum": ""
             },
             "require": {
@@ -2867,7 +2851,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2018-06-19T21:38:16+00:00"
+            "time": "2018-08-01T14:07:44+00:00"
         },
         {
             "name": "symfony/http-kernel",
