@@ -22,7 +22,7 @@ use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
-
+use Adshares\AdsOperator\Document\Transaction\EmptyTransaction;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -57,6 +57,7 @@ class DoctrineContext implements Context
             'blocks' => Block::class,
             'messages' => Message::class,
             'nodes' => Node::class,
+            'emptyTransactions' => EmptyTransaction::class,
         ];
 
         if (!isset($map[$entity])) {
