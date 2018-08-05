@@ -59,7 +59,7 @@ install:
 
 script:
   # run server
-  - ./bin/console server:run
+  - ./bin/console server:start
   # SensioLabs Security Checker: checks security issues
   - ./vendor/bin/security-checker security:check
   # PHP Lint: check syntax errors in all PHP files
