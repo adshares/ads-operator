@@ -51,6 +51,7 @@ before_install:
       }
       export -f tpecl
   - tpecl mongodb-${DRIVER_VERSION} mongodb.so
+  - tpecl xml xml.so
 
 # Install composer dependencies
 install:
@@ -58,6 +59,8 @@ install:
   - composer run-script install-codestandards
 
 script:
+  # run server
+  - ./bin/console server:run
   # SensioLabs Security Checker: checks security issues
   - ./vendor/bin/security-checker security:check
   # PHP Lint: check syntax errors in all PHP files
