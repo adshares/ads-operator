@@ -51,7 +51,6 @@ before_install:
       }
       export -f tpecl
   - tpecl mongodb-${DRIVER_VERSION} mongodb.so
-  - tpecl xml xml.so
 
 # Install composer dependencies
 install:
