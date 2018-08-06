@@ -57,7 +57,8 @@
         "phpstan/phpstan-doctrine": "^0.10.0",
         "behat/behat": "^3.4",
         "behat/symfony2-extension": "^2.1",
-        "guzzlehttp/guzzle": "^6.3"
+        "guzzlehttp/guzzle": "^6.3",
+        "symfony/web-server-bundle": "^4.1"
     },
     "config": {
         "preferred-install": {
