@@ -22,8 +22,14 @@ use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Document\Transaction\EmptyTransaction;
+use Adshares\AdsOperator\Document\Transaction\BroadcastTransaction;
 use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
+use Adshares\AdsOperator\Document\Transaction\EmptyTransaction;
+use Adshares\AdsOperator\Document\Transaction\KeyTransaction;
+use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
+use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
+use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
+use Adshares\AdsOperator\Document\Transaction\StatusTransaction;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ODM\MongoDB\DocumentManager;
@@ -58,8 +64,14 @@ class DoctrineContext implements Context
             'blocks' => Block::class,
             'messages' => Message::class,
             'nodes' => Node::class,
-            'emptyTransactions' => EmptyTransaction::class,
-            'connectionTransactions' => ConnectionTransaction::class,
+            'broadcastTransaction' => BroadcastTransaction::class,
+            'connectionTransaction' => ConnectionTransaction::class,
+            'emptyTransaction' => EmptyTransaction::class,
+            'keyTransaction' => KeyTransaction::class,
+            'logAccountTransaction' => LogAccountTransaction::class,
+            'sendOneTransaction' => SendOneTransaction::class,
+            'sendManyTransaction' => SendManyTransaction::class,
+            'statusTransaction' => StatusTransaction::class,
         ];
 
         if (!isset($map[$entity])) {
