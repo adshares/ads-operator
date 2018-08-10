@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e83ecbc43944e38a8f96af3d80cd5c03",
+    "content-hash": "992730957bd8063c5057d626a46f90a6",
     "packages": [
         {
             "name": "adshares/php-ads-client",
@@ -7056,8 +7056,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "symfony/lts": 20,
-        "adshares/php-ads-client": 20
+        "symfony/lts": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
