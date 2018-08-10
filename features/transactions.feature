@@ -1,5 +1,5 @@
 Feature: Transactions
-  In order to display accounts in blockexplorer
+  In order to display transactions in blockexplorer
   As an API client
   I need to be able to fetch single transaction and list of transactions
 
