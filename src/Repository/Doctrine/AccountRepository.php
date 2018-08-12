@@ -51,6 +51,9 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         return $account;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAccountsByNodeId(string $nodeId): array
     {
         $results = [];
