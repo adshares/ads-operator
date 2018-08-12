@@ -47,3 +47,8 @@ transaction_show:
     path: /transactions/{id}
     controller: Adshares\AdsOperator\Controller\Blockexplorer\TransactionController::showAction
     methods: [GET]
+
+account_list_by_nodeid:
+    path: /nodes/{nodeId}/accounts
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::accountsAction
+    methods: [GET]

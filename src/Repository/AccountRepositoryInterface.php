@@ -33,4 +33,10 @@ interface AccountRepositoryInterface extends ListRepositoryInterface
      * @return Account
      */
     public function getAccount(string $accountId):? Account;
+
+    /**
+     * @param string $nodeId
+     * @return array
+     */
+    public function getAccountsByNodeId(string $nodeId): array;
 }

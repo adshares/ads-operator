@@ -28,6 +28,13 @@ class Account extends \Adshares\Ads\Entity\Account
 {
     protected $id;
 
+    protected $nodeId;
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
     /**
      * @param string $id
      * @return bool
