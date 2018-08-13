@@ -39,7 +39,7 @@ use Doctrine\MongoDB\Collection;
  */
 class MongoMigration implements DatabaseMigrationInterface
 {
-    const BLOCKEXPLORER_DATABASE = 'blockexplorer';
+    const BLOCKEXPLORER_DATABASE = 'blockexplorer_test';
     const BLOCK_COLLECTION = 'block';
     const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
