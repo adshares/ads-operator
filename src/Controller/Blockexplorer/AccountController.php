@@ -22,6 +22,7 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Repository\AccountRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
@@ -136,5 +137,44 @@ class AccountController extends ApiController
         }
 
         return $this->response($this->serializer->serialize($account, 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Returns accounts resource for given Node",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Node Id is invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref=@Model(type=Account::class))
+     *          )
+     *      ),
+     *     @SWG\Parameter(
+     *          name="nodeId",
+     *          in="path",
+     *          type="string",
+     *          description="Node Id (hexadecimal number, e.g. 0001)"
+     *     )
+     * )
+     *
+     * @param string $nodeId
+     * @return Response
+     */
+    public function accountsAction(string $nodeId): Response
+    {
+        if (!Node::validateId($nodeId)) {
+            throw new UnprocessableEntityHttpException('Invalid resource identity');
+        }
+
+        $accounts = $this->repository->getAccountsByNodeId($nodeId);
+
+        return $this->response($this->serializer->serialize($accounts, 'json'), Response::HTTP_OK);
     }
 }
