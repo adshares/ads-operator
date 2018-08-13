@@ -35,7 +35,8 @@ Feature: Accounts
           "public_key":"4D68B719B7976A1BD38DEB6A88A97AE6258B564B13394490740B00257C8D1550",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0005-00000000-1269"
         },
         {
           "address":"0004-00000000-B838",
@@ -48,7 +49,8 @@ Feature: Accounts
           "public_key":"6B541CA4AA9B7117AC4D2DB61E487C4CBB52D59554C5E20CCB19767C1DCA5212",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0004-00000000-B838"
         },
         {
           "address":"0003-00000000-DFEC",
@@ -61,7 +63,8 @@ Feature: Accounts
           "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id": "0003-00000000-DFEC"
         },
         {
           "address":"0002-00000000-75BD",
@@ -74,7 +77,8 @@ Feature: Accounts
           "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0002-00000000-75BD"
         },
         {
           "address":"0001-00000005-CBCA",
@@ -87,7 +91,8 @@ Feature: Accounts
           "public_key":"6FAB00CC8AA65FF6C981C8EDDD87469FDF43635CCD7B08C2D48D38EDE0B1D1FF",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000005-CBCA"
         },
         {
           "address":"0001-00000004-DBEB",
@@ -100,7 +105,8 @@ Feature: Accounts
           "public_key":"B281F32AC70BF2508423F531ED13C6446F3378985550BADE83BA31B41A1824A1",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000004-DBEB"
         },
         {
           "address":"0001-00000003-AB0C",
@@ -113,7 +119,8 @@ Feature: Accounts
           "public_key":"B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id": "0001-00000003-AB0C"
         },
         {
           "address":"0001-00000002-BB2D",
@@ -126,7 +133,8 @@ Feature: Accounts
           "public_key":"D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000002-BB2D"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -139,7 +147,8 @@ Feature: Accounts
           "public_key":"6431A8580B014DA2420FF32842B0BA3CAB3B77F01D1150E5A0D34743F243B778",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000001-8B4E"
         },
         {
           "address":"0001-00000000-9B6F",
@@ -152,7 +161,8 @@ Feature: Accounts
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000000-9B6F"
         }
       ]
     """
@@ -176,7 +186,8 @@ Feature: Accounts
           "public_key":"4D68B719B7976A1BD38DEB6A88A97AE6258B564B13394490740B00257C8D1550",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0005-00000000-1269"
         },
         {
           "address":"0004-00000000-B838",
@@ -189,7 +200,8 @@ Feature: Accounts
           "public_key":"6B541CA4AA9B7117AC4D2DB61E487C4CBB52D59554C5E20CCB19767C1DCA5212",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0004-00000000-B838"
         },
         {
           "address":"0003-00000000-DFEC",
@@ -202,7 +214,8 @@ Feature: Accounts
           "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0003-00000000-DFEC"
         }
       ]
     """
@@ -227,7 +240,8 @@ Feature: Accounts
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000000-9B6F"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -240,7 +254,8 @@ Feature: Accounts
           "public_key":"6431A8580B014DA2420FF32842B0BA3CAB3B77F01D1150E5A0D34743F243B778",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000001-8B4E"
         },
         {
           "address":"0001-00000002-BB2D",
@@ -253,7 +268,8 @@ Feature: Accounts
           "public_key":"D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000002-BB2D"
         },
         {
           "address":"0001-00000003-AB0C",
@@ -266,7 +282,8 @@ Feature: Accounts
           "public_key":"B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000003-AB0C"
         },
         {
           "address":"0001-00000004-DBEB",
@@ -279,7 +296,8 @@ Feature: Accounts
           "public_key":"B281F32AC70BF2508423F531ED13C6446F3378985550BADE83BA31B41A1824A1",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000004-DBEB"
         },
         {
           "address":"0001-00000005-CBCA",
@@ -292,7 +310,8 @@ Feature: Accounts
           "public_key":"6FAB00CC8AA65FF6C981C8EDDD87469FDF43635CCD7B08C2D48D38EDE0B1D1FF",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000005-CBCA"
         },
         {
           "address":"0002-00000000-75BD",
@@ -305,7 +324,8 @@ Feature: Accounts
           "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0002-00000000-75BD"
         }
       ]
     """
@@ -329,7 +349,8 @@ Feature: Accounts
           "public_key":"4D68B719B7976A1BD38DEB6A88A97AE6258B564B13394490740B00257C8D1550",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0005-00000000-1269"
         },
         {
           "address":"0004-00000000-B838",
@@ -342,7 +363,8 @@ Feature: Accounts
           "public_key":"6B541CA4AA9B7117AC4D2DB61E487C4CBB52D59554C5E20CCB19767C1DCA5212",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0004-00000000-B838"
         }
       ]
     """
@@ -367,7 +389,8 @@ Feature: Accounts
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000000-9B6F"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -380,7 +403,8 @@ Feature: Accounts
           "public_key":"6431A8580B014DA2420FF32842B0BA3CAB3B77F01D1150E5A0D34743F243B778",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000001-8B4E"
         }
       ]
     """
@@ -406,7 +430,8 @@ Feature: Accounts
           "public_key":"4D68B719B7976A1BD38DEB6A88A97AE6258B564B13394490740B00257C8D1550",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0005-00000000-1269"
         }
       ]
     """
@@ -433,7 +458,8 @@ Feature: Accounts
           "public_key":"D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000002-BB2D"
         },
         {
           "address":"0001-00000003-AB0C",
@@ -446,7 +472,8 @@ Feature: Accounts
           "public_key":"B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000003-AB0C"
         }
       ]
     """
@@ -520,7 +547,8 @@ Feature: Accounts
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
-          "time":"2018-07-31T08:49:36+02:00"
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0001-00000000-9B6F"
         }
     """
 
@@ -558,4 +586,28 @@ Feature: Accounts
           "code":422,
           "message":"Invalid resource identity"
         }
+    """
+
+  Scenario: List accounts by node id
+    Given I want to get the list of "blockexplorer/nodes/0002/accounts"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+      [
+        {
+          "address":"0002-00000000-75BD",
+          "balance":596280092307692300,
+          "hash":"70D11F677A9B8F0A49BAD9DCE9F715FCE4AA76BDF23C14FB40142999A1E84577",
+          "local_change":"2018-07-31T08:49:36+02:00",
+          "msid":2,
+          "paired_address":"null",
+          "paired_node":2,
+          "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+          "remote_change":"2018-07-31T08:51:12+02:00",
+          "status":0,
+          "time":"2018-07-31T08:49:36+02:00",
+          "id":"0002-00000000-75BD"
+        }
+      ]
     """

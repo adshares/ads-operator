@@ -1,9 +1,6 @@
 Adshares\Ads\Entity\Account:
     exclusion_policy: ALL
     properties:
-        id:
-            expose: true
-            type: string
         address:
             expose: true
             type: string

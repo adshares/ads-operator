@@ -19,6 +19,8 @@ Adshares\AdsOperator\Document\Account:
             type: int
         node:
             type: int
+        nodeId:
+            type: string
         pairedAddress:
             type: string
         pairedNode:
