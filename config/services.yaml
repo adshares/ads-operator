@@ -68,6 +68,7 @@ services:
         autoconfigure: false
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\MessageController:
         parent: Adshares\AdsOperator\Controller\ApiController

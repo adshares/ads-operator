@@ -22,6 +22,7 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
+use Doctrine\ODM\MongoDB\MongoDBException;
 
 class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
@@ -49,5 +50,42 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         $transaction = $this->find($transactionId);
 
         return $transaction;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTransactionsByAccountId(
+        string $accountId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        $results = [];
+
+        try {
+            $queryBuilder = $this->createQueryBuilder();
+
+            $cursor = $queryBuilder
+                ->addOr($queryBuilder->expr()->field('senderAddress')->equals($accountId))
+                ->addOr($queryBuilder->expr()->field('targetAddress')->equals($accountId))
+                ->addOr($queryBuilder->expr()->field('wires.targetAddress')->equals($accountId))
+                ->sort($sort, $order)
+                ->limit($limit)
+                ->skip($offset)
+                ->getQuery()
+                ->execute();
+
+            $data = $cursor->toArray();
+
+            foreach ($data as $transaction) {
+                $results[] = $transaction;
+            }
+
+            return $results;
+        } catch (MongoDBException $ex) {
+            return [];
+        }
     }
 }
