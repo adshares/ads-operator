@@ -99,7 +99,7 @@ class ApiController
      */
     protected function validateRequest(Request $request, array $availableSortingFields): void
     {
-        $sort = $request->get('sort');
+        $sort = $this->normalizeSort($request->get('sort'));
         $order = $request->get('order');
         $limit = $request->get('limit');
         $offset = $request->get('offset');
@@ -174,7 +174,7 @@ class ApiController
      */
     protected function getSort(Request $request): string
     {
-        $sort = $request->get('sort');
+        $sort = $this->normalizeSort($request->get('sort'));
 
         if ($sort === null) {
             $sort = $this->defaultSort;
@@ -212,5 +212,18 @@ class ApiController
         $offset = $this->getOffset($request);
 
         return $this->repository->fetchList($sort, $order, $limit, $offset);
+    }
+
+    /**
+     * @param null|string $snake
+     * @return null|string
+     */
+    private function normalizeSort(?string $snake): ?string
+    {
+        if (!$snake) {
+            return null;
+        }
+
+        return lcfirst(str_replace('_', '', ucwords($snake, '_')));
     }
 }
