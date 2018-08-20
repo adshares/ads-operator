@@ -88,4 +88,37 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
             return [];
         }
     }
+
+    /**
+     * @param string $messageId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     * @throws MongoDBException
+     */
+    public function getTransactionsByMessageId(
+        string $messageId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        $results = [];
+
+        $cursor = $this
+            ->createQueryBuilder()
+            ->field('messageId')->equals($messageId)
+            ->getQuery()
+            ->execute();
+
+        $data = $cursor->toArray();
+
+        foreach ($data as $message) {
+            $results[] = $message;
+        }
+
+        return $results;
+    }
 }

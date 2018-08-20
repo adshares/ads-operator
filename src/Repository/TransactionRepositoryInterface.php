@@ -49,4 +49,20 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
         int $limit,
         int $offset
     ): array;
+
+    /**
+     * @param string $messageId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByMessageId(
+        string $messageId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
 }

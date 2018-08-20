@@ -854,3 +854,29 @@ Feature: Transactions
           "message":"Invalid resource identity"
         }
     """
+
+  Scenario: List transactions by message id
+    Given I want to get the list of "blockexplorer/messages/0001:00000001/transactions"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+      [
+        {
+          "block_id":"00000001",
+          "id":"0001:00000001:0000",
+          "message_id":"0001:00000001",
+          "node_id":"0001",
+          "type":"broadcast",
+          "size":1,
+          "message":"test_01",
+          "message_length":0,
+          "msg_id":"1",
+          "node":1,
+          "signature":"0001",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":1
+        }
+      ]
+    """
+
