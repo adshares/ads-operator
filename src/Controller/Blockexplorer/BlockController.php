@@ -134,7 +134,7 @@ class BlockController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Block::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $block = $this->repository->getBlock($id);
@@ -206,7 +206,7 @@ class BlockController extends ApiController
     public function messagesAction(Request $request, string $blockId): Response
     {
         if (!Block::validateId($blockId)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $this->validateRequest($request, $this->messageRepository->availableSortingFields());

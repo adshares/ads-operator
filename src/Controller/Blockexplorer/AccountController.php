@@ -138,7 +138,7 @@ class AccountController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Account::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $account = $this->repository->getAccount($id);
@@ -181,7 +181,7 @@ class AccountController extends ApiController
     public function accountsAction(string $nodeId): Response
     {
         if (!Node::validateId($nodeId)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $accounts = $this->repository->getAccountsByNodeId($nodeId);
@@ -249,7 +249,7 @@ class AccountController extends ApiController
     public function transactionsAction(Request $request, string $accountId): Response
     {
         if (!Account::validateId($accountId)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $this->validateRequest($request, $this->transactionRepository->availableSortingFields());

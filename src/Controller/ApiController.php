@@ -32,6 +32,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class ApiController
 {
+    const INVALID_RESOURCE_MESSAGE = 'Invalid resource identity';
+
     /**
      * @var mixed
      */

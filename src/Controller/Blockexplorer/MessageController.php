@@ -125,7 +125,7 @@ class MessageController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Message::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $message = $this->repository->getMessage($id);

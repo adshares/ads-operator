@@ -127,7 +127,7 @@ class NodeController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Node::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $node = $this->repository->getNode($id);
