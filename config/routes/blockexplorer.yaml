@@ -58,7 +58,7 @@ transaction_list_by_accountid:
     controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::transactionsAction
     methods: [GET]
 
-message_list_by_blocktid:
+message_list_by_blockid:
     path: /blocks/{blockId}/messages
     controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::messagesAction
     methods: [GET]
