@@ -65,13 +65,13 @@ class NodeController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order nodes"
+     *          description="The field used to sort nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort nodes"
+     *          description="The field used to set ordering for nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",

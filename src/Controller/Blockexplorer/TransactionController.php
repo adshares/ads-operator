@@ -63,13 +63,13 @@ class TransactionController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order transactions"
+     *          description="The field used to sort transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort transactions"
+     *          description="The field used to set ordering for transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",

@@ -72,13 +72,13 @@ class BlockController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order blocks"
+     *          description="The field used to sort blocks"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort blocks"
+     *          description="The field used to set ordering for blocks"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
@@ -171,13 +171,13 @@ class BlockController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order messages"
+     *          description="The field used to sort messages"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort messages"
+     *          description="The field used to set ordering for messages"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
