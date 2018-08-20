@@ -187,7 +187,7 @@ Feature: Nodes
     """
         {
           "code": 400,
-          "message": "Sort value `test` is invalid. Only id, balance values are supported."
+          "message": "Sort value `test` is invalid. Only id, msid, balance values are supported."
         }
     """
 

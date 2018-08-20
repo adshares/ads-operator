@@ -23,6 +23,8 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Repository\MessageRepositoryInterface;
 use Adshares\AdsOperator\Document\Message;
+use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -34,12 +36,20 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class MessageController extends ApiController
 {
     /**
+     * @var TransactionRepositoryInterface
+     */
+    private $transactionRepository;
+
+    /**
      * BlockController constructor.
      * @param MessageRepositoryInterface $repository
      */
-    public function __construct(MessageRepositoryInterface $repository)
-    {
+    public function __construct(
+        MessageRepositoryInterface $repository,
+        TransactionRepositoryInterface $transactionRepository
+    ) {
         $this->repository = $repository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -63,13 +73,13 @@ class MessageController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order messages"
+     *          description="The field used to sort messages"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort messages"
+     *          description="The field used to set ordering for messages"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
@@ -125,7 +135,7 @@ class MessageController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Message::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $message = $this->repository->getMessage($id);
@@ -135,5 +145,86 @@ class MessageController extends ApiController
         }
 
         return $this->response($this->serializer->serialize($message, 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="List of transactions for given message",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Message Id is invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref=@Model(type=Transaction::class))
+     *          )
+     *      ),
+     *     @SWG\Parameter(
+     *          name="sort",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to sort transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="order",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to set ordering for transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="limit",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to limit number of transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="offset",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to specify transactions offset"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="accountId",
+     *          in="path",
+     *          type="string",
+     *          description="Message Id (hexadecimal number, e.g. 0001:00000001)"
+     *      )
+     * )
+     *
+     * @param Request $request
+     * @param string $messageId
+     * @return Response
+     */
+    public function transactionsAction(Request $request, string $messageId): Response
+    {
+        if (!Message::validateId($messageId)) {
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
+        }
+
+        $this->validateRequest($request, $this->transactionRepository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $transactions = $this->transactionRepository->getTransactionsByMessageId(
+            $messageId,
+            $sort,
+            $order,
+            $limit,
+            $offset
+        );
+
+        return $this->response($this->serializer->serialize($transactions, 'json'), Response::HTTP_OK);
     }
 }

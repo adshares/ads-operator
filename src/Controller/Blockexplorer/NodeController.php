@@ -65,13 +65,13 @@ class NodeController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order nodes"
+     *          description="The field used to sort nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort nodes"
+     *          description="The field used to set ordering for nodes"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
@@ -127,7 +127,7 @@ class NodeController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Node::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $node = $this->repository->getNode($id);

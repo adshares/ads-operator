@@ -52,3 +52,18 @@ account_list_by_nodeid:
     path: /nodes/{nodeId}/accounts
     controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::accountsAction
     methods: [GET]
+
+transaction_list_by_accountid:
+    path: /accounts/{accountId}/transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::transactionsAction
+    methods: [GET]
+
+message_list_by_blockid:
+    path: /blocks/{blockId}/messages
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::messagesAction
+    methods: [GET]
+
+transaction_list_by_messageId:
+    path: /messages/{messageId}/transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\MessageController::transactionsAction
+    methods: [GET]

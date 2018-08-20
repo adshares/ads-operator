@@ -49,4 +49,37 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
 
         return $message;
     }
+
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     * @throws \Doctrine\ODM\MongoDB\MongoDBException
+     */
+    public function getMessagesByBlockId(
+        string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        $results = [];
+
+        $cursor = $this
+            ->createQueryBuilder()
+            ->field('blockId')->equals($blockId)
+            ->getQuery()
+            ->execute();
+
+        $data = $cursor->toArray();
+
+        foreach ($data as $message) {
+            $results[] = $message;
+        }
+
+        return $results;
+    }
 }

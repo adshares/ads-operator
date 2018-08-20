@@ -20,6 +20,8 @@
 
 namespace Adshares\AdsOperator\Document;
 
+use Adshares\Ads\Util\AdsConverter;
+
 /**
  * Class Account
  * @package Adshares\AdsOperator\Document
@@ -33,6 +35,11 @@ class Account extends \Adshares\Ads\Entity\Account
     public function getId(): string
     {
         return $this->id;
+    }
+
+    public function getBalanceInADS(): string
+    {
+        return AdsConverter::clicksToAds($this->balance).' ADS';
     }
 
     /**
