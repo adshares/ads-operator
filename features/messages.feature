@@ -391,4 +391,20 @@ Feature: Messages
           "message":"Invalid resource identity"
         }
     """
-    
+
+  Scenario: List messages by block id
+    Given I want to get the list of "blockexplorer/blocks/00000008/messages"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+      [
+        {
+          "block_id":"00000008",
+          "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
+          "length":8,
+          "id":"0001:00000008",
+          "transaction_count":1
+        }
+      ]
+    """

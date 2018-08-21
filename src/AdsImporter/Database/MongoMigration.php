@@ -129,7 +129,11 @@ class MongoMigration implements DatabaseMigrationInterface
             'length' => $message->getLength(),
         ];
 
-        $this->messageCollection->insert($document);
+        try {
+            $this->messageCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            // do nothing when a block exists in the database
+        }
     }
 
     /**
@@ -174,7 +178,11 @@ class MongoMigration implements DatabaseMigrationInterface
             $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
         }
 
-        $this->transactionCollection->insert($document);
+        try {
+            $this->transactionCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            return;
+        }
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];

@@ -33,4 +33,20 @@ interface MessageRepositoryInterface extends ListRepositoryInterface
      * @return Message
      */
     public function getMessage(string $messageId):? Message;
+
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getMessagesByBlockId(
+        string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
 }
