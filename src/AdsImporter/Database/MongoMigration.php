@@ -39,7 +39,6 @@ use Doctrine\MongoDB\Collection;
  */
 class MongoMigration implements DatabaseMigrationInterface
 {
-    const BLOCKEXPLORER_DATABASE = 'blockexplorer';
     const BLOCK_COLLECTION = 'block';
     const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
@@ -87,16 +86,16 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $accountTransactionCollection;
 
-
     /**
      * MongoMigration constructor.
      *
      * @param Connection $connection
+     * @param string $databaseName
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, string $databaseName)
     {
         $this->connection = $connection;
-        $this->db = $this->connection->selectDatabase(self::BLOCKEXPLORER_DATABASE);
+        $this->db = $this->connection->selectDatabase($databaseName);
 
         $this->selectCollections();
     }

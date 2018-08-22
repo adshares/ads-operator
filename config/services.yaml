@@ -91,6 +91,7 @@ services:
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
+            $databaseName: '%env(MONGODB_DB)%'
 
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
         class: Doctrine\ODM\DocumentRepository
