@@ -30,6 +30,11 @@ use Adshares\Ads\Entity\Transaction\BroadcastTransaction as BaseBroadcastTransac
 class BroadcastTransaction extends BaseBroadcastTransaction implements ArrayableInterface
 {
     /**
+     * @var string
+     */
+    protected $senderAddress;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -47,6 +52,7 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
             'signature' => $this->signature,
             'time' => $this->time,
             'user' => $this->user,
+            'senderAddress' => $this->getSenderAddress(),
         ];
     }
 }

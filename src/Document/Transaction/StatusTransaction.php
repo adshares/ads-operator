@@ -30,6 +30,16 @@ use Adshares\AdsOperator\Document\ArrayableInterface;
 class StatusTransaction extends BaseStatusTransaction implements ArrayableInterface
 {
     /**
+     * @var string
+     */
+    protected $senderAddress;
+
+    /**
+     * @var string
+     */
+    protected $targetAddress;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -47,6 +57,8 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
+            'senderAddress' => $this->getSenderAddress(),
+            'targetAddress' => $this->getTargetAddress(),
         ];
     }
 }

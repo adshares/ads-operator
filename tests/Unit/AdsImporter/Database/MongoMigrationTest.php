@@ -151,7 +151,9 @@ class MongoMigrationTest extends TestCase
         /** @var AbstractTransaction $transaction */
         foreach ($transactions as $class) {
             $transaction = $class::createFromRawData([
-                'time' => time(),
+                'user'=> '1',
+                'node'=> '1',
+                'time'=> time(),
                 'senderAddress' => '1234',
                 'id' => '12312',
                 'target_address' => '1222',

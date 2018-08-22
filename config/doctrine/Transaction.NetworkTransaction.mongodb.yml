@@ -30,3 +30,7 @@ Adshares\AdsOperator\Document\Transaction\NetworkTransaction:
       type: date
     user:
       type: int
+    targetAddress:
+      type: string
+    senderAddress:
+      type: string

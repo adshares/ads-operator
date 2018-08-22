@@ -29,4 +29,5 @@ Adshares\AdsOperator\Document\Transaction\LogAccountTransaction:
             type: date
         user:
             type: int
-
+        senderAddress:
+            type: string

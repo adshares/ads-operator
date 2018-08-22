@@ -30,6 +30,11 @@ use Adshares\Ads\Entity\Transaction\LogAccountTransaction as BaseLogAccountTrans
 class LogAccountTransaction extends BaseLogAccountTransaction implements ArrayableInterface
 {
     /**
+     * @var string
+     */
+    protected $senderAddress;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -46,6 +51,7 @@ class LogAccountTransaction extends BaseLogAccountTransaction implements Arrayab
             'signature' => $this->signature,
             'time' => $this->time,
             'user' => $this->user,
+            'senderAddress' => $this->getSenderAddress(),
         ];
     }
 }

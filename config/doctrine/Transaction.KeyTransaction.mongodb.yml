@@ -38,3 +38,7 @@ Adshares\AdsOperator\Document\Transaction\KeyTransaction:
             type: date
         user:
             type: int
+        targetAddress:
+            type: string
+        senderAddress:
+            type: string
