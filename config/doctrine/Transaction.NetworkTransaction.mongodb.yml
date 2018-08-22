@@ -19,9 +19,9 @@ Adshares\AdsOperator\Document\Transaction\NetworkTransaction:
     msgId:
       type: string
     targetNode:
-      type: string
+      type: int
     targetUser:
-      type: string
+      type: int
     node:
       type: int
     signature:

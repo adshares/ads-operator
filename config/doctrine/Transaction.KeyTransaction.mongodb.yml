@@ -27,9 +27,9 @@ Adshares\AdsOperator\Document\Transaction\KeyTransaction:
         publicKeySignature:
             type: string
         targetNode:
-            type: string
+            type: int
         targetUser:
-            type: string
+            type: int
         node:
             type: int
         signature:
