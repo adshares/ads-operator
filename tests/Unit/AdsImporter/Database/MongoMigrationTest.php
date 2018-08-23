@@ -164,7 +164,20 @@ class MongoMigrationTest extends TestCase
                         'target_node' => 1,
                         'target_user' => 1,
                     ],
-                ]
+                ],
+                'network_account' => [
+                    'address' => '0001-00000000-9B6F',
+                    'balance' => 5000,
+                    'hash' => md5('adshares'),
+                    'localChange' => time(),
+                    'remoteChange' => time(),
+                    'time' => time(),
+                    'msid' => 5,
+                    'node' => 2,
+                    'paired_node' => 0,
+                    'public_key' => 'publickKey',
+                    'status' => 'status',
+                ],
             ]);
             $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
             $mongoMigration->addTransaction($transaction);

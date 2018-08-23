@@ -26,6 +26,7 @@ use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Doctrine\MongoDB\Connection;
@@ -152,7 +153,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'oldHash' => $block->getOldHash(),
             'vipHash' => $block->getVipHash(),
             'nodeCount' => $block->getNodeCount(),
-            'time' => new UTCDateTime((int)$block->getTime()->format('U')*1000),
+            'time' => $this->createMongoDate($block->getTime()),
             'voteYes' => $block->getVoteYes(),
             'voteNo' => $block->getVoteNo(),
             'voteTotal' => $block->getVoteTotal(),
@@ -173,8 +174,20 @@ class MongoMigration implements DatabaseMigrationInterface
     {
         $document = $transaction->toArray();
 
+        if ($transaction instanceof LogAccountTransaction) {
+            $document['networkAccount']['localChange'] = $this->createMongoDate(
+                $document['networkAccount']['localChange']
+            );
+            $document['networkAccount']['remoteChange'] = $this->createMongoDate(
+                $document['networkAccount']['remoteChange']
+            );
+            $document['networkAccount']['time'] = $this->createMongoDate(
+                $document['networkAccount']['time']
+            );
+        }
+
         if (isset($document['time']) && $document['time'] instanceof \DateTime) {
-            $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
+            $document['time'] = $this->createMongoDate($document['time']);
         }
 
         try {
@@ -235,7 +248,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'messageHash' => $node->getMessageHash(),
             'ipv4' => $node->getIpv4(),
             'msid' => $node->getMsid(),
-            'mtim' => new UTCDateTime((int)$node->getMtim()->format('U')*1000),
+            'mtim' => $this->createMongoDate($node->getMtim()),
             'port' => $node->getPort(),
             'publicKey' => $node->getPublicKey(),
             'status' => $node->getStatus(),
@@ -263,9 +276,9 @@ class MongoMigration implements DatabaseMigrationInterface
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
             'hash' => $account->getHash(),
-            'localChange' => new UTCDateTime((int)$account->getLocalChange()->format('U')*1000),
-            'remoteChange' => new UTCDateTime((int)$account->getRemoteChange()->format('U')*1000),
-            'time' => new UTCDateTime((int)$account->getTime()->format('U')*1000),
+            'localChange' => $this->createMongoDate($account->getLocalChange()),
+            'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
+            'time' => $this->createMongoDate($account->getTime()),
             'msid' => $account->getMsid(),
             'pairedAddress' => $account->getPairedAddress(),
             'publicKey' => $account->getPublicKey(),
@@ -292,5 +305,14 @@ class MongoMigration implements DatabaseMigrationInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return UTCDateTime
+     */
+    private function createMongoDate(\DateTime $date): UTCDateTime
+    {
+        return new UTCDateTime((int)$date->format('U')*1000);
     }
 }
