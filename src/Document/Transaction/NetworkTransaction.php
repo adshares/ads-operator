@@ -30,6 +30,16 @@ use Adshares\Ads\Entity\Transaction\NetworkTransaction as BaseNetworkTransaction
 class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInterface
 {
     /**
+     * @var string
+     */
+    protected $senderAddress;
+
+    /**
+     * @var string
+     */
+    protected $targetAddress;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -47,6 +57,8 @@ class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInte
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
+            'senderAddress' => $this->getSenderAddress(),
+            'targetAddress' => $this->getTargetAddress(),
         ];
     }
 }

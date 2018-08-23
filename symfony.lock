@@ -1,6 +1,6 @@
 {
-    "adshares/php-ads-client": {
-        "version": "1.0.x-dev"
+    "adshares/ads-client": {
+        "version": "v1.0.1"
     },
     "alcaeus/mongo-php-adapter": {
         "version": "1.1.5"

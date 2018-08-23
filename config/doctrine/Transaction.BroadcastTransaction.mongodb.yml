@@ -30,3 +30,5 @@ Adshares\AdsOperator\Document\Transaction\BroadcastTransaction:
             type: date
         user:
             type: int
+        senderAddress:
+            type: string

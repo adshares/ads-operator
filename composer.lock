@@ -4,23 +4,24 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b82f08e39f653ac2a54f849050fd52cc",
+    "content-hash": "669482697f599ddf8ff7522bac3764ed",
     "packages": [
         {
-            "name": "adshares/php-ads-client",
-            "version": "dev-master",
+            "name": "adshares/ads-client",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/adshares/php-ads-client.git",
-                "reference": "e7758f16a720e143503b8273ec37993bd765b15d"
+                "url": "https://github.com/adshares/ads-php-client.git",
+                "reference": "b6245e8261bd7ce165022d257fe8c5ed55bb51ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/adshares/php-ads-client/zipball/e7758f16a720e143503b8273ec37993bd765b15d",
-                "reference": "e7758f16a720e143503b8273ec37993bd765b15d",
+                "url": "https://api.github.com/repos/adshares/ads-php-client/zipball/b6245e8261bd7ce165022d257fe8c5ed55bb51ed",
+                "reference": "b6245e8261bd7ce165022d257fe8c5ed55bb51ed",
                 "shasum": ""
             },
             "require": {
+                "ext-json": "*",
                 "php": ">=7.2.0",
                 "psr/log": "^1.0",
                 "symfony/process": "^4.1"
@@ -56,11 +57,11 @@
                 },
                 {
                     "name": "Contributors",
-                    "homepage": "https://github.com/adshares/php-ads-client/graphs/contributors"
+                    "homepage": "https://github.com/adshares/ads-php-client/graphs/contributors"
                 }
             ],
-            "description": "PHP 7.2 client for the ADS blockchain",
-            "homepage": "https://github.com/adshares/php-ads-client",
+            "description": "PHP client for the ADS blockchain",
+            "homepage": "https://github.com/adshares/ads-php-client",
             "keywords": [
                 "ads",
                 "adshares",
@@ -68,7 +69,7 @@
                 "esc",
                 "php"
             ],
-            "time": "2018-08-01T08:54:20+00:00"
+            "time": "2018-08-22T09:38:49+00:00"
         },
         {
             "name": "alcaeus/mongo-php-adapter",
@@ -7058,11 +7059,11 @@
     "platform": {
         "php": "^7.1.3",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-mongodb": "*"
     },
     "platform-dev": [],
     "platform-overrides": {
-        "ext-mongo": "1.6.16",
-        "ext-mongodb": "1.5.0"
+        "ext-mongo": "1.6.16"
     }
 }
