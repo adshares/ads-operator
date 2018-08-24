@@ -55,7 +55,7 @@ class Node extends \Adshares\Ads\Entity\Node
      */
     public static function validateId(string $id): bool
     {
-        return (bool) preg_match('/^[0-9A-Z]{4}$/', $id);
+        return (bool) preg_match('/^[0-9A-F]{4}$/', $id);
     }
 
     /**
