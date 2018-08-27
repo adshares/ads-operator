@@ -54,14 +54,22 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getAccountsByNodeId(string $nodeId): array
-    {
+    public function getAccountsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
         $results = [];
 
         try {
             $cursor = $this
                 ->createQueryBuilder()
                 ->field('nodeId')->equals($nodeId)
+                ->sort($sort, $order)
+                ->limit($limit)
+                ->skip($offset)
                 ->getQuery()
                 ->execute();
 

@@ -71,6 +71,9 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
         $cursor = $this
             ->createQueryBuilder()
             ->field('blockId')->equals($blockId)
+            ->sort($sort, $order)
+            ->limit($limit)
+            ->skip($offset)
             ->getQuery()
             ->execute();
 

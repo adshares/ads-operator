@@ -110,6 +110,9 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         $cursor = $this
             ->createQueryBuilder()
             ->field('messageId')->equals($messageId)
+            ->sort($sort, $order)
+            ->limit($limit)
+            ->skip($offset)
             ->getQuery()
             ->execute();
 
