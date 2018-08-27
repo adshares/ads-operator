@@ -22,7 +22,9 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Repository\BlockRepositoryInterface;
+use Adshares\AdsOperator\Repository\MessageRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -34,12 +36,19 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class BlockController extends ApiController
 {
     /**
+     * @var MessageRepositoryInterface
+     */
+    private $messageRepository;
+
+    /**
      * BlockController constructor.
      * @param BlockRepositoryInterface $repository
+     * @param MessageRepositoryInterface $messageRepository
      */
-    public function __construct(BlockRepositoryInterface $repository)
+    public function __construct(BlockRepositoryInterface $repository, MessageRepositoryInterface $messageRepository)
     {
         $this->repository = $repository;
+        $this->messageRepository = $messageRepository;
     }
 
     /**
@@ -63,13 +72,13 @@ class BlockController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order blocks"
+     *          description="The field used to sort blocks"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort blocks"
+     *          description="The field used to set ordering for blocks"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
@@ -125,7 +134,7 @@ class BlockController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Block::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $block = $this->repository->getBlock($id);
@@ -135,5 +144,86 @@ class BlockController extends ApiController
         }
 
         return $this->response($this->serializer->serialize($block, 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="List of messages for given block",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Block Id is invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref=@Model(type=Message::class))
+     *          )
+     *      ),
+     *     @SWG\Parameter(
+     *          name="sort",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to sort messages"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="order",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to set ordering for messages"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="limit",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to limit number of messages"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="offset",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to specify messages offset"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="blockId",
+     *          in="path",
+     *          type="string",
+     *          description="Block Id (hexadecimal number, e.g. 5B758BC0)"
+     *      )
+     * )
+     *
+     * @param Request $request
+     * @param string $blockId
+     * @return Response
+     */
+    public function messagesAction(Request $request, string $blockId): Response
+    {
+        if (!Block::validateId($blockId)) {
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
+        }
+
+        $this->validateRequest($request, $this->messageRepository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $transactions = $this->messageRepository->getMessagesByBlockId(
+            $blockId,
+            $sort,
+            $order,
+            $limit,
+            $offset
+        );
+
+        return $this->response($this->serializer->serialize($transactions, 'json'), Response::HTTP_OK);
     }
 }

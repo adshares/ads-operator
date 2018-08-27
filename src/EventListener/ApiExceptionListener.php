@@ -59,7 +59,7 @@ class ApiExceptionListener
         } else {
             $data = $this->prepareResponse(Response::HTTP_INTERNAL_SERVER_ERROR, 'Internal server error');
 
-            if ($this->environment === 'dev') {
+            if (in_array($this->environment, ['dev', 'test'])) {
                 $data['dev'] = $this->getDevBlock($exception);
             }
 

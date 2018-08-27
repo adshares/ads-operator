@@ -20,6 +20,8 @@
 
 namespace Adshares\AdsOperator\Document;
 
+use Adshares\Ads\Util\AdsConverter;
+
 /**
  * Class Account
  * @package Adshares\AdsOperator\Document
@@ -28,12 +30,24 @@ class Account extends \Adshares\Ads\Entity\Account
 {
     protected $id;
 
+    protected $nodeId;
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function getBalanceInADS(): string
+    {
+        return AdsConverter::clicksToAds($this->balance).' ADS';
+    }
+
     /**
      * @param string $id
      * @return bool
      */
     public static function validateId(string $id): bool
     {
-        return (bool) preg_match('/^[0-9A-Z]{4}-[0-9A-Z]{8}-[0-9A-Z]{4}$/', $id);
+        return (bool) preg_match('/^[0-9A-F]{4}-[0-9A-F]{8}-[0-9A-F]{4}$/', $id);
     }
 }

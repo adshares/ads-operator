@@ -22,7 +22,10 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Transaction;
+use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Repository\AccountRepositoryInterface;
+use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
@@ -34,12 +37,21 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 class AccountController extends ApiController
 {
     /**
+     * @var TransactionRepositoryInterface
+     */
+    private $transactionRepository;
+
+    /**
      * AccountController constructor.
      * @param AccountRepositoryInterface $repository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
-    public function __construct(AccountRepositoryInterface $repository)
-    {
+    public function __construct(
+        AccountRepositoryInterface $repository,
+        TransactionRepositoryInterface $transactionRepository
+    ) {
         $this->repository = $repository;
+        $this->transactionRepository = $transactionRepository;
     }
 
     /**
@@ -63,13 +75,13 @@ class AccountController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to order accounts"
+     *          description="The field used to sort accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort accounts"
+     *          description="The field used to set ordering for accounts"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
@@ -126,7 +138,7 @@ class AccountController extends ApiController
     public function showAction(string $id): Response
     {
         if (!Account::validateId($id)) {
-            throw new UnprocessableEntityHttpException('Invalid resource identity');
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
         $account = $this->repository->getAccount($id);
@@ -136,5 +148,125 @@ class AccountController extends ApiController
         }
 
         return $this->response($this->serializer->serialize($account, 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Returns accounts resource for given Node",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Node Id is invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref=@Model(type=Account::class))
+     *          )
+     *      ),
+     *     @SWG\Parameter(
+     *          name="nodeId",
+     *          in="path",
+     *          type="string",
+     *          description="Node Id (hexadecimal number, e.g. 0001)"
+     *     )
+     * )
+     *
+     * @param string $nodeId
+     * @return Response
+     */
+    public function accountsAction(string $nodeId): Response
+    {
+        if (!Node::validateId($nodeId)) {
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
+        }
+
+        $accounts = $this->repository->getAccountsByNodeId($nodeId);
+
+        return $this->response($this->serializer->serialize($accounts, 'json'), Response::HTTP_OK);
+    }
+
+    /**
+     * @Operation(
+     *     summary="List of transactions for given account",
+     *     tags={"Blockexplorer"},
+     *
+     *      @SWG\Response(
+     *          response=422,
+     *          description="Returned when Account Id is invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when query parameters are invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=200,
+     *          description="Returned when operation is successful",
+     *          @SWG\Schema(
+     *              type="array",
+     *              @SWG\Items(ref=@Model(type=Transaction::class))
+     *          )
+     *      ),
+     *     @SWG\Parameter(
+     *          name="sort",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to sort transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="order",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to set ordering for transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="limit",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to limit number of transactions"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="offset",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to specify transactions offset"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="accountId",
+     *          in="path",
+     *          type="string",
+     *          description="account Id (hexadecimal number, e.g. 0001-00000001-1234)"
+     *      )
+     * )
+     *
+     * @param Request $request
+     * @param string $accountId
+     * @return Response
+     */
+    public function transactionsAction(Request $request, string $accountId): Response
+    {
+        if (!Account::validateId($accountId)) {
+            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
+        }
+
+        $this->validateRequest($request, $this->transactionRepository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $transactions = $this->transactionRepository->getTransactionsByAccountId(
+            $accountId,
+            $sort,
+            $order,
+            $limit,
+            $offset
+        );
+
+        return $this->response($this->serializer->serialize($transactions, 'json'), Response::HTTP_OK);
     }
 }

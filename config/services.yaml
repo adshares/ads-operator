@@ -60,6 +60,7 @@ services:
         autoconfigure: false
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\BlockRepository'
+          $messageRepository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\AccountController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -68,6 +69,7 @@ services:
         autoconfigure: false
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\MessageController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -76,6 +78,7 @@ services:
         autoconfigure: false
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\TransactionController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -88,6 +91,7 @@ services:
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
+            $databaseName: '%env(MONGODB_DB)%'
 
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
         class: Doctrine\ODM\DocumentRepository

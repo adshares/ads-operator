@@ -39,7 +39,6 @@ use Doctrine\MongoDB\Collection;
  */
 class MongoMigration implements DatabaseMigrationInterface
 {
-    const BLOCKEXPLORER_DATABASE = 'blockexplorer';
     const BLOCK_COLLECTION = 'block';
     const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
@@ -87,16 +86,16 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $accountTransactionCollection;
 
-
     /**
      * MongoMigration constructor.
      *
      * @param Connection $connection
+     * @param string $databaseName
      */
-    public function __construct(Connection $connection)
+    public function __construct(Connection $connection, string $databaseName)
     {
         $this->connection = $connection;
-        $this->db = $this->connection->selectDatabase(self::BLOCKEXPLORER_DATABASE);
+        $this->db = $this->connection->selectDatabase($databaseName);
 
         $this->selectCollections();
     }
@@ -129,7 +128,11 @@ class MongoMigration implements DatabaseMigrationInterface
             'length' => $message->getLength(),
         ];
 
-        $this->messageCollection->insert($document);
+        try {
+            $this->messageCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            // do nothing when a block exists in the database
+        }
     }
 
     /**
@@ -174,7 +177,11 @@ class MongoMigration implements DatabaseMigrationInterface
             $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
         }
 
-        $this->transactionCollection->insert($document);
+        try {
+            $this->transactionCollection->insert($document);
+        } catch (\MongoDuplicateKeyException $ex) {
+            return;
+        }
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];

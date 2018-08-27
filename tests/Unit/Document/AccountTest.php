@@ -32,7 +32,7 @@ class AccountTest extends TestCase
             "1234-1234-1234" => false,
             "1234:1234" => false,
             "1234" => false,
-            "1234-1234AFGA-12DD" => true,
+            "1234-1234AFFA-12DD" => true,
         ];
 
         foreach ($ids as $id => $expected) {

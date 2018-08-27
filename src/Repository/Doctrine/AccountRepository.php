@@ -22,6 +22,7 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Repository\AccountRepositoryInterface;
+use Doctrine\ODM\MongoDB\MongoDBException;
 
 class AccountRepository extends BaseRepository implements AccountRepositoryInterface
 {
@@ -48,5 +49,31 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         $account = $this->find($accountId);
 
         return $account;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAccountsByNodeId(string $nodeId): array
+    {
+        $results = [];
+
+        try {
+            $cursor = $this
+                ->createQueryBuilder()
+                ->field('nodeId')->equals($nodeId)
+                ->getQuery()
+                ->execute();
+
+            $data = $cursor->toArray();
+
+            foreach ($data as $node) {
+                $results[] = $node;
+            }
+
+            return $results;
+        } catch (MongoDBException $ex) {
+            return [];
+        }
     }
 }

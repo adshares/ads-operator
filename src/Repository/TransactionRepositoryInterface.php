@@ -33,4 +33,36 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      * @return AbstractTransaction
      */
     public function getTransaction(string $transactionId):? AbstractTransaction;
+
+    /**
+     * @param string $accountId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByAccountId(
+        string $accountId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
+     * @param string $messageId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByMessageId(
+        string $messageId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
 }

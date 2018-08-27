@@ -1,15 +1,15 @@
 Adshares\Ads\Entity\Account:
     exclusion_policy: ALL
     properties:
-        id:
-            expose: true
-            type: string
         address:
             expose: true
             type: string
         balance:
             expose: true
             type: int
+#            accessor: # access_type must be set to public_method
+#                getter: getBalanceInADS
+#                setter: setBalance
         hash:
             expose: true
             type: string

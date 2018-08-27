@@ -30,6 +30,16 @@ use Adshares\Ads\Entity\Transaction\KeyTransaction as BaseKeyTransaction;
 class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
 {
     /**
+     * @var string
+     */
+    protected $senderAddress;
+
+    /**
+     * @var string
+     */
+    protected $targetAddress;
+
+    /**
      * {@inheritdoc}
      */
     public function toArray(): array
@@ -50,6 +60,8 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
+            'senderAddress' => $this->getSenderAddress(),
+            'targetAddress' => $this->getTargetAddress(),
         ];
     }
 }
