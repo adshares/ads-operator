@@ -209,7 +209,7 @@ class AccountController extends ApiController
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
-        $this->validateRequest($request, $this->transactionRepository->availableSortingFields());
+        $this->validateRequest($request, $this->repository->availableSortingFields());
 
         $sort = $this->getSort($request);
         $order = $this->getOrder($request);
