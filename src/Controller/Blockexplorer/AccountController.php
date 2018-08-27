@@ -172,19 +172,57 @@ class AccountController extends ApiController
      *          in="path",
      *          type="string",
      *          description="Node Id (hexadecimal number, e.g. 0001)"
-     *     )
+     *     ),
+     *     @SWG\Parameter(
+     *          name="sort",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to sort accounts"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="order",
+     *          in="query",
+     *          type="string",
+     *          description="The field used to set ordering for accounts"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="limit",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to limit number of accounts"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="offset",
+     *          in="query",
+     *          type="integer",
+     *          description="The field used to specify accounts offset"
+     *      )
      * )
      *
+     * @param Request $request
      * @param string $nodeId
      * @return Response
      */
-    public function accountsAction(string $nodeId): Response
+    public function accountsAction(Request $request, string $nodeId): Response
     {
         if (!Node::validateId($nodeId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
 
-        $accounts = $this->repository->getAccountsByNodeId($nodeId);
+        $this->validateRequest($request, $this->transactionRepository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+
+        $accounts = $this->repository->getAccountsByNodeId(
+            $nodeId,
+            $sort,
+            $order,
+            $limit,
+            $offset
+        );
 
         return $this->response($this->serializer->serialize($accounts, 'json'), Response::HTTP_OK);
     }

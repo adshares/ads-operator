@@ -1,5 +1,4 @@
 <?php
-header("Access-Control-Allow-Origin: *");
 
 use Adshares\AdsOperator\Kernel;
 use Symfony\Component\Debug\Debug;
