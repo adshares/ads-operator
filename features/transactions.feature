@@ -1385,20 +1385,20 @@ Feature: Transactions
     And the response should contain:
    """
      [
-       {
-        "block_id":"1A7F0400",
-        "id":"0001:00000001:0000",
+        {
+        "block_id":"1C7F0400",
+        "id":"0003:00000021:0000",
         "message_id":"0001:00000001",
-        "node_id":"0001",
+        "node_id":"0003",
         "type":"broadcast",
-        "size":1,
-        "message":"0000000000000000000000000000000000000000000000000000000000000001",
-        "message_length":1,
-        "msg_id":"1",
-        "node":1,
-        "signature":"0001",
+        "size":21,
+        "message":"0000000000000000000000000000000000000000000000000000000000000021",
+        "message_length":21,
+        "msg_id":"3",
+        "node":3,
+        "signature":"0021",
         "time":"2018-07-31T08:49:36+02:00",
-        "user":1
+        "user":21
        },
        {
         "block_id":"1B7F0400",
@@ -1416,19 +1416,19 @@ Feature: Transactions
         "user":11
        },
        {
-        "block_id":"1C7F0400",
-        "id":"0003:00000021:0000",
+        "block_id":"1A7F0400",
+        "id":"0001:00000001:0000",
         "message_id":"0001:00000001",
-        "node_id":"0003",
+        "node_id":"0001",
         "type":"broadcast",
-        "size":21,
-        "message":"0000000000000000000000000000000000000000000000000000000000000021",
-        "message_length":21,
-        "msg_id":"3",
-        "node":3,
-        "signature":"0021",
+        "size":1,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
+        "msg_id":"1",
+        "node":1,
+        "signature":"0001",
         "time":"2018-07-31T08:49:36+02:00",
-        "user":21
+        "user":1
        }
      ]
    """
@@ -1436,6 +1436,7 @@ Feature: Transactions
   Scenario: List transactions by message id
     Given I want to get the list of "blockexplorer/messages/0001:00000001/transactions"
     And I want to limit to 1
+    And I want to offset to 2
     When I request resource
     Then the response status code should be 200
     And the response should contain:
@@ -1516,7 +1517,7 @@ Feature: Transactions
      ]
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/messages/1001:00000001/transactions"
     When I request resource
     Then the response status code should be 200
@@ -1525,7 +1526,7 @@ Feature: Transactions
      []
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/messages/0001-00000001/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1537,7 +1538,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/messages/0001*/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1549,7 +1550,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/messages/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1561,7 +1562,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/messages//transactions"
     When I request resource
     Then the response status code should be 404
@@ -1573,7 +1574,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by account id
     Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
     When I request resource
     Then the response status code should be 200
@@ -1623,7 +1624,7 @@ Feature: Transactions
      ]
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by account id
     Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
     And I want to limit to 1
     When I request resource
@@ -1654,7 +1655,38 @@ Feature: Transactions
      ]
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by account id
+    Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
+    And I want to offset to 1
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+       {
+         "block_id":"6A7F0400",
+         "id":"0001:00000006:0000",
+         "message_id":"0001:00000006",
+         "node_id":"0001",
+         "type":"send_one",
+         "size":6,
+         "amount":"9223372036854775807",
+         "message":6,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000006-0000",
+         "sender_fee":6000000000000000000,
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_address":"0002-00000016-0000",
+         "target_node":1,
+         "target_user":1,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":6
+       }
+     ]
+   """
+
+  Scenario: List transactions by account id
     Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
     And I want to sort by "block_id"
     And I want to order by "asc"
@@ -1709,7 +1741,7 @@ Feature: Transactions
 
 
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid account id
     Given I want to get the list of "blockexplorer/accounts/1001-00000006-0000/transactions"
     When I request resource
     Then the response status code should be 200
@@ -1718,7 +1750,7 @@ Feature: Transactions
      []
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/accounts/0001:00000006:0000/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1730,7 +1762,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/accounts/0001*/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1742,7 +1774,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/accounts/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1754,7 +1786,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by invalid message id
     Given I want to get the list of "blockexplorer/accounts//transactions"
     When I request resource
     Then the response status code should be 404

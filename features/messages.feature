@@ -468,35 +468,14 @@ Feature: Messages
         {
           "block_id":"1C6180E0",
           "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "length":15,
-          "id":"0001:00000010",
+          "length":10,
+          "id":"0001:00000015",
           "transaction_count":1
         },
         {
           "block_id":"1C6180E0",
           "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "length":14,
-          "id":"0001:00000011",
-          "transaction_count":1
-        },
-        {
-          "block_id":"1C6180E0",
-          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "length":13,
-          "id":"0001:00000012",
-          "transaction_count":1
-        },
-        {
-          "block_id":"1C6180E0",
-          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "length":12,
-          "id":"0001:00000013",
-          "transaction_count":1
-        },
-        {
-          "block_id":"1C6180E0",
-          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "length":11,
+          "length":10,
           "id":"0001:00000014",
           "transaction_count":1
         },
@@ -504,13 +483,34 @@ Feature: Messages
           "block_id":"1C6180E0",
           "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
           "length":10,
-          "id":"0001:00000015",
+          "id":"0001:00000013",
+          "transaction_count":1
+        },
+        {
+          "block_id":"1C6180E0",
+          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
+          "length":10,
+          "id":"0001:00000012",
+          "transaction_count":1
+        },
+        {
+          "block_id":"1C6180E0",
+          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
+          "length":10,
+          "id":"0001:00000011",
+          "transaction_count":1
+        },
+        {
+          "block_id":"1C6180E0",
+          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
+          "length":10,
+          "id":"0001:00000010",
           "transaction_count":1
         }
       ]
     """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by block id
     Given I want to get the list of "blockexplorer/blocks/1C6180E0/messages"
     And I want to limit to 2
     And I want to offset to 2
@@ -520,27 +520,23 @@ Feature: Messages
    """
      [
        {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000010","transaction_count":1
+       "block_id":"1C6180E0",
+       "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
+       "length":10,
+       "id":"0001:00000013",
+       "transaction_count":1
        },
        {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000011","transaction_count":1
-       },
-       {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000012","transaction_count":1
-       },
-       {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000013","transaction_count":1
-       },
-       {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000014","transaction_count":1
-       },
-       {
-       "block_id":"1C6180E0","hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D","length":10,"id":"0001:00000015","transaction_count":1
+       "block_id":"1C6180E0",
+       "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
+       "length":10,
+       "id":"0001:00000012",
+       "transaction_count":1
        }
      ]
    """
 
-  Scenario: List transactions by message id
+  Scenario: List transactions by block id
     Given I want to get the list of "blockexplorer/blocks/1C6180E0/messages"
     And I want to sort by "id"
     And I want to order by "asc"
@@ -594,17 +590,17 @@ Feature: Messages
      ]
    """
 
-  Scenario: List transactions by message id
-    Given I want to get the list of "blockexplorer/accounts/1001-00000006-0000/transactions"
+  Scenario: List transactions by invalid block id
+    Given I want to get the list of "blockexplorer/blocks/1C618011/messages"
     When I request resource
     Then the response status code should be 200
     And the response should contain:
    """
-     []
+       []
    """
 
-  Scenario: List transactions by message id
-    Given I want to get the list of "blockexplorer/accounts/0001:00000006:0000/transactions"
+  Scenario: List transactions by invalid block id
+    Given I want to get the list of "blockexplorer/blocks/1C6180E*/messages"
     When I request resource
     Then the response status code should be 422
     And the response should contain:
@@ -615,8 +611,8 @@ Feature: Messages
       }
    """
 
-  Scenario: List transactions by message id
-    Given I want to get the list of "blockexplorer/accounts/0001*/transactions"
+  Scenario: List transactions by invalid block id
+    Given I want to get the list of "blockexplorer/blocks/messages"
     When I request resource
     Then the response status code should be 422
     And the response should contain:
@@ -627,29 +623,14 @@ Feature: Messages
       }
    """
 
-  Scenario: List transactions by message id
-    Given I want to get the list of "blockexplorer/accounts/transactions"
-    When I request resource
-    Then the response status code should be 422
-    And the response should contain:
-   """
-      {
-        "code":422,
-        "message":"Invalid resource identity"
-      }
-   """
-
-  Scenario: List transactions by message id
-    Given I want to get the list of "blockexplorer/accounts//transactions"
+  Scenario: List transactions by invalid block id
+    Given I want to get the list of "blockexplorer/blocks//messages"
     When I request resource
     Then the response status code should be 404
     And the response should contain:
    """
       {
         "code":404,
-        "message":"No route found for \"GET \/api\/v1\/blockexplorer\/accounts\/\/transactions\""
+        "message":"No route found for \"GET \/api\/v1\/blockexplorer\/blocks\/\/messages\""
       }
    """
-
-
-
