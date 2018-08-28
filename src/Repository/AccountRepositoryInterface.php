@@ -36,7 +36,17 @@ interface AccountRepositoryInterface extends ListRepositoryInterface
 
     /**
      * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
      * @return array
      */
-    public function getAccountsByNodeId(string $nodeId): array;
+    public function getAccountsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
 }
