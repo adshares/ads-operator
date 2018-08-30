@@ -43,6 +43,7 @@ class MessageController extends ApiController
     /**
      * BlockController constructor.
      * @param MessageRepositoryInterface $repository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
     public function __construct(
         MessageRepositoryInterface $repository,

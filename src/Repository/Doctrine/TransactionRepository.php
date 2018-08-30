@@ -53,6 +53,39 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     }
 
     /**
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function fetchList(string $sort, string $order, int $limit, int $offset): array
+    {
+        $results = [];
+
+        try {
+            $cursor = $this
+                ->createQueryBuilder()
+                ->field('type')->notEqual('connection')
+                ->sort($sort, $order)
+                ->limit($limit)
+                ->skip($offset)
+                ->getQuery()
+                ->execute();
+
+            $data = $cursor->toArray();
+
+            foreach ($data as $node) {
+                $results[] = $node;
+            }
+        } catch (MongoDBException $ex) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getTransactionsByAccountId(
@@ -68,6 +101,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
             $queryBuilder = $this->createQueryBuilder();
 
             $cursor = $queryBuilder
+                ->field('type')->notEqual('connection')
                 ->addOr($queryBuilder->expr()->field('senderAddress')->equals($accountId))
                 ->addOr($queryBuilder->expr()->field('targetAddress')->equals($accountId))
                 ->addOr($queryBuilder->expr()->field('wires.targetAddress')->equals($accountId))
