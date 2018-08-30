@@ -164,16 +164,6 @@ Feature: Transactions
         "size":23
         },
         {
-        "block_id":"2C7F0400",
-        "id":"0003:00000022:0000",
-        "message_id":"0003:00000022",
-        "node_id":"0003",
-        "type":"connection",
-        "size":22,
-        "ip_address":"192.168.1.22",
-        "port":80
-        },
-        {
         "block_id":"1C7F0400",
         "id":"0003:00000021:0000",
         "message_id":"0001:00000001",
@@ -280,16 +270,6 @@ Feature: Transactions
         "node_id":"0002",
         "type":"empty",
         "size":13
-        },
-        {
-        "block_id":"2B7F0400",
-        "id":"0002:00000012:0000",
-        "message_id":"0002:00000012",
-        "node_id":"0002",
-        "type":"connection",
-        "size":12,
-        "ip_address":"192.168.1.12",
-        "port":80
         },
         {
         "block_id":"1B7F0400",
@@ -400,16 +380,6 @@ Feature: Transactions
         "size":3
         },
         {
-        "block_id":"2A7F0400",
-        "id":"0001:00000002:0000",
-        "message_id":"0001:00000002",
-        "node_id":"0001",
-        "type":"connection",
-        "size":2,
-        "ip_address":"192.168.1.2",
-        "port":80
-        },
-        {
         "block_id":"1A7F0400",
         "id":"0001:00000001:0000",
         "message_id":"0001:00000001",
@@ -487,7 +457,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
-    And I want to limit to 5
+    And I want to limit to 4
     And I want to order by "asc"
     When I request resource
     Then the response status code should be 200
@@ -508,16 +478,6 @@ Feature: Transactions
          "signature":"0001",
          "time":"2018-07-31T08:49:36+02:00",
          "user":1
-         },
-         {
-         "block_id":"2A7F0400",
-         "id":"0001:00000002:0000",
-         "message_id":"0001:00000002",
-         "node_id":"0001",
-         "type":"connection",
-         "size":2,
-         "ip_address":"192.168.1.2",
-         "port":80
          },
          {
          "block_id":"3A7F0400",
@@ -676,21 +636,19 @@ Feature: Transactions
         "user":1
         },
         {
-        "block_id":"2A7F0400",
-        "id":"0001:00000002:0000",
-        "message_id":"0001:00000002",
+        "block_id":"3A7F0400",
+        "id":"0001:00000003:0000",
+        "message_id":"0001:00000003",
         "node_id":"0001",
-        "type":"connection",
-        "size":2,
-        "ip_address":"192.168.1.2",
-        "port":80
+        "type":"empty",
+        "size":3
         }
       ]
     """
 
   Scenario: List all available transactions with offset and sort by id asc
     Given I want to get the list of "blockexplorer/transactions"
-    And I want to offset to 22
+    And I want to offset to 19
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
@@ -754,7 +712,7 @@ Feature: Transactions
   Scenario: List all available transactions with limit, offset and sort by id asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 2
-    And I want to offset to 2
+    And I want to offset to 1
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
@@ -1038,50 +996,6 @@ Feature: Transactions
         """
       [
          {
-         "block_id":"2A7F0400",
-         "id":"0001:00000002:0000",
-         "message_id":"0001:00000002",
-         "node_id":"0001",
-         "type":"connection",
-         "size":2,
-         "ip_address":"192.168.1.2",
-         "port":80
-         },
-         {
-         "block_id":"2B7F0400",
-         "id":"0002:00000012:0000",
-         "message_id":"0002:00000012",
-         "node_id":"0002",
-         "type":"connection",
-         "size":12,
-         "ip_address":"192.168.1.12",
-         "port":80
-         },
-         {
-         "block_id":"2C7F0400",
-         "id":"0003:00000022:0000",
-         "message_id":"0003:00000022",
-         "node_id":"0003",
-         "type":"connection",
-         "size":22,
-         "ip_address":"192.168.1.22",
-         "port":80
-         }
-      ]
-    """
-
-  Scenario: List all available transactions with sort by asc
-    Given I want to get the list of "blockexplorer/transactions"
-    And I want to limit to 3
-    And I want to offset to 9
-    And I want to sort by "type"
-    And I want to order by "asc"
-    When I request resource
-    Then the response status code should be 200
-    And the response should contain:
-        """
-      [
-         {
          "block_id":"3A7F0400",
          "id":"0001:00000003:0000",
          "message_id":"0001:00000003",
@@ -1111,7 +1025,7 @@ Feature: Transactions
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 3
-    And I want to offset to 12
+    And I want to offset to 9
     And I want to sort by "type"
     And I want to order by "asc"
     When I request resource
@@ -1164,7 +1078,7 @@ Feature: Transactions
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 4
-    And I want to offset to 15
+    And I want to offset to 12
     And I want to sort by "type"
     And I want to order by "asc"
     When I request resource
@@ -1246,7 +1160,7 @@ Feature: Transactions
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 3
-    And I want to offset to 19
+    And I want to offset to 16
     And I want to sort by "type"
     And I want to order by "asc"
     When I request resource
@@ -1319,7 +1233,7 @@ Feature: Transactions
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 3
-    And I want to offset to 22
+    And I want to offset to 19
     And I want to sort by "type"
     And I want to order by "asc"
     When I request resource
