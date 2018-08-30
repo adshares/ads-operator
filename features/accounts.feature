@@ -682,7 +682,7 @@ Feature: Accounts
      ]
    """
 
-  Scenario: List transactions by node id
+  Scenario: List accounts by node id
     Given I want to get the list of "blockexplorer/nodes/0001/accounts"
     And I want to limit to 2
     And I want to offset to 2
@@ -722,7 +722,7 @@ Feature: Accounts
      ]
    """
 
-  Scenario: List transactions by node id
+  Scenario: List accounts by node id
     Given I want to get the list of "blockexplorer/nodes/0001/accounts"
     And I want to sort by "id"
     And I want to order by "asc"

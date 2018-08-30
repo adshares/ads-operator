@@ -1741,7 +1741,7 @@ Feature: Transactions
 
 
 
-  Scenario: List transactions by invalid account id
+  Scenario: List transactions by non-existent account id
     Given I want to get the list of "blockexplorer/accounts/1001-00000006-0000/transactions"
     When I request resource
     Then the response status code should be 200
@@ -1750,7 +1750,7 @@ Feature: Transactions
      []
    """
 
-  Scenario: List transactions by invalid message id
+  Scenario: List transactions by invalid account id
     Given I want to get the list of "blockexplorer/accounts/0001:00000006:0000/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1762,7 +1762,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by invalid message id
+  Scenario: List transactions by invalid account id
     Given I want to get the list of "blockexplorer/accounts/0001*/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1774,7 +1774,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by invalid message id
+  Scenario: List transactions by invalid account id
     Given I want to get the list of "blockexplorer/accounts/transactions"
     When I request resource
     Then the response status code should be 422
@@ -1786,7 +1786,7 @@ Feature: Transactions
       }
    """
 
-  Scenario: List transactions by invalid message id
+  Scenario: List transactions by invalid account id
     Given I want to get the list of "blockexplorer/accounts//transactions"
     When I request resource
     Then the response status code should be 404

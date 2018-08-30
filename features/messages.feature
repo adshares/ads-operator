@@ -510,7 +510,7 @@ Feature: Messages
       ]
     """
 
-  Scenario: List transactions by block id
+  Scenario: List messages by block id
     Given I want to get the list of "blockexplorer/blocks/1C6180E0/messages"
     And I want to limit to 2
     And I want to offset to 2
@@ -536,7 +536,7 @@ Feature: Messages
      ]
    """
 
-  Scenario: List transactions by block id
+  Scenario: List messages by block id
     Given I want to get the list of "blockexplorer/blocks/1C6180E0/messages"
     And I want to sort by "id"
     And I want to order by "asc"
@@ -590,7 +590,7 @@ Feature: Messages
      ]
    """
 
-  Scenario: List transactions by invalid block id
+  Scenario: List messages by non-existent block
     Given I want to get the list of "blockexplorer/blocks/1C618011/messages"
     When I request resource
     Then the response status code should be 200
@@ -599,7 +599,7 @@ Feature: Messages
        []
    """
 
-  Scenario: List transactions by invalid block id
+  Scenario: List messages by invalid block id
     Given I want to get the list of "blockexplorer/blocks/1C6180E*/messages"
     When I request resource
     Then the response status code should be 422
@@ -611,7 +611,7 @@ Feature: Messages
       }
    """
 
-  Scenario: List transactions by invalid block id
+  Scenario: List messages by invalid block id
     Given I want to get the list of "blockexplorer/blocks/messages"
     When I request resource
     Then the response status code should be 422
@@ -623,7 +623,7 @@ Feature: Messages
       }
    """
 
-  Scenario: List transactions by invalid block id
+  Scenario: List messages by invalid block id
     Given I want to get the list of "blockexplorer/blocks//messages"
     When I request resource
     Then the response status code should be 404
