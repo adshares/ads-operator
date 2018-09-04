@@ -50,7 +50,17 @@ transaction_show:
 
 account_list_by_nodeid:
     path: /nodes/{nodeId}/accounts
-    controller: Adshares\AdsOperator\Controller\Blockexplorer\AccountController::accountsAction
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::accountsAction
+    methods: [GET]
+
+message_list_by_nodeid:
+    path: /nodes/{nodeId}/messages
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::messagesAction
+    methods: [GET]
+
+transaction_list_by_nodeid:
+    path: /nodes/{nodeId}/transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::transactionsAction
     methods: [GET]
 
 transaction_list_by_accountid:

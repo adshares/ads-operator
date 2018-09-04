@@ -4,3 +4,7 @@ Adshares\AdsOperator\Document\Account:
         id:
             expose: true
             type: string
+        nodeId:
+            expose: true
+            type: string
+

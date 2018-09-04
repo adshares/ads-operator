@@ -66,23 +66,25 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
         int $limit,
         int $offset
     ): array {
-        $results = [];
+        return $this->fetchList($sort, $order, $limit, $offset, ['blockId' => $blockId]);
+    }
 
-        $cursor = $this
-            ->createQueryBuilder()
-            ->field('blockId')->equals($blockId)
-            ->sort($sort, $order)
-            ->limit($limit)
-            ->skip($offset)
-            ->getQuery()
-            ->execute();
-
-        $data = $cursor->toArray();
-
-        foreach ($data as $message) {
-            $results[] = $message;
-        }
-
-        return $results;
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     * @throws \Doctrine\ODM\MongoDB\MongoDBException
+     */
+    public function getMessagesByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
     }
 }

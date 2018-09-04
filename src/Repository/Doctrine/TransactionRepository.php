@@ -57,9 +57,10 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @param string $order
      * @param int $limit
      * @param int $offset
+     * @param array $conditions
      * @return array
      */
-    public function fetchList(string $sort, string $order, int $limit, int $offset): array
+    public function fetchList(string $sort, string $order, int $limit, int $offset, ?array $conditions = []): array
     {
         $results = [];
 
@@ -69,11 +70,18 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
                 ->field('type')->notEqual('connection')
                 ->sort($sort, $order)
                 ->limit($limit)
-                ->skip($offset)
-                ->getQuery()
-                ->execute();
+                ->skip($offset);
 
-            $data = $cursor->toArray();
+            if ($conditions) {
+                foreach ($conditions as $columnName => $value) {
+                    $cursor->field($columnName)->equals($value);
+                }
+            }
+
+            $data = $cursor
+                ->getQuery()
+                ->execute()
+                ->toArray();
 
             foreach ($data as $node) {
                 $results[] = $node;
@@ -130,7 +138,6 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @param int $limit
      * @param int $offset
      * @return array
-     * @throws MongoDBException
      */
     public function getTransactionsByMessageId(
         string $messageId,
@@ -139,23 +146,24 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $limit,
         int $offset
     ): array {
-        $results = [];
+        return $this->fetchList($sort, $order, $limit, $offset, ['messageId' => $messageId]);
+    }
 
-        $cursor = $this
-            ->createQueryBuilder()
-            ->field('messageId')->equals($messageId)
-            ->sort($sort, $order)
-            ->limit($limit)
-            ->skip($offset)
-            ->getQuery()
-            ->execute();
-
-        $data = $cursor->toArray();
-
-        foreach ($data as $message) {
-            $results[] = $message;
-        }
-
-        return $results;
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
     }
 }

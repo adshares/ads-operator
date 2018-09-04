@@ -61,27 +61,6 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
         int $limit,
         int $offset
     ): array {
-        $results = [];
-
-        try {
-            $cursor = $this
-                ->createQueryBuilder()
-                ->field('nodeId')->equals($nodeId)
-                ->sort($sort, $order)
-                ->limit($limit)
-                ->skip($offset)
-                ->getQuery()
-                ->execute();
-
-            $data = $cursor->toArray();
-
-            foreach ($data as $node) {
-                $results[] = $node;
-            }
-
-            return $results;
-        } catch (MongoDBException $ex) {
-            return [];
-        }
+        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
     }
 }
