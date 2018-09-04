@@ -41,7 +41,9 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class NodeController extends ApiController
 {
-
+    /**
+     * @var AccountRepositoryInterface
+     */
     private $accountRepository;
 
     /**
@@ -349,25 +351,25 @@ class NodeController extends ApiController
      *          name="sort",
      *          in="query",
      *          type="string",
-     *          description="The field used to sort messages"
+     *          description="The field used to sort transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="order",
      *          in="query",
      *          type="string",
-     *          description="The field used to set ordering for messages"
+     *          description="The field used to set ordering for transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="limit",
      *          in="query",
      *          type="integer",
-     *          description="The field used to limit number of messages"
+     *          description="The field used to limit number of transactions"
      *      ),
      *      @SWG\Parameter(
      *          name="offset",
      *          in="query",
      *          type="integer",
-     *          description="The field used to specify messages offset"
+     *          description="The field used to specify transactions offset"
      *      )
      * )
      *
