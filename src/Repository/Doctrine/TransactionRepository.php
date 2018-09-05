@@ -166,4 +166,22 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     ): array {
         return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
     }
+
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByBlockId(
+        string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['blockId' => $blockId]);
+    }
 }

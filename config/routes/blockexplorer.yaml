@@ -73,6 +73,11 @@ message_list_by_blockid:
     controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::messagesAction
     methods: [GET]
 
+transaction_list_by_blockid:
+    path: /blocks/{blockId}/transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\BlockController::transactionsAction
+    methods: [GET]
+
 transaction_list_by_messageId:
     path: /messages/{messageId}/transactions
     controller: Adshares\AdsOperator\Controller\Blockexplorer\MessageController::transactionsAction
