@@ -39,4 +39,15 @@ class AccountTest extends TestCase
             $this->assertEquals($expected, Account::validateId((string)$id));
         }
     }
+
+    public function testGetId()
+    {
+        $data = [
+            'id' => '1234-12345678-1234',
+        ];
+
+        /** @var Account $account */
+        $account = Account::createFromRawData($data);
+        $this->assertEquals($data['id'], $account->getId());
+    }
 }
