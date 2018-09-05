@@ -48,6 +48,7 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,

@@ -65,4 +65,36 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
         int $limit,
         int $offset
     ): array;
+
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByBlockId(
+        string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
 }

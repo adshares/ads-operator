@@ -38,6 +38,7 @@ class ConnectionTransaction extends BaseConnectionTransaction implements Arrayab
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'ipAddress' => $this->ipAddress,

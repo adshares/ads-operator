@@ -36,7 +36,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0005-00000000-1269"
+          "id":"0005-00000000-1269",
+          "node_id":"0005"
         },
         {
           "address":"0004-00000000-B838",
@@ -50,7 +51,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0004-00000000-B838"
+          "id":"0004-00000000-B838",
+          "node_id":"0004"
         },
         {
           "address":"0003-00000000-DFEC",
@@ -64,7 +66,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id": "0003-00000000-DFEC"
+          "id": "0003-00000000-DFEC",
+          "node_id":"0003"
         },
         {
           "address":"0002-00000000-75BD",
@@ -78,7 +81,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0002-00000000-75BD"
+          "id":"0002-00000000-75BD",
+          "node_id":"0002"
         },
         {
           "address":"0001-00000005-CBCA",
@@ -92,7 +96,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000005-CBCA"
+          "id":"0001-00000005-CBCA",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000004-DBEB",
@@ -106,7 +111,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000004-DBEB"
+          "id":"0001-00000004-DBEB",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000003-AB0C",
@@ -120,7 +126,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id": "0001-00000003-AB0C"
+          "id": "0001-00000003-AB0C",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000002-BB2D",
@@ -134,7 +141,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000002-BB2D"
+          "id":"0001-00000002-BB2D",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -148,7 +156,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000001-8B4E"
+          "id":"0001-00000001-8B4E",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000000-9B6F",
@@ -162,7 +171,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000000-9B6F"
+          "id":"0001-00000000-9B6F",
+          "node_id":"0001"
         }
       ]
     """
@@ -187,7 +197,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0005-00000000-1269"
+          "id":"0005-00000000-1269",
+          "node_id":"0005"
         },
         {
           "address":"0004-00000000-B838",
@@ -201,7 +212,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0004-00000000-B838"
+          "id":"0004-00000000-B838",
+          "node_id":"0004"
         },
         {
           "address":"0003-00000000-DFEC",
@@ -215,14 +227,15 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0003-00000000-DFEC"
+          "id":"0003-00000000-DFEC",
+          "node_id":"0003"
         }
       ]
     """
 
   Scenario: List all available accounts with sort by asc
     Given I want to get the list of "blockexplorer/accounts"
-    And I want to limit to 7
+    And I want to limit to 2
     And I want to order by "asc"
     When I request resource
     Then the response status code should be 200
@@ -241,7 +254,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000000-9B6F"
+          "id":"0001-00000000-9B6F",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -255,77 +269,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000001-8B4E"
-        },
-        {
-          "address":"0001-00000002-BB2D",
-          "balance":1886044087591240,
-          "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
-          "local_change":"2018-07-31T08:49:36+02:00",
-          "msid":7,
-          "paired_address":"null",
-          "paired_node":1,
-          "public_key":"D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3",
-          "remote_change":"2018-07-31T08:51:12+02:00",
-          "status":0,
-          "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000002-BB2D"
-        },
-        {
-          "address":"0001-00000003-AB0C",
-          "balance":1886044087591240,
-          "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
-          "local_change":"2018-07-31T08:49:36+02:00",
-          "msid":8,
-          "paired_address":"null",
-          "paired_node":1,
-          "public_key":"B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90",
-          "remote_change":"2018-07-31T08:51:12+02:00",
-          "status":0,
-          "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000003-AB0C"
-        },
-        {
-          "address":"0001-00000004-DBEB",
-          "balance":1886044087591240,
-          "hash":"5569B007386AB86D9B7760C5D6EF9E60DA1A1378FA2C602345D8E7C88B75129B",
-          "local_change":"2018-07-31T08:49:36+02:00",
-          "msid":9,
-          "paired_address":"null",
-          "paired_node":1,
-          "public_key":"B281F32AC70BF2508423F531ED13C6446F3378985550BADE83BA31B41A1824A1",
-          "remote_change":"2018-07-31T08:51:12+02:00",
-          "status":0,
-          "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000004-DBEB"
-        },
-        {
-          "address":"0001-00000005-CBCA",
-          "balance":1886044087591240,
-          "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-          "local_change":"2018-07-31T08:49:36+02:00",
-          "msid":10,
-          "paired_address":"null",
-          "paired_node":1,
-          "public_key":"6FAB00CC8AA65FF6C981C8EDDD87469FDF43635CCD7B08C2D48D38EDE0B1D1FF",
-          "remote_change":"2018-07-31T08:51:12+02:00",
-          "status":0,
-          "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000005-CBCA"
-        },
-        {
-          "address":"0002-00000000-75BD",
-          "balance":596280092307692300,
-          "hash":"70D11F677A9B8F0A49BAD9DCE9F715FCE4AA76BDF23C14FB40142999A1E84577",
-          "local_change":"2018-07-31T08:49:36+02:00",
-          "msid":2,
-          "paired_address":"null",
-          "paired_node":2,
-          "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
-          "remote_change":"2018-07-31T08:51:12+02:00",
-          "status":0,
-          "time":"2018-07-31T08:49:36+02:00",
-          "id":"0002-00000000-75BD"
+          "id":"0001-00000001-8B4E",
+          "node_id":"0001"
         }
       ]
     """
@@ -350,7 +295,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0005-00000000-1269"
+          "id":"0005-00000000-1269",
+          "node_id":"0005"
         },
         {
           "address":"0004-00000000-B838",
@@ -364,7 +310,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0004-00000000-B838"
+          "id":"0004-00000000-B838",
+          "node_id":"0004"
         }
       ]
     """
@@ -390,7 +337,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000000-9B6F"
+          "id":"0001-00000000-9B6F",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000001-8B4E",
@@ -404,7 +352,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000001-8B4E"
+          "id":"0001-00000001-8B4E",
+          "node_id":"0001"
         }
       ]
     """
@@ -431,7 +380,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0005-00000000-1269"
+          "id":"0005-00000000-1269",
+          "node_id":"0005"
         }
       ]
     """
@@ -459,7 +409,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000002-BB2D"
+          "id":"0001-00000002-BB2D",
+          "node_id":"0001"
         },
         {
           "address":"0001-00000003-AB0C",
@@ -473,7 +424,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000003-AB0C"
+          "id":"0001-00000003-AB0C",
+          "node_id":"0001"
         }
       ]
     """
@@ -548,7 +500,8 @@ Feature: Accounts
           "remote_change":"2018-07-31T08:51:12+02:00",
           "status":0,
           "time":"2018-07-31T08:49:36+02:00",
-          "id":"0001-00000000-9B6F"
+          "id":"0001-00000000-9B6F",
+          "node_id":"0001"
         }
     """
 
@@ -607,7 +560,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000005-CBCA"
+        "id":"0001-00000005-CBCA",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000004-DBEB",
@@ -621,7 +575,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000004-DBEB"
+        "id":"0001-00000004-DBEB",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000003-AB0C",
@@ -635,7 +590,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000003-AB0C"
+        "id":"0001-00000003-AB0C",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000002-BB2D",
@@ -649,7 +605,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000002-BB2D"
+        "id":"0001-00000002-BB2D",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000001-8B4E",
@@ -663,7 +620,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000001-8B4E"
+        "id":"0001-00000001-8B4E",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000000-9B6F",
@@ -677,7 +635,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000000-9B6F"
+        "id":"0001-00000000-9B6F",
+        "node_id":"0001"
        }
      ]
    """
@@ -703,7 +662,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000003-AB0C"
+        "id":"0001-00000003-AB0C",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000002-BB2D",
@@ -717,13 +677,15 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000002-BB2D"
+        "id":"0001-00000002-BB2D",
+        "node_id":"0001"
        }
      ]
    """
 
   Scenario: List accounts by node id
     Given I want to get the list of "blockexplorer/nodes/0001/accounts"
+    And I want to limit to 2
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
@@ -743,7 +705,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000000-9B6F"
+        "id":"0001-00000000-9B6F",
+        "node_id":"0001"
        },
        {
         "address":"0001-00000001-8B4E",
@@ -757,63 +720,8 @@ Feature: Accounts
         "remote_change":"2018-07-31T08:51:12+02:00",
         "status":0,
         "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000001-8B4E"
-       },
-       {
-        "address":"0001-00000002-BB2D",
-        "balance":1886044087591240,
-        "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
-        "local_change":"2018-07-31T08:49:36+02:00",
-        "msid":7,
-        "paired_address":"null",
-        "paired_node":1,
-        "public_key":"D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3",
-        "remote_change":"2018-07-31T08:51:12+02:00",
-        "status":0,
-        "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000002-BB2D"
-       },
-       {
-        "address":"0001-00000003-AB0C",
-        "balance":1886044087591240,
-        "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
-        "local_change":"2018-07-31T08:49:36+02:00",
-        "msid":8,
-        "paired_address":"null",
-        "paired_node":1,
-        "public_key":"B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90",
-        "remote_change":"2018-07-31T08:51:12+02:00",
-        "status":0,
-        "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000003-AB0C"
-       },
-       {
-        "address":"0001-00000004-DBEB",
-        "balance":1886044087591240,
-        "hash":"5569B007386AB86D9B7760C5D6EF9E60DA1A1378FA2C602345D8E7C88B75129B",
-        "local_change":"2018-07-31T08:49:36+02:00",
-        "msid":9,
-        "paired_address":"null",
-        "paired_node":1,
-        "public_key":"B281F32AC70BF2508423F531ED13C6446F3378985550BADE83BA31B41A1824A1",
-        "remote_change":"2018-07-31T08:51:12+02:00",
-        "status":0,
-        "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000004-DBEB"
-       },
-       {
-        "address":"0001-00000005-CBCA",
-        "balance":1886044087591240,
-        "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
-        "local_change":"2018-07-31T08:49:36+02:00",
-        "msid":10,
-        "paired_address":"null",
-        "paired_node":1,
-        "public_key":"6FAB00CC8AA65FF6C981C8EDDD87469FDF43635CCD7B08C2D48D38EDE0B1D1FF",
-        "remote_change":"2018-07-31T08:51:12+02:00",
-        "status":0,
-        "time":"2018-07-31T08:49:36+02:00",
-        "id":"0001-00000005-CBCA"
+        "id":"0001-00000001-8B4E",
+        "node_id":"0001"
        }
      ]
    """
