@@ -28,11 +28,11 @@ class AccountTest extends TestCase
     public function testValidation()
     {
         $ids = [
-            "1234:1234:1234" => false,
-            "1234-1234-1234" => false,
-            "1234:1234" => false,
-            "1234" => false,
-            "1234-1234AFFA-12DD" => true,
+            '1234:1234:1234' => false,
+            '1234-1234-1234' => false,
+            '1234:1234' => false,
+            '1234' => false,
+            '0001-00000000-9B6F' => true,
         ];
 
         foreach ($ids as $id => $expected) {
@@ -43,7 +43,7 @@ class AccountTest extends TestCase
     public function testGetId()
     {
         $data = [
-            'id' => '1234-12345678-1234',
+            'id' => '0001-00000000-9B6F',
         ];
 
         /** @var Account $account */
