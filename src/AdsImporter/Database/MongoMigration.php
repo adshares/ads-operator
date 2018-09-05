@@ -181,7 +181,7 @@ class MongoMigration implements DatabaseMigrationInterface
             $networkAccount['remoteChange'] = $this->createMongoDate($networkAccount['remoteChange']);
             $networkAccount['time'] = $this->createMongoDate($networkAccount['time']);
 
-            $transaction['networkAccount'] = $networkAccount;
+            $document['networkAccount'] = $networkAccount;
         }
 
         if (isset($document['time']) && $document['time'] instanceof \DateTime) {
