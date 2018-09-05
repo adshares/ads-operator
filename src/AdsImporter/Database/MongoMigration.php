@@ -175,15 +175,13 @@ class MongoMigration implements DatabaseMigrationInterface
         $document = $transaction->toArray();
 
         if ($transaction instanceof LogAccountTransaction) {
-            $document['networkAccount']['localChange'] = $this->createMongoDate(
-                $document['networkAccount']['localChange']
-            );
-            $document['networkAccount']['remoteChange'] = $this->createMongoDate(
-                $document['networkAccount']['remoteChange']
-            );
-            $document['networkAccount']['time'] = $this->createMongoDate(
-                $document['networkAccount']['time']
-            );
+            $networkAccount = $document['networkAccount'];
+
+            $networkAccount['localChange'] = $this->createMongoDate($networkAccount['localChange']);
+            $networkAccount['remoteChange'] = $this->createMongoDate($networkAccount['remoteChange']);
+            $networkAccount['time'] = $this->createMongoDate($networkAccount['timeChange']);
+
+            $transaction['networkAccount'] = $networkAccount;
         }
 
         if (isset($document['time']) && $document['time'] instanceof \DateTime) {
