@@ -154,6 +154,7 @@ class MongoMigrationTest extends TestCase
             $transaction = $class::createFromRawData([
                 'user'=> '1',
                 'node'=> '1',
+                'nodeId' => '0001',
                 'time'=> time(),
                 'senderAddress' => '1234',
                 'id' => '12312',

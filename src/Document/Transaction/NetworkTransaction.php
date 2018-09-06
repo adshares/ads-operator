@@ -59,6 +59,7 @@ class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInte
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
             'targetAddress' => $this->getTargetAddress(),
+            'nodeId' => $this->getNodeId(),
         ];
     }
 }

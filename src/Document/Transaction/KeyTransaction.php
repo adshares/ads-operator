@@ -62,6 +62,7 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
             'targetAddress' => $this->getTargetAddress(),
+            'nodeId' => $this->getNodeId(),
         ];
     }
 }

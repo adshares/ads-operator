@@ -40,6 +40,7 @@ class EmptyTransaction extends BaseEmptyTransaction implements ArrayableInterfac
             'type' => $this->type,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
+            'nodeId' => $this->getNodeId(),
         ];
     }
 }
