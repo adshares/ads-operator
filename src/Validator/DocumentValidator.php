@@ -26,12 +26,10 @@ class DocumentValidator
 {
     private $validator;
 
-
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
     }
-
 
     public function validate($document): array
     {
