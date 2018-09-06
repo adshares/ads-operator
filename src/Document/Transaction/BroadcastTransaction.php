@@ -54,7 +54,6 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
             'time' => $this->time,
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
-            'nodeId' => $this->getNodeId(),
         ];
     }
 }

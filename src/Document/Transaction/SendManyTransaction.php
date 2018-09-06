@@ -51,7 +51,6 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
             'time' => $this->time,
             'user' => $this->user,
             'wires' => $this->transformTransactionWiresToArray($this->wires),
-            'nodeId' => $this->getNodeId(),
         ];
     }
 

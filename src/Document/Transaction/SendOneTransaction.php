@@ -53,7 +53,6 @@ class SendOneTransaction extends BaseSendOneTransaction implements ArrayableInte
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
-            'nodeId' => $this->getNodeId(),
         ];
     }
 }

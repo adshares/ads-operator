@@ -53,7 +53,6 @@ class LogAccountTransaction extends BaseLogAccountTransaction implements Arrayab
             'time' => $this->time,
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
-            'nodeId' => $this->getNodeId(),
         ];
     }
 

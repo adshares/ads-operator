@@ -60,7 +60,6 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
             'targetAddress' => $this->getTargetAddress(),
-            'nodeId' => $this->getNodeId(),
         ];
     }
 }
