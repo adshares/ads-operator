@@ -96,6 +96,7 @@ services:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
             $databaseName: '%env(MONGODB_DB)%'
+            $logger: '@logger'
 
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
         class: Doctrine\ODM\DocumentRepository

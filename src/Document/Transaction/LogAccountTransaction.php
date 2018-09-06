@@ -47,12 +47,34 @@ class LogAccountTransaction extends BaseLogAccountTransaction implements Arrayab
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,
-            'networkAccount' => (array) $this->networkAccount,
+            'networkAccount' => $this->transformNetworkAccountToArray(),
             'node' => $this->node,
             'signature' => $this->signature,
             'time' => $this->time,
             'user' => $this->user,
             'senderAddress' => $this->getSenderAddress(),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function transformNetworkAccountToArray(): array
+    {
+        return [
+            'address' => $this->networkAccount->getAddress(),
+            'balance' => $this->networkAccount->getBalance(),
+            'hash' => $this->networkAccount->getHash(),
+            'localChange' => $this->networkAccount->getLocalChange(),
+            'msid' => $this->networkAccount->getMsid(),
+            'node' => $this->networkAccount->getNode(),
+            'pairedAddress' => $this->networkAccount->getPairedAddress(),
+            'pairedNode' => $this->networkAccount->getPairedNode(),
+            'publicKey' => $this->networkAccount->getPublicKey(),
+            'remoteChange'=> $this->networkAccount->getRemoteChange(),
+            'status' => $this->networkAccount->getStatus(),
+            'time' => $this->networkAccount->getTime(),
+
         ];
     }
 }
