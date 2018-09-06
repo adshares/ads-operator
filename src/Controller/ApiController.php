@@ -95,6 +95,29 @@ class ApiController
         return new Response($data, $status, $headers);
     }
 
+    protected function validationErrorResponse(array $data, int $status = Response::HTTP_BAD_REQUEST): Response
+    {
+        if (!isset($data['message'])) {
+            $data['message'] = 'Validation failed';
+        }
+
+        if (!isset($data['code'])) {
+            $data['code'] = $status;
+        }
+
+        if (!isset($data['errors'])) {
+            $data['errors'] = [];
+        }
+
+        $encoded = json_encode($data);
+
+        if (false === $encoded) {
+            throw new \RuntimeException('Internal error');
+        }
+
+        return $this->response($encoded, $status);
+    }
+
     /**
      * @param Request $request
      * @param array $availableSortingFields

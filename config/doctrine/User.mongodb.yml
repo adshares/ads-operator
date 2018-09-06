@@ -1,0 +1,13 @@
+Adshares\AdsOperator\Document\User:
+  type: document
+  collection: user
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\UserRepository
+  fields:
+    id:
+      id: true
+      strategy: AUTO
+      type: string
+    email:
+      type: string
+    password:
+      type: string

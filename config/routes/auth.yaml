@@ -1,0 +1,4 @@
+user_registration:
+  path: /register
+  controller: Adshares\AdsOperator\Controller\Auth\AuthController::registerAction
+  methods: [POST]

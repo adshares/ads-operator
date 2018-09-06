@@ -1,0 +1,7 @@
+Adshares\AdsOperator\Document\User:
+  properties:
+    email:
+      - NotBlank: ~
+      - Email: ~
+    password:
+      - NotBlank: ~
