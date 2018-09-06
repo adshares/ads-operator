@@ -20,7 +20,6 @@
 
 namespace Adshares\AdsOperator\Controller\Auth;
 
-use Adshares\AdsOperator\Auth\Exception\UserAlreadyExistsException;
 use Adshares\AdsOperator\Auth\UserRegistration;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\User;
@@ -51,8 +50,6 @@ class AuthController extends ApiController
             $this->userRegistration->register($user);
         } catch (ValidatorException $ex) {
             return $this->validationErrorResponse(['errors' => $ex->getErrors()]);
-        } catch (UserAlreadyExistsException $ex) {
-            return $this->validationErrorResponse(['message' => $ex->getMessage()]);
         }
 
         return $this->response(null, Response::HTTP_CREATED);

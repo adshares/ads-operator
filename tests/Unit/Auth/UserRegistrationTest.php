@@ -20,51 +20,68 @@
 
 namespace Adshares\AdsOperator\Tests\Unit\Auth;
 
-use Adshares\AdsOperator\Auth\Exception\UserAlreadyExistsException;
 use Adshares\AdsOperator\Auth\UserRegistration;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
 use Adshares\AdsOperator\Validator\DocumentValidator;
+use Adshares\AdsOperator\Validator\ValidatorException;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserRegistrationTest extends TestCase
 {
-    public function testWhenUserExistsInTheDatabase()
+    public function testWhenValidationErrorsOccurs()
     {
-        $this->expectException(UserAlreadyExistsException::class);
+        $this->expectException(ValidatorException::class);
         $user  = new User('user@adshares.net', sha1('password'));
 
         $userRepository = $this->createMock(UserRepositoryInterface::class);
-        $userRepository
-            ->expects($this->once())
-            ->method('findByEmail')
-            ->willReturn($user);
+        $validator = $this->createMock(DocumentValidator::class);
+        $validator
+            ->method('validate')
+            ->willReturn([[], []]);
 
-        $userRegistration = new UserRegistration($userRepository, $this->getValidatorMock());
+        $userRegistration = new UserRegistration($userRepository, $validator, $this->getEncoderMock());
         $userRegistration->register($user);
     }
 
-    public function testWhenUserDoesNotExistInTheDatabaseAndShouldBeStore()
+    public function testWhenValidationDoesNotContainErrors()
     {
-        $user  = new User('user@adshares.net', sha1('password'));
+        $user  = new User('user@adshares.net', 'password');
 
         $userRepository = $this->createMock(UserRepositoryInterface::class);
         $userRepository
             ->expects($this->once())
-            ->method('findByEmail')
+            ->method('signUp')
             ->willReturn(null);
 
         $userRepository
             ->expects($this->once())
             ->method('signUp');
 
-        $userRegistration = new UserRegistration($userRepository, $this->getValidatorMock());
+        $userRegistration = new UserRegistration(
+            $userRepository,
+            $this->getValidatorMock(),
+            $this->getEncoderMock($user->getPassword())
+        );
         $userRegistration->register($user);
     }
 
     private function getValidatorMock()
     {
         return $this->createMock(DocumentValidator::class);
+    }
+
+    private function getEncoderMock(?string $password = null)
+    {
+        $mock = $this->createMock(UserPasswordEncoderInterface::class);
+
+        if ($password) {
+            $mock
+                ->method('encodePassword')
+                ->willReturn(sha1($password));
+        }
+
+        return $mock;
     }
 }

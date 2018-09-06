@@ -1,4 +1,6 @@
 Adshares\AdsOperator\Document\User:
+  constraints:
+    - \Doctrine\Bundle\MongoDBBundle\Validator\Constraints\Unique: email
   properties:
     email:
       - NotBlank: ~

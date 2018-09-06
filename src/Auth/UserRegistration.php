@@ -20,11 +20,11 @@
 
 namespace Adshares\AdsOperator\Auth;
 
-use Adshares\AdsOperator\Auth\Exception\UserAlreadyExistsException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
 use Adshares\AdsOperator\Validator\DocumentValidator;
 use Adshares\AdsOperator\Validator\ValidatorException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserRegistration
 {
@@ -32,24 +32,27 @@ class UserRegistration
 
     private $validator;
 
-    public function __construct(UserRepositoryInterface $userRepository, DocumentValidator $validator)
-    {
+    private $userPasswordEncoder;
+
+    public function __construct(
+        UserRepositoryInterface $userRepository,
+        DocumentValidator $validator,
+        UserPasswordEncoderInterface $userPasswordEncoder
+    ) {
         $this->userRepository = $userRepository;
         $this->validator = $validator;
+        $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
     public function register(User $user)
     {
         $errors = $this->validator->validate($user);
 
-        if (0 !== count($errors)) {
+        if (count($errors) > 0) {
             throw new ValidatorException($errors);
         }
 
-        if ($this->userRepository->findByEmail($user->getEmail())) {
-            throw new UserAlreadyExistsException(sprintf('User %s already exists in the system.', $user->getEmail()));
-        }
-
+        $user->setPassword($this->userPasswordEncoder->encodePassword($user, $user->getPassword()));
         $this->userRepository->signUp($user);
     }
 }

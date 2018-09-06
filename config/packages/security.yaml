@@ -1,4 +1,7 @@
 security:
+    encoders:
+        Adshares\AdsOperator\Document\User:
+            algorithm: bcrypt
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
         in_memory: { memory: ~ }

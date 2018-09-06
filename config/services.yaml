@@ -108,6 +108,7 @@ services:
       arguments:
         $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
         $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
+        $userPasswordEncoder: '@security.password_encoder'
 
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:

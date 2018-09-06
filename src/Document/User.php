@@ -37,6 +37,16 @@ class User implements UserInterface
         $this->password = $password;
     }
 
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
     public function getRoles()
     {
         return ['ROLE_USER'];
@@ -59,7 +69,7 @@ class User implements UserInterface
 
     public function getEmail()
     {
-        return $this->email;
+        return $this->getUsername();
     }
 
     public function eraseCredentials()
