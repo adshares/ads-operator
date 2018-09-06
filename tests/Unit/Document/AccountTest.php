@@ -28,15 +28,26 @@ class AccountTest extends TestCase
     public function testValidation()
     {
         $ids = [
-            "1234:1234:1234" => false,
-            "1234-1234-1234" => false,
-            "1234:1234" => false,
-            "1234" => false,
-            "1234-1234AFGA-12DD" => true,
+            '1234:1234:1234' => false,
+            '1234-1234-1234' => false,
+            '1234:1234' => false,
+            '1234' => false,
+            '0001-00000000-9B6F' => true,
         ];
 
         foreach ($ids as $id => $expected) {
             $this->assertEquals($expected, Account::validateId((string)$id));
         }
+    }
+
+    public function testGetId()
+    {
+        $data = [
+            'id' => '0001-00000000-9B6F',
+        ];
+
+        /** @var Account $account */
+        $account = Account::createFromRawData($data);
+        $this->assertEquals($data['id'], $account->getId());
     }
 }

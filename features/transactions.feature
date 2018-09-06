@@ -5,46 +5,46 @@ Feature: Transactions
 
   Background:
     Given "broadcastTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size | message | messageLength | msgId          | node | signature | time                          | user |
-      | 0001:00000001:0000 | 00000001 | 0001:00000001 | 0001   | broadcast   | 01   | test_01 | test_01       | 0001:00000001  | 0001 | 0001      | 2018-07-31T08:49:36.000+02:00 | 01_u |
-      | 0002:00000011:0000 | 00000011 | 0002:00000011 | 0002   | broadcast   | 11   | test_11 | test_11       | 0002:00000011  | 0002 | 0011      | 2018-07-31T08:49:36.000+02:00 | 11_u |
-      | 0003:00000021:0000 | 00000021 | 0003:00000021 | 0003   | broadcast   | 21   | test_21 | test_21       | 0003:00000021  | 0003 | 0021      | 2018-07-31T08:49:36.000+02:00 | 21_u |
+      | id                 | blockId  | messageId     | nodeId | type            | size | message                                                          | messageLength                                                    | msgId          | node | signature | time                          | user |
+      | 0001:00000001:0000 | 1A7F0400 | 0001:00000001 | 0001   | broadcast       | 01   | 0000000000000000000000000000000000000000000000000000000000000001 | 0000000000000000000000000000000000000000000000000000000000000001 | 0001:00000001  | 0001 | 0001      | 2018-07-31T08:49:36.000+02:00 | 0001 |
+      | 0002:00000011:0000 | 1B7F0400 | 0001:00000001 | 0002   | broadcast       | 11   | 0000000000000000000000000000000000000000000000000000000000000011 | 0000000000000000000000000000000000000000000000000000000000000011 | 0002:00000011  | 0002 | 0011      | 2018-07-31T08:49:36.000+02:00 | 0011 |
+      | 0003:00000021:0000 | 1C7F0400 | 0001:00000001 | 0003   | broadcast       | 21   | 0000000000000000000000000000000000000000000000000000000000000021 | 0000000000000000000000000000000000000000000000000000000000000021 | 0003:00000021  | 0003 | 0021      | 2018-07-31T08:49:36.000+02:00 | 0021 |
     Given "connectionTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size | ipAddress    | port |
-      | 0001:00000002:0000 | 00000002 | 0001:00000002 | 0001   | connection  | 02   | 192.168.1.2  | 80   |
-      | 0002:00000012:0000 | 00000012 | 0002:00000012 | 0002   | connection  | 12   | 192.168.1.12 | 80   |
-      | 0003:00000022:0000 | 00000022 | 0003:00000022 | 0003   | connection  | 22   | 192.168.1.22 | 80   |
+      | id                 | blockId  | messageId     | nodeId | type            | size | ipAddress    | port |
+      | 0001:00000002:0000 | 2A7F0400 | 0001:00000002 | 0001   | connection      | 02   | 192.168.1.2  | 80   |
+      | 0002:00000012:0000 | 2B7F0400 | 0002:00000012 | 0002   | connection      | 12   | 192.168.1.12 | 80   |
+      | 0003:00000022:0000 | 2C7F0400 | 0003:00000022 | 0003   | connection      | 22   | 192.168.1.22 | 80   |
     Given "emptyTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size |
-      | 0001:00000003:0000 | 00000003 | 0001:00000003 | 0001   | empty       | 03   |
-      | 0002:00000013:0000 | 00000013 | 0002:00000013 | 0002   | empty       | 13   |
-      | 0003:00000023:0000 | 00000023 | 0003:00000023 | 0003   | empty       | 23   |
+      | id                 | blockId  | messageId     | nodeId | type            | size |
+      | 0001:00000003:0000 | 3A7F0400 | 0001:00000003 | 0001   | empty           | 03   |
+      | 0002:00000013:0000 | 3B7F0400 | 0002:00000013 | 0002   | empty           | 13   |
+      | 0003:00000023:0000 | 3C7F0400 | 0003:00000023 | 0003   | empty           | 23   |
     Given "keyTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type                    | size | msgId         | newPublicKey                                                     | oldPublicKey                                                     | publicKey                                                        | publicKeySignature                                               | targetNode | targetUser | node | signature | time                          | user |
-      | 0001:00000004:0000 | 00000004 | 0001:00000004 | 0001   | account_created         | 04   | 0001:00000004 | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | 04_tN      | 04_tU      | 0001 | 04_s      | 2018-07-31T08:49:36.000+02:00 | 04_u |
-      | 0002:00000014:0000 | 00000014 | 0002:00000014 | 0002   | account_created         | 14   | 0002:00000014 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 14_tN      | 14_tU      | 0002 | 14_s      | 2018-07-31T08:49:36.000+02:00 | 14_u |
-      | 0003:00000024:0000 | 00000024 | 0003:00000024 | 0003   | account_created         | 24   | 0003:00000024 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 24_tN      | 24_tU      | 0003 | 14_s      | 2018-07-31T08:49:36.000+02:00 | 24_u |
+      | id                 | blockId  | messageId     | nodeId | type            | size | msgId         | newPublicKey                                                     | oldPublicKey                                                     | publicKey                                                        | publicKeySignature                                               | targetNode | targetUser | node | signature                                                                                                                        | time                          | user |
+      | 0001:00000004:0000 | 4A7F0400 | 0001:00000004 | 0001   | account_created | 04   | 0001:00000004 | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | 0001       | 0004       | 0001 | EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104 | 2018-07-31T08:49:36.000+02:00 | 0004 |
+      | 0002:00000014:0000 | 4B7F0400 | 0002:00000014 | 0002   | account_created | 14   | 0002:00000014 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 0002       | 0014       | 0002 | 8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508 | 2018-07-31T08:49:36.000+02:00 | 0014 |
+      | 0003:00000024:0000 | 4C7F0400 | 0003:00000024 | 0003   | account_created | 24   | 0003:00000024 | 9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282 | 0003       | 0024       | 0003 | 630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A | 2018-07-31T08:49:36.000+02:00 | 0024 |
     Given "logAccountTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size | msgId         | node | signature | time                          | user |
-      | 0001:00000005:0000 | 00000005 | 0001:00000115 | 0001   | log_account | 0005 | 0001:00000005 | 0001 | 0005      | 2018-07-31T08:49:36.000+02:00 | 05_u |
-      | 0002:00000015:0000 | 00000015 | 0002:00000015 | 0002   | log_account | 0015 | 0002:00000015 | 0002 | 0015      | 2018-07-31T08:49:36.000+02:00 | 15_u |
-      | 0003:00000025:0000 | 00000025 | 0003:00000025 | 0003   | log_account | 0025 | 0003:00000025 | 0003 | 0025      | 2018-07-31T08:49:36.000+02:00 | 25_u |
+      | id                 | blockId  | messageId     | nodeId | type            | size | msgId         | node | signature | time                          | user |
+      | 0001:00000005:0000 | 5A7F0400 | 0001:00000115 | 0001   | log_account     | 0005 | 0001:00000005 | 0001 | 0005      | 2018-07-31T08:49:36.000+02:00 | 0005 |
+      | 0002:00000015:0000 | 5B7F0400 | 0002:00000015 | 0002   | log_account     | 0015 | 0002:00000015 | 0002 | 0015      | 2018-07-31T08:49:36.000+02:00 | 0015 |
+      | 0003:00000025:0000 | 5C7F0400 | 0003:00000025 | 0003   | log_account     | 0025 | 0003:00000025 | 0003 | 0025      | 2018-07-31T08:49:36.000+02:00 | 0025 |
     Given "sendOneTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size | msgId         | node | signature | time                          | user | amount | message  | senderAddress | senderFee | targetAddress | targetNode | targetUser |
-      | 0001:00000006:0000 | 00000006 | 0001:00000006 | 0001   | send_one    | 06   | 0001:00000006 | 0001 | 0006      | 2018-07-31T08:49:36.000+02:00 | 06_u | 06_a   | 06_m     | 06_sA         | 06_sF     | 06_tA         | 06_tN      | 06_tU      |
-      | 0002:00000016:0000 | 00000016 | 0002:00000016 | 0002   | send_one    | 16   | 0002:00000016 | 0002 | 0016      | 2018-07-31T08:49:36.000+02:00 | 16_u | 16_a   | 16_m     | 16_sA         | 16_sF     | 16_tA         | 16_tN      | 16_tU      |
-      | 0003:00000026:0000 | 00000026 | 0003:00000026 | 0003   | send_one    | 26   | 0003:00000026 | 0003 | 0026      | 2018-07-31T08:49:36.000+02:00 | 26_u | 26_a   | 26_m     | 26_sA         | 26_sF     | 26_tA         | 26_tN      | 26_tU      |
+      | id                 | blockId  | messageId     | nodeId | type            | size | msgId         | node | signature                                                                                                                        | time                          | user | amount       | message                                                          | senderAddress      | senderFee | targetAddress      | targetNode | targetUser |
+      | 0001:00000006:0000 | 6A7F0400 | 0001:00000006 | 0001   | send_one        | 06   | 0001:00000006 | 0001 | EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104 | 2018-07-31T08:49:36.000+02:00 | 0006 | 060000000000 | 0000000000000000000000000000000000000000000000000000000000000006 | 0001-00000006-0000 | 060000000 | 0002-00000016-0000 | 0001       | 0001       |
+      | 0002:00000016:0000 | 6B7F0400 | 0002:00000016 | 0002   | send_one        | 16   | 0002:00000016 | 0002 | 8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508 | 2018-07-31T08:49:36.000+02:00 | 0016 | 160000000000 | 0000000000000000000000000000000000000000000000000000000000000016 | 0002-00000016-0000 | 160000000 | 0003-00000026-0000 | 0002       | 0002       |
+      | 0003:00000026:0000 | 6C7F0400 | 0003:00000026 | 0003   | send_one        | 26   | 0003:00000026 | 0003 | 630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A | 2018-07-31T08:49:36.000+02:00 | 0026 | 260000000000 | 0000000000000000000000000000000000000000000000000000000000000026 | 0003-00000026-0000 | 260000000 | 0001-00000006-0000 | 0003       | 0003       |
     Given "sendManyTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type        | size | msgId         | node | signature | time                          | user | senderAddress | senderFee | wireCount     |
-      | 0001:00000007:0000 | 00000007 | 0001:00000007 | 0001   | send_many   | 0007 | 0001:00000007 | 0001 | 0007      | 2018-07-31T08:49:36.000+02:00 | 07_u | 07_sA         | 07_sF     | amount        |
-      | 0002:00000017:0000 | 00000017 | 0002:00000017 | 0002   | send_many   | 0017 | 0002:00000017 | 0002 | 0017      | 2018-07-31T08:49:36.000+02:00 | 17_u | 17_sA         | 17_sF     | targetAddress |
-      | 0003:00000027:0000 | 00000027 | 0003:00000027 | 0003   | send_many   | 0027 | 0003:00000027 | 0003 | 0027      | 2018-07-31T08:49:36.000+02:00 | 27_u | 27_sA         | 27_sF     | targetNode    |
-      | 0004:00000037:0000 | 00000037 | 0004:00000037 | 0004   | send_many   | 0037 | 0004:00000037 | 0004 | 0037      | 2018-07-31T08:49:36.000+02:00 | 37_u | 37_sA         | 37_sF     | targetUser    |
+      | id                 | blockId  | messageId     | nodeId | type            | size | msgId         | node | signature | time                          | user | senderAddress      | senderFee | wireCount     |
+      | 0001:00000007:0000 | 7A7F0400 | 0001:00000007 | 0001   | send_many       | 0007 | 0001:00000007 | 0001 | 0007      | 2018-07-31T08:49:36.000+02:00 | 0007 | 0001-00000007-0000 | 070000000 | amount        |
+      | 0002:00000017:0000 | 7B7F0400 | 0002:00000017 | 0002   | send_many       | 0017 | 0002:00000017 | 0002 | 0017      | 2018-07-31T08:49:36.000+02:00 | 0017 | 0002-00000017-0000 | 170000000 | targetAddress |
+      | 0003:00000027:0000 | 7C7F0400 | 0003:00000027 | 0003   | send_many       | 0027 | 0003:00000027 | 0003 | 0027      | 2018-07-31T08:49:36.000+02:00 | 0027 | 0003-00000027-0000 | 270000000 | targetNode    |
+      | 0004:00000037:0000 | 7D7F0400 | 0004:00000037 | 0004   | send_many       | 0037 | 0004:00000037 | 0004 | 0037      | 2018-07-31T08:49:36.000+02:00 | 0037 | 0004-00000037-0000 | 370000000 | targetUser    |
     Given "statusTransaction" exist in application:
-      | id                 | blockId  | messageId     | nodeId | type                 | size | msgId         | status | node | signature | time                              | user | targetNode | targetUser |
-      | 0001:00000008:0000 | 00000008 | 0001:00000008 | 0001   | set_node_status      | 0008 | 0001:00000008 | 08_s   | 0001 | 0008      | 2018-07-31T08:49:36.000+02:00     | 08_u | 08_tN      | 08_tU      |
-      | 0002:00000018:0000 | 00000018 | 0002:00000018 | 0002   | set_node_status      | 0018 | 0002:00000018 | 18_s   | 0002 | 0018      | 2018-07-31T08:49:36.000+02:00     | 18_u | 18_tN      | 18_tU      |
-      | 0003:00000028:0000 | 00000028 | 0003:00000028 | 0003   | set_node_status      | 0028 | 0003:00000028 | 28_s   | 0003 | 0028      | 2018-07-31T08:49:36.000+02:00     | 28_u | 28_tN      | 28_tU      |
+      | id                 | blockId  | messageId     | nodeId | type            | size | msgId         | status | node | signature | time                              | user | targetNode | targetUser |
+      | 0001:00000008:0000 | 8A7F0400 | 0001:00000008 | 0001   | set_node_status | 0008 | 0001:00000008 | 0      | 0001 | 0008      | 2018-07-31T08:49:36.000+02:00     | 0008 | 0008       | 0008       |
+      | 0002:00000018:0000 | 8B7F0400 | 0002:00000018 | 0002   | set_node_status | 0018 | 0002:00000018 | 0      | 0002 | 0018      | 2018-07-31T08:49:36.000+02:00     | 0018 | 0018       | 0018       |
+      | 0003:00000028:0000 | 8C7F0400 | 0003:00000028 | 0003   | set_node_status | 0028 | 0003:00000028 | 0      | 0003 | 0028      | 2018-07-31T08:49:36.000+02:00     | 0028 | 0028       | 0028       |
 
   Scenario: List all available transaction without sort and pagination
     Given I want to get the list of "blockexplorer/transactions"
@@ -54,7 +54,7 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000037",
+        "block_id":"7D7F0400",
         "id":"0004:00000037:0000",
         "message_id":"0004:00000037",
         "node_id":"0004",
@@ -62,8 +62,8 @@ Feature: Transactions
         "size":37,
         "msg_id":"4",
         "node":4,
-        "sender_address":"37_sA",
-        "sender_fee":37,
+        "sender_address":"0004-00000037-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0037",
         "time":"2018-07-31T08:49:36+02:00",
         "user":37,
@@ -71,7 +71,7 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000028",
+        "block_id":"8C7F0400",
         "id":"0003:00000028:0000",
         "message_id":"0003:00000028",
         "node_id":"0003",
@@ -80,14 +80,14 @@ Feature: Transactions
         "msg_id":"3",
         "node":3,
         "signature":"0028",
-        "status":28,
+        "status":0,
         "target_node":28,
         "target_user":28,
         "time":"2018-07-31T08:49:36+02:00",
         "user":28
         },
         {
-        "block_id":"00000027",
+        "block_id":"7C7F0400",
         "id":"0003:00000027:0000",
         "message_id":"0003:00000027",
         "node_id":"0003",
@@ -95,8 +95,8 @@ Feature: Transactions
         "size":27,
         "msg_id":"3",
         "node":3,
-        "sender_address":"27_sA",
-        "sender_fee":27,
+        "sender_address":"0003-00000027-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0027",
         "time":"2018-07-31T08:49:36+02:00",
         "user":27,
@@ -104,27 +104,27 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000026",
+        "block_id":"6C7F0400",
         "id":"0003:00000026:0000",
         "message_id":"0003:00000026",
         "node_id":"0003",
         "type":"send_one",
         "size":26,
-        "amount":"26",
+        "amount":"9223372036854775807",
         "message":26,
         "msg_id":"3",
         "node":3,
-        "sender_address":"26_sA",
-        "sender_fee":26,
-        "signature":"0026",
-        "target_address":"26_tA",
-        "target_node":26,
-        "target_user":26,
+        "sender_address":"0003-00000026-0000",
+        "sender_fee":9223372036854775807,
+        "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+        "target_address":"0001-00000006-0000",
+        "target_node":3,
+        "target_user":3,
         "time":"2018-07-31T08:49:36+02:00",
         "user":26
         },
         {
-        "block_id":"00000025",
+        "block_id":"5C7F0400",
         "id":"0003:00000025:0000",
         "message_id":"0003:00000025",
         "node_id":"0003",
@@ -137,7 +137,7 @@ Feature: Transactions
         "user":25
         },
         {
-        "block_id":"00000024",
+        "block_id":"4C7F0400",
         "id":"0003:00000024:0000",
         "message_id":"0003:00000024",
         "node_id":"0003",
@@ -149,14 +149,14 @@ Feature: Transactions
         "old_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
         "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
         "public_key_signature":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
-        "signature":"14_s",
-        "target_node":24,
+        "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+        "target_node":3,
         "target_user":24,
         "time":"2018-07-31T08:49:36+02:00",
         "user":24
         },
         {
-        "block_id":"00000023",
+        "block_id":"3C7F0400",
         "id":"0003:00000023:0000",
         "message_id":"0003:00000023",
         "node_id":"0003",
@@ -164,24 +164,14 @@ Feature: Transactions
         "size":23
         },
         {
-        "block_id":"00000022",
-        "id":"0003:00000022:0000",
-        "message_id":"0003:00000022",
-        "node_id":"0003",
-        "type":"connection",
-        "size":22,
-        "ip_address":"192.168.1.22",
-        "port":80
-        },
-        {
-        "block_id":"00000021",
+        "block_id":"1C7F0400",
         "id":"0003:00000021:0000",
-        "message_id":"0003:00000021",
+        "message_id":"0001:00000001",
         "node_id":"0003",
         "type":"broadcast",
         "size":21,
-        "message":"test_21",
-        "message_length":0,
+        "message":"0000000000000000000000000000000000000000000000000000000000000021",
+        "message_length":21,
         "msg_id":"3",
         "node":3,
         "signature":"0021",
@@ -189,7 +179,7 @@ Feature: Transactions
         "user":21
         },
         {
-        "block_id":"00000018",
+        "block_id":"8B7F0400",
         "id":"0002:00000018:0000",
         "message_id":"0002:00000018",
         "node_id":"0002",
@@ -198,14 +188,14 @@ Feature: Transactions
         "msg_id":"2",
         "node":2,
         "signature":"0018",
-        "status":18,
+        "status":0,
         "target_node":18,
         "target_user":18,
         "time":"2018-07-31T08:49:36+02:00",
         "user":18
         },
         {
-        "block_id":"00000017",
+        "block_id":"7B7F0400",
         "id":"0002:00000017:0000",
         "message_id":"0002:00000017",
         "node_id":"0002",
@@ -213,8 +203,8 @@ Feature: Transactions
         "size":17,
         "msg_id":"2",
         "node":2,
-        "sender_address":"17_sA",
-        "sender_fee":17,
+        "sender_address":"0002-00000017-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0017",
         "time":"2018-07-31T08:49:36+02:00",
         "user":17,
@@ -222,27 +212,27 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000016",
+        "block_id":"6B7F0400",
         "id":"0002:00000016:0000",
         "message_id":"0002:00000016",
         "node_id":"0002",
         "type":"send_one",
         "size":16,
-        "amount":"16",
+        "amount":"9223372036854775807",
         "message":16,
         "msg_id":"2",
         "node":2,
-        "sender_address":"16_sA",
-        "sender_fee":16,
-        "signature":"0016",
-        "target_address":"16_tA",
-        "target_node":16,
-        "target_user":16,
+        "sender_address":"0002-00000016-0000",
+        "sender_fee":9223372036854775807,
+        "signature":"8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508",
+        "target_address":"0003-00000026-0000",
+        "target_node":2,
+        "target_user":2,
         "time":"2018-07-31T08:49:36+02:00",
         "user":16
         },
         {
-        "block_id":"00000015",
+        "block_id":"5B7F0400",
         "id":"0002:00000015:0000",
         "message_id":"0002:00000015",
         "node_id":"0002",
@@ -255,7 +245,7 @@ Feature: Transactions
         "user":15
         },
         {
-        "block_id":"00000014",
+        "block_id":"4B7F0400",
         "id":"0002:00000014:0000",
         "message_id":"0002:00000014",
         "node_id":"0002",
@@ -267,14 +257,14 @@ Feature: Transactions
         "old_public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
         "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
         "public_key_signature":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
-        "signature":"14_s",
-        "target_node":14,
+        "signature":"8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508",
+        "target_node":2,
         "target_user":14,
         "time":"2018-07-31T08:49:36+02:00",
         "user":14
         },
         {
-        "block_id":"00000013",
+        "block_id":"3B7F0400",
         "id":"0002:00000013:0000",
         "message_id":"0002:00000013",
         "node_id":"0002",
@@ -282,24 +272,14 @@ Feature: Transactions
         "size":13
         },
         {
-        "block_id":"00000012",
-        "id":"0002:00000012:0000",
-        "message_id":"0002:00000012",
-        "node_id":"0002",
-        "type":"connection",
-        "size":12,
-        "ip_address":"192.168.1.12",
-        "port":80
-        },
-        {
-        "block_id":"00000011",
+        "block_id":"1B7F0400",
         "id":"0002:00000011:0000",
-        "message_id":"0002:00000011",
+        "message_id":"0001:00000001",
         "node_id":"0002",
         "type":"broadcast",
         "size":11,
-        "message":"test_11",
-        "message_length":0,
+        "message":"0000000000000000000000000000000000000000000000000000000000000011",
+        "message_length":11,
         "msg_id":"2",
         "node":2,
         "signature":"0011",
@@ -307,7 +287,7 @@ Feature: Transactions
         "user":11
         },
         {
-        "block_id":"00000008",
+        "block_id":"8A7F0400",
         "id":"0001:00000008:0000",
         "message_id":"0001:00000008",
         "node_id":"0001",
@@ -316,14 +296,14 @@ Feature: Transactions
         "msg_id":"1",
         "node":1,
         "signature":"0008",
-        "status":8,
+        "status":0,
         "target_node":8,
         "target_user":8,
         "time":"2018-07-31T08:49:36+02:00",
         "user":8
         },
         {
-        "block_id":"00000007",
+        "block_id":"7A7F0400",
         "id":"0001:00000007:0000",
         "message_id":"0001:00000007",
         "node_id":"0001",
@@ -331,8 +311,8 @@ Feature: Transactions
         "size":7,
         "msg_id":"1",
         "node":1,
-        "sender_address":"07_sA",
-        "sender_fee":7,
+        "sender_address":"0001-00000007-0000",
+        "sender_fee":7000000000000000000,
         "signature":"0007",
         "time":"2018-07-31T08:49:36+02:00",
         "user":7,
@@ -340,27 +320,27 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000006",
+        "block_id":"6A7F0400",
         "id":"0001:00000006:0000",
         "message_id":"0001:00000006",
         "node_id":"0001",
         "type":"send_one",
         "size":6,
-        "amount":"6",
+        "amount":"9223372036854775807",
         "message":6,
         "msg_id":"1",
         "node":1,
-        "sender_address":"06_sA",
-        "sender_fee":6,
-        "signature":"0006",
-        "target_address":"06_tA",
-        "target_node":6,
-        "target_user":6,
+        "sender_address":"0001-00000006-0000",
+        "sender_fee":6000000000000000000,
+        "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+        "target_address":"0002-00000016-0000",
+        "target_node":1,
+        "target_user":1,
         "time":"2018-07-31T08:49:36+02:00",
         "user":6
         },
         {
-        "block_id":"00000005",
+        "block_id":"5A7F0400",
         "id":"0001:00000005:0000",
         "message_id":"0001:00000115",
         "node_id":"0001",
@@ -373,7 +353,7 @@ Feature: Transactions
         "user":5
         },
         {
-        "block_id":"00000004",
+        "block_id":"4A7F0400",
         "id":"0001:00000004:0000",
         "message_id":"0001:00000004",
         "node_id":"0001",
@@ -385,14 +365,14 @@ Feature: Transactions
         "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
         "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
         "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
-        "signature":"04_s",
-        "target_node":4,
+        "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+        "target_node":1,
         "target_user":4,
         "time":"2018-07-31T08:49:36+02:00",
         "user":4
         },
         {
-        "block_id":"00000003",
+        "block_id":"3A7F0400",
         "id":"0001:00000003:0000",
         "message_id":"0001:00000003",
         "node_id":"0001",
@@ -400,24 +380,14 @@ Feature: Transactions
         "size":3
         },
         {
-        "block_id":"00000002",
-        "id":"0001:00000002:0000",
-        "message_id":"0001:00000002",
-        "node_id":"0001",
-        "type":"connection",
-        "size":2,
-        "ip_address":"192.168.1.2",
-        "port":80
-        },
-        {
-        "block_id":"00000001",
+        "block_id":"1A7F0400",
         "id":"0001:00000001:0000",
         "message_id":"0001:00000001",
         "node_id":"0001",
         "type":"broadcast",
         "size":1,
-        "message":"test_01",
-        "message_length":0,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
         "msg_id":"1",
         "node":1,
         "signature":"0001",
@@ -436,7 +406,7 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000037",
+        "block_id":"7D7F0400",
         "id":"0004:00000037:0000",
         "message_id":"0004:00000037",
         "node_id":"0004",
@@ -444,32 +414,29 @@ Feature: Transactions
         "size":37,
         "msg_id":"4",
         "node":4,
-        "sender_address":"37_sA",
-        "sender_fee":37,
+        "sender_address":"0004-00000037-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0037",
         "time":"2018-07-31T08:49:36+02:00",
-        "user":37,
-        "wire_count":0,
-        "wires":[]
+        "user":37,"wire_count":0,"wires":[]
         },
         {
-        "block_id":"00000028",
+        "block_id":"8C7F0400",
         "id":"0003:00000028:0000",
         "message_id":"0003:00000028",
         "node_id":"0003",
         "type":"set_node_status",
-        "size":28,
-        "msg_id":"3",
+        "size":28,"msg_id":"3",
         "node":3,
         "signature":"0028",
-        "status":28,
+        "status":0,
         "target_node":28,
         "target_user":28,
         "time":"2018-07-31T08:49:36+02:00",
         "user":28
         },
         {
-        "block_id":"00000027",
+        "block_id":"7C7F0400",
         "id":"0003:00000027:0000",
         "message_id":"0003:00000027",
         "node_id":"0003",
@@ -477,8 +444,8 @@ Feature: Transactions
         "size":27,
         "msg_id":"3",
         "node":3,
-        "sender_address":"27_sA",
-        "sender_fee":27,
+        "sender_address":"0003-00000027-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0027",
         "time":"2018-07-31T08:49:36+02:00",
         "user":27,
@@ -490,78 +457,68 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
-    And I want to limit to 5
+    And I want to limit to 4
     And I want to order by "asc"
     When I request resource
     Then the response status code should be 200
     And the response should contain:
         """
       [
-          {
-          "block_id":"00000001",
-          "id":"0001:00000001:0000",
-          "message_id":"0001:00000001",
-          "node_id":"0001",
-          "type":"broadcast",
-          "size":1,
-          "message":"test_01",
-          "message_length":0,
-          "msg_id":"1",
-          "node":1,
-          "signature":"0001",
-          "time":"2018-07-31T08:49:36+02:00",
-          "user":1
-          },
-          {
-          "block_id":"00000002",
-          "id":"0001:00000002:0000",
-          "message_id":"0001:00000002",
-          "node_id":"0001",
-          "type":"connection",
-          "size":2,
-          "ip_address":"192.168.1.2",
-          "port":80
-          },
-          {
-          "block_id":"00000003",
-          "id":"0001:00000003:0000",
-          "message_id":"0001:00000003",
-          "node_id":"0001",
-          "type":"empty",
-          "size":3
-          },
-          {
-          "block_id":"00000004",
-          "id":"0001:00000004:0000",
-          "message_id":"0001:00000004",
-          "node_id":"0001",
-          "type":"account_created",
-          "size":4,
-          "msg_id":"1",
-          "new_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
-          "node":1,
-          "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
-          "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
-          "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
-          "signature":"04_s",
-          "target_node":4,
-          "target_user":4,
-          "time":"2018-07-31T08:49:36+02:00",
-          "user":4
-          },
-          {
-          "block_id":"00000005",
-          "id":"0001:00000005:0000",
-          "message_id":"0001:00000115",
-          "node_id":"0001",
-          "type":"log_account",
-          "size":5,
-          "msg_id":"1",
-          "node":1,
-          "signature":"0005",
-          "time":"2018-07-31T08:49:36+02:00",
-          "user":5
-          }
+         {
+         "block_id":"1A7F0400",
+         "id":"0001:00000001:0000",
+         "message_id":"0001:00000001",
+         "node_id":"0001",
+         "type":"broadcast",
+         "size":1,
+         "message":"0000000000000000000000000000000000000000000000000000000000000001",
+         "message_length":1,
+         "msg_id":"1",
+         "node":1,
+         "signature":"0001",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":1
+         },
+         {
+         "block_id":"3A7F0400",
+         "id":"0001:00000003:0000",
+         "message_id":"0001:00000003",
+         "node_id":"0001",
+         "type":"empty",
+         "size":3
+         },
+         {
+         "block_id":"4A7F0400",
+         "id":"0001:00000004:0000",
+         "message_id":"0001:00000004",
+         "node_id":"0001",
+         "type":"account_created",
+         "size":4,
+         "msg_id":"1",
+         "new_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+         "node":1,
+         "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+         "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_node":1,
+         "target_user":4,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":4
+         },
+         {
+         "block_id":"5A7F0400",
+         "id":"0001:00000005:0000",
+         "message_id":"0001:00000115",
+         "node_id":"0001",
+         "type":"log_account",
+         "size":5,
+         "msg_id":"1",
+         "node":1,
+         "signature":"0005",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":5
+         }
       ]
     """
 
@@ -575,7 +532,7 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000037",
+        "block_id":"7D7F0400",
         "id":"0004:00000037:0000",
         "message_id":"0004:00000037",
         "node_id":"0004",
@@ -583,8 +540,8 @@ Feature: Transactions
         "size":37,
         "msg_id":"4",
         "node":4,
-        "sender_address":"37_sA",
-        "sender_fee":37,
+        "sender_address":"0004-00000037-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0037",
         "time":"2018-07-31T08:49:36+02:00",
         "user":37,
@@ -592,7 +549,7 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000028",
+        "block_id":"8C7F0400",
         "id":"0003:00000028:0000",
         "message_id":"0003:00000028",
         "node_id":"0003",
@@ -601,11 +558,55 @@ Feature: Transactions
         "msg_id":"3",
         "node":3,
         "signature":"0028",
-        "status":28,
+        "status":0,
         "target_node":28,
         "target_user":28,
         "time":"2018-07-31T08:49:36+02:00",
         "user":28
+        }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by id
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 2
+    And I want to sort by "block_id"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+      [
+        {
+          "block_id":"8C7F0400",
+          "id":"0003:00000028:0000",
+          "message_id":"0003:00000028",
+          "node_id":"0003",
+          "type":"set_node_status",
+          "size":28,
+          "msg_id":"3",
+          "node":3,
+          "signature":"0028",
+          "status":0,
+          "target_node":28,
+          "target_user":28,
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":28
+        },
+        {
+          "block_id":"8B7F0400",
+          "id":"0002:00000018:0000",
+          "message_id":"0002:00000018",
+          "node_id":"0002",
+          "type":"set_node_status",
+          "size":18,
+          "msg_id":"2",
+          "node":2,
+          "signature":"0018",
+          "status":0,
+          "target_node":18,
+          "target_user":18,
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":18
         }
       ]
     """
@@ -620,14 +621,14 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000001",
+        "block_id":"1A7F0400",
         "id":"0001:00000001:0000",
         "message_id":"0001:00000001",
         "node_id":"0001",
         "type":"broadcast",
         "size":1,
-        "message":"test_01",
-        "message_length":0,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
         "msg_id":"1",
         "node":1,
         "signature":"0001",
@@ -635,21 +636,19 @@ Feature: Transactions
         "user":1
         },
         {
-        "block_id":"00000002",
-        "id":"0001:00000002:0000",
-        "message_id":"0001:00000002",
+        "block_id":"3A7F0400",
+        "id":"0001:00000003:0000",
+        "message_id":"0001:00000003",
         "node_id":"0001",
-        "type":"connection",
-        "size":2,
-        "ip_address":"192.168.1.2",
-        "port":80
+        "type":"empty",
+        "size":3
         }
       ]
     """
 
   Scenario: List all available transactions with offset and sort by id asc
     Given I want to get the list of "blockexplorer/transactions"
-    And I want to offset to 22
+    And I want to offset to 19
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
@@ -658,7 +657,7 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000027",
+        "block_id":"7C7F0400",
         "id":"0003:00000027:0000",
         "message_id":"0003:00000027",
         "node_id":"0003",
@@ -666,8 +665,8 @@ Feature: Transactions
         "size":27,
         "msg_id":"3",
         "node":3,
-        "sender_address":"27_sA",
-        "sender_fee":27,
+        "sender_address":"0003-00000027-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0027",
         "time":"2018-07-31T08:49:36+02:00",
         "user":27,
@@ -675,7 +674,7 @@ Feature: Transactions
         "wires":[]
         },
         {
-        "block_id":"00000028",
+        "block_id":"8C7F0400",
         "id":"0003:00000028:0000",
         "message_id":"0003:00000028",
         "node_id":"0003",
@@ -684,14 +683,14 @@ Feature: Transactions
         "msg_id":"3",
         "node":3,
         "signature":"0028",
-        "status":28,
+        "status":0,
         "target_node":28,
         "target_user":28,
         "time":"2018-07-31T08:49:36+02:00",
         "user":28
         },
         {
-        "block_id":"00000037",
+        "block_id":"7D7F0400",
         "id":"0004:00000037:0000",
         "message_id":"0004:00000037",
         "node_id":"0004",
@@ -699,8 +698,8 @@ Feature: Transactions
         "size":37,
         "msg_id":"4",
         "node":4,
-        "sender_address":"37_sA",
-        "sender_fee":37,
+        "sender_address":"0004-00000037-0000",
+        "sender_fee":9223372036854775807,
         "signature":"0037",
         "time":"2018-07-31T08:49:36+02:00",
         "user":37,
@@ -713,7 +712,7 @@ Feature: Transactions
   Scenario: List all available transactions with limit, offset and sort by id asc
     Given I want to get the list of "blockexplorer/transactions"
     And I want to limit to 2
-    And I want to offset to 2
+    And I want to offset to 1
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
@@ -722,7 +721,7 @@ Feature: Transactions
     """
       [
         {
-        "block_id":"00000003",
+        "block_id":"3A7F0400",
         "id":"0001:00000003:0000",
         "message_id":"0001:00000003",
         "node_id":"0001",
@@ -730,7 +729,7 @@ Feature: Transactions
         "size":3
         },
         {
-        "block_id":"00000004",
+        "block_id":"4A7F0400",
         "id":"0001:00000004:0000",
         "message_id":"0001:00000004",
         "node_id":"0001",
@@ -742,8 +741,8 @@ Feature: Transactions
         "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
         "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
         "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
-        "signature":"04_s",
-        "target_node":4,
+        "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+        "target_node":1,
         "target_user":4,
         "time":"2018-07-31T08:49:36+02:00",
         "user":4
@@ -810,7 +809,7 @@ Feature: Transactions
     And the response should contain:
     """
         {
-        "block_id":"00000023",
+        "block_id":"3C7F0400",
         "id":"0003:00000023:0000",
         "message_id":"0003:00000023",
         "node_id":"0003",
@@ -855,28 +854,862 @@ Feature: Transactions
         }
     """
 
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 0
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"4A7F0400",
+         "id":"0001:00000004:0000",
+         "message_id":"0001:00000004",
+         "node_id":"0001",
+         "type":"account_created",
+         "size":4,
+         "msg_id":"1",
+         "new_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+         "node":1,
+         "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+         "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_node":1,
+         "target_user":4,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":4
+         },
+         {
+         "block_id":"4B7F0400",
+         "id":"0002:00000014:0000",
+         "message_id":"0002:00000014",
+         "node_id":"0002",
+         "type":"account_created",
+         "size":14,
+         "msg_id":"2",
+         "new_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+         "node":2,
+         "old_public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+         "public_key_signature":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+         "signature":"8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508",
+         "target_node":2,
+         "target_user":14,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":14
+         },
+         {
+         "block_id":"4C7F0400",
+         "id":"0003:00000024:0000",
+         "message_id":"0003:00000024",
+         "node_id":"0003",
+         "type":"account_created",
+         "size":24,
+         "msg_id":"3",
+         "new_public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+         "node":3,
+         "old_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+         "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+         "public_key_signature":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+         "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+         "target_node":3,
+         "target_user":24,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":24
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 3
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"1A7F0400",
+         "id":"0001:00000001:0000",
+         "message_id":"0001:00000001",
+         "node_id":"0001",
+         "type":"broadcast",
+         "size":1,
+         "message":"0000000000000000000000000000000000000000000000000000000000000001",
+         "message_length":1,
+         "msg_id":"1",
+         "node":1,
+         "signature":"0001",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":1
+         },
+         {
+         "block_id":"1B7F0400",
+         "id":"0002:00000011:0000",
+         "message_id":"0001:00000001",
+         "node_id":"0002",
+         "type":"broadcast",
+         "size":11,
+         "message":"0000000000000000000000000000000000000000000000000000000000000011",
+         "message_length":11,
+         "msg_id":"2",
+         "node":2,
+         "signature":"0011",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":11
+         },
+         {
+         "block_id":"1C7F0400",
+         "id":"0003:00000021:0000",
+         "message_id":"0001:00000001",
+         "node_id":"0003",
+         "type":"broadcast",
+         "size":21,
+         "message":"0000000000000000000000000000000000000000000000000000000000000021",
+         "message_length":21,
+         "msg_id":"3",
+         "node":3,
+         "signature":"0021",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":21
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 6
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"3A7F0400",
+         "id":"0001:00000003:0000",
+         "message_id":"0001:00000003",
+         "node_id":"0001",
+         "type":"empty",
+         "size":3
+         },
+         {
+         "block_id":"3B7F0400",
+         "id":"0002:00000013:0000",
+         "message_id":"0002:00000013",
+         "node_id":"0002",
+         "type":"empty",
+         "size":13
+         },
+         {
+         "block_id":"3C7F0400",
+         "id":"0003:00000023:0000",
+         "message_id":"0003:00000023",
+         "node_id":"0003",
+         "type":"empty",
+         "size":23
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 9
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"5A7F0400",
+         "id":"0001:00000005:0000",
+         "message_id":"0001:00000115",
+         "node_id":"0001",
+         "type":"log_account",
+         "size":5,
+         "msg_id":"1",
+         "node":1,
+         "signature":"0005",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":5
+         },
+         {
+         "block_id":"5B7F0400",
+         "id":"0002:00000015:0000",
+         "message_id":"0002:00000015",
+         "node_id":"0002",
+         "type":"log_account",
+         "size":15,
+         "msg_id":"2",
+         "node":2,
+         "signature":"0015",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":15
+         },
+         {
+         "block_id":"5C7F0400",
+         "id":"0003:00000025:0000",
+         "message_id":"0003:00000025",
+         "node_id":"0003",
+         "type":"log_account",
+         "size":25,
+         "msg_id":"3",
+         "node":3,
+         "signature":"0025",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":25
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 4
+    And I want to offset to 12
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"7A7F0400",
+         "id":"0001:00000007:0000",
+         "message_id":"0001:00000007",
+         "node_id":"0001",
+         "type":"send_many",
+         "size":7,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000007-0000",
+         "sender_fee":7000000000000000000,
+         "signature":"0007",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":7,
+         "wire_count":0,
+         "wires":[]
+         },
+         {
+         "block_id":"7B7F0400",
+         "id":"0002:00000017:0000",
+         "message_id":"0002:00000017",
+         "node_id":"0002",
+         "type":"send_many",
+         "size":17,
+         "msg_id":"2",
+         "node":2,
+         "sender_address":"0002-00000017-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"0017",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":17,
+         "wire_count":0,
+         "wires":[]
+         },
+         {
+         "block_id":"7C7F0400",
+         "id":"0003:00000027:0000",
+         "message_id":"0003:00000027",
+         "node_id":"0003",
+         "type":"send_many",
+         "size":27,
+         "msg_id":"3",
+         "node":3,
+         "sender_address":"0003-00000027-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"0027",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":27,
+         "wire_count":0,
+         "wires":[]
+         },
+         {
+         "block_id":"7D7F0400",
+         "id":"0004:00000037:0000",
+         "message_id":"0004:00000037",
+         "node_id":"0004",
+         "type":"send_many",
+         "size":37,
+         "msg_id":"4",
+         "node":4,
+         "sender_address":"0004-00000037-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"0037",
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":37,
+         "wire_count":0,
+         "wires":[]
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 16
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"6A7F0400",
+         "id":"0001:00000006:0000",
+         "message_id":"0001:00000006",
+         "node_id":"0001",
+         "type":"send_one",
+         "size":6,
+         "amount":"9223372036854775807",
+         "message":6,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000006-0000",
+         "sender_fee":6000000000000000000,
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_address":"0002-00000016-0000",
+         "target_node":1,
+         "target_user":1,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":6
+         },
+         {
+         "block_id":"6B7F0400",
+         "id":"0002:00000016:0000",
+         "message_id":"0002:00000016",
+         "node_id":"0002",
+         "type":"send_one",
+         "size":16,
+         "amount":"9223372036854775807",
+         "message":16,
+         "msg_id":"2",
+         "node":2,
+         "sender_address":"0002-00000016-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"8BEE474A149EAF1C9081A29BE2B71903A7B267DF3749419C14F5E11256E80EF1B657592F40FD275207851B670E3D0B4FA9CD4BF627C83D0C88996178698AA508",
+         "target_address":"0003-00000026-0000",
+         "target_node":2,
+         "target_user":2,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":16
+         },
+         {
+         "block_id":"6C7F0400",
+         "id":"0003:00000026:0000",
+         "message_id":"0003:00000026",
+         "node_id":"0003",
+         "type":"send_one",
+         "size":26,"amount":"9223372036854775807",
+         "message":26,
+         "msg_id":"3",
+         "node":3,
+         "sender_address":"0003-00000026-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+         "target_address":"0001-00000006-0000",
+         "target_node":3,
+         "target_user":3,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":26
+         }
+      ]
+    """
+
+  Scenario: List all available transactions with sort by asc
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 19
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+        """
+      [
+         {
+         "block_id":"8A7F0400",
+         "id":"0001:00000008:0000",
+         "message_id":"0001:00000008",
+         "node_id":"0001",
+         "type":"set_node_status",
+         "size":8,
+         "msg_id":"1",
+         "node":1,
+         "signature":"0008",
+         "status":0,
+         "target_node":8,
+         "target_user":8,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":8
+         },
+         {
+         "block_id":"8B7F0400",
+         "id":"0002:00000018:0000",
+         "message_id":"0002:00000018",
+         "node_id":"0002",
+         "type":"set_node_status",
+         "size":18,
+         "msg_id":"2",
+         "node":2,
+         "signature":"0018",
+         "status":0,
+         "target_node":18,
+         "target_user":18,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":18
+         },
+         {
+         "block_id":"8C7F0400",
+         "id":"0003:00000028:0000",
+         "message_id":"0003:00000028",
+         "node_id":"0003",
+         "type":"set_node_status",
+         "size":28,
+         "msg_id":"3",
+         "node":3,
+         "signature":"0028",
+         "status":0,
+         "target_node":28,
+         "target_user":28,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":28
+         }
+      ]
+    """
+
   Scenario: List transactions by message id
     Given I want to get the list of "blockexplorer/messages/0001:00000001/transactions"
     When I request resource
     Then the response status code should be 200
     And the response should contain:
-    """
-      [
+   """
+     [
         {
-          "block_id":"00000001",
-          "id":"0001:00000001:0000",
-          "message_id":"0001:00000001",
-          "node_id":"0001",
-          "type":"broadcast",
-          "size":1,
-          "message":"test_01",
-          "message_length":0,
-          "msg_id":"1",
-          "node":1,
-          "signature":"0001",
-          "time":"2018-07-31T08:49:36+02:00",
-          "user":1
-        }
-      ]
-    """
+        "block_id":"1C7F0400",
+        "id":"0003:00000021:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0003",
+        "type":"broadcast",
+        "size":21,
+        "message":"0000000000000000000000000000000000000000000000000000000000000021",
+        "message_length":21,
+        "msg_id":"3",
+        "node":3,
+        "signature":"0021",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":21
+       },
+       {
+        "block_id":"1B7F0400",
+        "id":"0002:00000011:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0002",
+        "type":"broadcast",
+        "size":11,
+        "message":"0000000000000000000000000000000000000000000000000000000000000011",
+        "message_length":11,
+        "msg_id":"2",
+        "node":2,
+        "signature":"0011",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":11
+       },
+       {
+        "block_id":"1A7F0400",
+        "id":"0001:00000001:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0001",
+        "type":"broadcast",
+        "size":1,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
+        "msg_id":"1",
+        "node":1,
+        "signature":"0001",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":1
+       }
+     ]
+   """
+
+  Scenario: List transactions by message id
+    Given I want to get the list of "blockexplorer/messages/0001:00000001/transactions"
+    And I want to limit to 1
+    And I want to offset to 2
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+       {
+        "block_id":"1A7F0400",
+        "id":"0001:00000001:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0001",
+        "type":"broadcast",
+        "size":1,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
+        "msg_id":"1",
+        "node":1,
+        "signature":"0001",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":1
+       }
+     ]
+   """
+
+  Scenario: List transactions by message id
+    Given I want to get the list of "blockexplorer/messages/0001:00000001/transactions"
+    And I want to sort by "block_id"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+        {
+        "block_id":"1A7F0400",
+        "id":"0001:00000001:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0001",
+        "type":"broadcast",
+        "size":1,
+        "message":"0000000000000000000000000000000000000000000000000000000000000001",
+        "message_length":1,
+        "msg_id":"1",
+        "node":1,
+        "signature":"0001",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":1
+       },
+       {
+        "block_id":"1B7F0400",
+        "id":"0002:00000011:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0002",
+        "type":"broadcast",
+        "size":11,
+        "message":"0000000000000000000000000000000000000000000000000000000000000011",
+        "message_length":11,
+        "msg_id":"2",
+        "node":2,
+        "signature":"0011",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":11
+       },
+       {
+        "block_id":"1C7F0400",
+        "id":"0003:00000021:0000",
+        "message_id":"0001:00000001",
+        "node_id":"0003",
+        "type":"broadcast",
+        "size":21,
+        "message":"0000000000000000000000000000000000000000000000000000000000000021",
+        "message_length":21,
+        "msg_id":"3",
+        "node":3,
+        "signature":"0021",
+        "time":"2018-07-31T08:49:36+02:00",
+        "user":21
+       }
+     ]
+   """
+
+  Scenario: List transactions by invalid message id
+    Given I want to get the list of "blockexplorer/messages/1001:00000001/transactions"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     []
+   """
+
+  Scenario: List transactions by invalid message id
+    Given I want to get the list of "blockexplorer/messages/0001-00000001/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid message id
+    Given I want to get the list of "blockexplorer/messages/0001*/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid message id
+    Given I want to get the list of "blockexplorer/messages/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid message id
+    Given I want to get the list of "blockexplorer/messages//transactions"
+    When I request resource
+    Then the response status code should be 404
+    And the response should contain:
+   """
+      {
+        "code":404,
+        "message":"No route found for \"GET \/api\/v1\/blockexplorer\/messages\/\/transactions\""
+      }
+   """
+
+  Scenario: List transactions by account id
+    Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+       {
+         "block_id":"6C7F0400",
+         "id":"0003:00000026:0000",
+         "message_id":"0003:00000026",
+         "node_id":"0003",
+         "type":"send_one",
+         "size":26,
+         "amount":"9223372036854775807",
+         "message":26,
+         "msg_id":"3",
+         "node":3,
+         "sender_address":"0003-00000026-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+         "target_address":"0001-00000006-0000",
+         "target_node":3,
+         "target_user":3,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":26
+       },
+       {
+         "block_id":"6A7F0400",
+         "id":"0001:00000006:0000",
+         "message_id":"0001:00000006",
+         "node_id":"0001",
+         "type":"send_one",
+         "size":6,
+         "amount":"9223372036854775807",
+         "message":6,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000006-0000",
+         "sender_fee":6000000000000000000,
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_address":"0002-00000016-0000",
+         "target_node":1,
+         "target_user":1,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":6
+       }
+     ]
+   """
+
+  Scenario: List transactions by account id
+    Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
+    And I want to limit to 1
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+       {
+         "block_id":"6C7F0400",
+         "id":"0003:00000026:0000",
+         "message_id":"0003:00000026",
+         "node_id":"0003",
+         "type":"send_one",
+         "size":26,
+         "amount":"9223372036854775807",
+         "message":26,
+         "msg_id":"3",
+         "node":3,
+         "sender_address":"0003-00000026-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+         "target_address":"0001-00000006-0000",
+         "target_node":3,
+         "target_user":3,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":26
+       }
+     ]
+   """
+
+  Scenario: List transactions by account id
+    Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
+    And I want to offset to 1
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+       {
+         "block_id":"6A7F0400",
+         "id":"0001:00000006:0000",
+         "message_id":"0001:00000006",
+         "node_id":"0001",
+         "type":"send_one",
+         "size":6,
+         "amount":"9223372036854775807",
+         "message":6,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000006-0000",
+         "sender_fee":6000000000000000000,
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_address":"0002-00000016-0000",
+         "target_node":1,
+         "target_user":1,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":6
+       }
+     ]
+   """
+
+  Scenario: List transactions by account id
+    Given I want to get the list of "blockexplorer/accounts/0001-00000006-0000/transactions"
+    And I want to sort by "block_id"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     [
+        {
+         "block_id":"6A7F0400",
+         "id":"0001:00000006:0000",
+         "message_id":"0001:00000006",
+         "node_id":"0001",
+         "type":"send_one",
+         "size":6,
+         "amount":"9223372036854775807",
+         "message":6,
+         "msg_id":"1",
+         "node":1,
+         "sender_address":"0001-00000006-0000",
+         "sender_fee":6000000000000000000,
+         "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+         "target_address":"0002-00000016-0000",
+         "target_node":1,
+         "target_user":1,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":6
+       },
+       {
+         "block_id":"6C7F0400",
+         "id":"0003:00000026:0000",
+         "message_id":"0003:00000026",
+         "node_id":"0003",
+         "type":"send_one",
+         "size":26,
+         "amount":"9223372036854775807",
+         "message":26,
+         "msg_id":"3",
+         "node":3,
+         "sender_address":"0003-00000026-0000",
+         "sender_fee":9223372036854775807,
+         "signature":"630DC6EC4A80917266051A66738C1B0B18D63FDA895DABB77AD40FB8C64DA2E526A2B2546DEF2CD24354351DBC7A3E280AA4EB594057B725D31FB00A47BFDB0A",
+         "target_address":"0001-00000006-0000",
+         "target_node":3,
+         "target_user":3,
+         "time":"2018-07-31T08:49:36+02:00",
+         "user":26
+       }
+     ]
+   """
+
+
+
+
+  Scenario: List transactions by non-existent account id
+    Given I want to get the list of "blockexplorer/accounts/1001-00000006-0000/transactions"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+   """
+     []
+   """
+
+  Scenario: List transactions by invalid account id
+    Given I want to get the list of "blockexplorer/accounts/0001:00000006:0000/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid account id
+    Given I want to get the list of "blockexplorer/accounts/0001*/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid account id
+    Given I want to get the list of "blockexplorer/accounts/transactions"
+    When I request resource
+    Then the response status code should be 422
+    And the response should contain:
+   """
+      {
+        "code":422,
+        "message":"Invalid resource identity"
+      }
+   """
+
+  Scenario: List transactions by invalid account id
+    Given I want to get the list of "blockexplorer/accounts//transactions"
+    When I request resource
+    Then the response status code should be 404
+    And the response should contain:
+   """
+      {
+        "code":404,
+        "message":"No route found for \"GET \/api\/v1\/blockexplorer\/accounts\/\/transactions\""
+      }
+   """
+
 

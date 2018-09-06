@@ -54,26 +54,13 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function getAccountsByNodeId(string $nodeId): array
-    {
-        $results = [];
-
-        try {
-            $cursor = $this
-                ->createQueryBuilder()
-                ->field('nodeId')->equals($nodeId)
-                ->getQuery()
-                ->execute();
-
-            $data = $cursor->toArray();
-
-            foreach ($data as $node) {
-                $results[] = $node;
-            }
-
-            return $results;
-        } catch (MongoDBException $ex) {
-            return [];
-        }
+    public function getAccountsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
     }
 }

@@ -29,11 +29,11 @@ class NodeTest extends TestCase
     {
         $ids = [
             "1234" => true,
-            "A2G4" => true,
-            "A2G40" => false,
+            "A2F4" => true,
+            "A2F40" => false,
             "1234-1234-1234" => false,
             "1234:1234" => false,
-            "1234-1234AFGA-12DD" => false,
+            "1234-1234AFBA-12DD" => false,
         ];
 
         foreach ($ids as $id => $expected) {

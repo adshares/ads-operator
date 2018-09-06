@@ -53,6 +53,47 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     }
 
     /**
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @param array $conditions
+     * @return array
+     */
+    public function fetchList(string $sort, string $order, int $limit, int $offset, ?array $conditions = []): array
+    {
+        $results = [];
+
+        try {
+            $cursor = $this
+                ->createQueryBuilder()
+                ->field('type')->notEqual('connection')
+                ->sort($sort, $order)
+                ->limit($limit)
+                ->skip($offset);
+
+            if ($conditions) {
+                foreach ($conditions as $columnName => $value) {
+                    $cursor->field($columnName)->equals($value);
+                }
+            }
+
+            $data = $cursor
+                ->getQuery()
+                ->execute()
+                ->toArray();
+
+            foreach ($data as $node) {
+                $results[] = $node;
+            }
+        } catch (MongoDBException $ex) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getTransactionsByAccountId(
@@ -68,6 +109,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
             $queryBuilder = $this->createQueryBuilder();
 
             $cursor = $queryBuilder
+                ->field('type')->notEqual('connection')
                 ->addOr($queryBuilder->expr()->field('senderAddress')->equals($accountId))
                 ->addOr($queryBuilder->expr()->field('targetAddress')->equals($accountId))
                 ->addOr($queryBuilder->expr()->field('wires.targetAddress')->equals($accountId))
@@ -96,7 +138,6 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @param int $limit
      * @param int $offset
      * @return array
-     * @throws MongoDBException
      */
     public function getTransactionsByMessageId(
         string $messageId,
@@ -105,20 +146,42 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $limit,
         int $offset
     ): array {
-        $results = [];
+        return $this->fetchList($sort, $order, $limit, $offset, ['messageId' => $messageId]);
+    }
 
-        $cursor = $this
-            ->createQueryBuilder()
-            ->field('messageId')->equals($messageId)
-            ->getQuery()
-            ->execute();
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
+    }
 
-        $data = $cursor->toArray();
-
-        foreach ($data as $message) {
-            $results[] = $message;
-        }
-
-        return $results;
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByBlockId(
+        string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
+        return $this->fetchList($sort, $order, $limit, $offset, ['blockId' => $blockId]);
     }
 }

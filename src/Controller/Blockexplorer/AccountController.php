@@ -152,45 +152,6 @@ class AccountController extends ApiController
 
     /**
      * @Operation(
-     *     summary="Returns accounts resource for given Node",
-     *     tags={"Blockexplorer"},
-     *
-     *      @SWG\Response(
-     *          response=422,
-     *          description="Returned when Node Id is invalid"
-     *     ),
-     *     @SWG\Response(
-     *          response=200,
-     *          description="Returned when operation is successful",
-     *          @SWG\Schema(
-     *              type="array",
-     *              @SWG\Items(ref=@Model(type=Account::class))
-     *          )
-     *      ),
-     *     @SWG\Parameter(
-     *          name="nodeId",
-     *          in="path",
-     *          type="string",
-     *          description="Node Id (hexadecimal number, e.g. 0001)"
-     *     )
-     * )
-     *
-     * @param string $nodeId
-     * @return Response
-     */
-    public function accountsAction(string $nodeId): Response
-    {
-        if (!Node::validateId($nodeId)) {
-            throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
-        }
-
-        $accounts = $this->repository->getAccountsByNodeId($nodeId);
-
-        return $this->response($this->serializer->serialize($accounts, 'json'), Response::HTTP_OK);
-    }
-
-    /**
-     * @Operation(
      *     summary="List of transactions for given account",
      *     tags={"Blockexplorer"},
      *

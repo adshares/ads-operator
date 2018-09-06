@@ -228,6 +228,24 @@ final class ApiControllerTest extends TestCase
         $this->assertNull($result);
     }
 
+    public function testNormalizeSortWhenValueIsNull()
+    {
+        $apiController = new ApiController();
+        $result = $this->invokeMethod($apiController, 'normalizeSort', [null]);
+
+        $this->assertNull($result);
+    }
+
+    public function testNormalizeSortWhenValueIsNotNull()
+    {
+        $value = 'one_two_three';
+        $expected = 'oneTwoThree';
+        $apiController = new ApiController();
+        $result = $this->invokeMethod($apiController, 'normalizeSort', [$value]);
+
+        $this->assertEquals($expected, $result);
+    }
+
 
     private function getRequestMock(array $input)
     {

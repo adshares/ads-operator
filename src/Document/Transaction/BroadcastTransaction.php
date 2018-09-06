@@ -43,6 +43,7 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'message' => $this->message,
