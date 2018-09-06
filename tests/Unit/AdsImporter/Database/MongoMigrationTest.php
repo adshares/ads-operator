@@ -43,6 +43,7 @@ use MongoDB\Database;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class MongoMigrationTest extends TestCase
 {
@@ -91,7 +92,7 @@ class MongoMigrationTest extends TestCase
         $this->prepareConnectionMockWithMethod('insert');
         $message = $this->createMock(Message::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addMessage($message);
     }
 
@@ -100,7 +101,7 @@ class MongoMigrationTest extends TestCase
         $this->prepareConnectionMockWithMethod('insert');
         $block = $this->createMock(Block::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addBlock($block);
     }
 
@@ -109,7 +110,7 @@ class MongoMigrationTest extends TestCase
         $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
         $block = $this->createMock(Block::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addBlock($block);
     }
 
@@ -179,7 +180,7 @@ class MongoMigrationTest extends TestCase
                     'status' => 'status',
                 ],
             ]);
-            $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+            $mongoMigration = $this->createMongoMigrationInstance($this->connection);
             $mongoMigration->addTransaction($transaction);
             $this->assertTrue(true);
         }
@@ -198,7 +199,7 @@ class MongoMigrationTest extends TestCase
             ->method('getTargetAddress')
             ->willReturn('0001-00000000-1234');
 
-        $mongoMigration = new MongoMigration($this->prepareConnectionForOneAndManyTransactions(), self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->prepareConnectionForOneAndManyTransactions());
         $mongoMigration->addTransaction($transaction);
         $this->assertTrue(true);
     }
@@ -216,7 +217,7 @@ class MongoMigrationTest extends TestCase
             ->method('getTargetAddress')
             ->willReturn('0001-00000000-9B6F');
 
-        $mongoMigration = new MongoMigration($this->prepareConnectionForOneAndManyTransactions(), self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->prepareConnectionForOneAndManyTransactions());
         $mongoMigration->addTransaction($transaction);
         $this->assertTrue(true);
     }
@@ -241,7 +242,7 @@ class MongoMigrationTest extends TestCase
             ->method('getWires')
             ->willReturn([$wires]);
 
-        $mongoMigration = new MongoMigration($this->prepareConnectionForOneAndManyTransactions(), self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->prepareConnectionForOneAndManyTransactions());
         $mongoMigration->addTransaction($transaction);
         $this->assertTrue(true);
     }
@@ -251,7 +252,7 @@ class MongoMigrationTest extends TestCase
         $this->prepareConnectionMockWithMethod('insert');
         $node = $this->createMock(Node::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addOrUpdateNode($node);
     }
 
@@ -261,7 +262,7 @@ class MongoMigrationTest extends TestCase
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addOrUpdateNode($node);
     }
 
@@ -272,7 +273,7 @@ class MongoMigrationTest extends TestCase
         $account = $this->createMock(Account::class);
         $node = $this->createMock(Node::class);
 
-        $mongoMigration = new MongoMigration($this->connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
         $mongoMigration->addOrUpdateAccount($account, $node);
     }
 
@@ -313,8 +314,7 @@ class MongoMigrationTest extends TestCase
             ->method('selectDatabase')
             ->willReturn($database);
 
-
-        $mongoMigration = new MongoMigration($connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($connection);
         $result = $mongoMigration->getNewestBlockTime();
 
         $this->assertEquals($time, $result);
@@ -356,8 +356,7 @@ class MongoMigrationTest extends TestCase
             ->method('selectDatabase')
             ->willReturn($database);
 
-
-        $mongoMigration = new MongoMigration($connection, self::DATABASE_NAME);
+        $mongoMigration = $this->createMongoMigrationInstance($connection);
         $result = $mongoMigration->getNewestBlockTime();
 
         $this->assertNull($result);
@@ -382,5 +381,11 @@ class MongoMigrationTest extends TestCase
             ->willReturn($database);
 
         return $connection;
+    }
+
+    private function createMongoMigrationInstance($connection)
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        return new MongoMigration($connection, self::DATABASE_NAME, $logger);
     }
 }

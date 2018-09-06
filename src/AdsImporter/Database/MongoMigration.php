@@ -34,7 +34,6 @@ use MongoDB\BSON\UTCDateTime;
 use Doctrine\MongoDB\Collection;
 use Psr\Log\LoggerInterface;
 
-
 /**
  * Class MongoMigration
  *
@@ -212,10 +211,10 @@ class MongoMigration implements DatabaseMigrationInterface
         } catch (\MongoDuplicateKeyException $ex) {
             $details = sprintf(
                 'Id: %s, NodeId: %s, BlockId: %s, MessageId: %s',
-                $transaction->getId(),
-                $transaction->getNodeId(),
-                $transaction->getBlockId(),
-                $transaction->getMessageId()
+                $document['id'],
+                $document['nodeId'],
+                $document['blockId'],
+                $document['messageId']
             );
 
             $this->addExceptionToLog(sprintf('TRANSACTION_DUPLICATED [%s]', $details));
