@@ -24,12 +24,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
 {
-
     private $id;
 
     private $email;
 
     private $password;
+
+    private $createdAt;
 
     public function __construct(string $email, string $password)
     {
@@ -45,6 +46,11 @@ class User implements UserInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 
     public function getRoles()

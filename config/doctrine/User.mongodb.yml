@@ -11,3 +11,8 @@ Adshares\AdsOperator\Document\User:
       type: string
     password:
       type: string
+    createdAt:
+      type: date
+      gedmo:
+        timestampable:
+          on: create
