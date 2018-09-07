@@ -26,6 +26,7 @@ use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Validator\ValidatorException;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -56,16 +57,14 @@ class AuthController extends ApiController
      *          description="Returned when operation is successful",
      *      ),
      *     @SWG\Parameter(
-     *          name="email",
-     *          in="formData",
-     *          type="string",
-     *          description="User's email"
-     *      ),
-     *      @SWG\Parameter(
-     *          name="password",
-     *          in="formData",
-     *          type="string",
-     *          description="User's password"
+     *          name="",
+     *          in="body",
+     *          required=true,
+     *          description="User data",
+     *          @SWG\Schema(type="object",
+     *              @SWG\Property(property="email", type="string"),
+     *              @SWG\Property(property="password", type="string")
+     *          )
      *      )
      * )
      *
@@ -79,6 +78,7 @@ class AuthController extends ApiController
         $context = new DeserializationContext();
         $context->setGroups('create');
 
+        /** @var User $user */
         $user = $this->serializer->deserialize($content, User::class, 'json', $context);
 
         try {

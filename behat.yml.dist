@@ -5,6 +5,7 @@ default:
             contexts:
                 - DoctrineContext:
                     - '@doctrine.odm.mongodb.document_manager'
+                    - '@security.password_encoder'
                 - ApiContext:
                     - '@Adshares\AdsOperator\GuzzleHttp\ApiClient'
 
