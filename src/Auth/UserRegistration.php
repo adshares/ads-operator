@@ -28,10 +28,19 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserRegistration
 {
+    /**
+     * @var UserRepositoryInterface
+     */
     private $userRepository;
 
+    /**
+     * @var DocumentValidator
+     */
     private $validator;
 
+    /**
+     * @var UserPasswordEncoderInterface
+     */
     private $userPasswordEncoder;
 
     public function __construct(
@@ -44,7 +53,10 @@ class UserRegistration
         $this->userPasswordEncoder = $userPasswordEncoder;
     }
 
-    public function register(User $user)
+    /**
+     * @param User $user
+     */
+    public function register(User $user): void
     {
         $errors = $this->validator->validate($user);
 

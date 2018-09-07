@@ -24,6 +24,9 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DocumentValidator
 {
+    /**
+     * @var ValidatorInterface
+     */
     private $validator;
 
     public function __construct(ValidatorInterface $validator)
@@ -31,6 +34,10 @@ class DocumentValidator
         $this->validator = $validator;
     }
 
+    /**
+     * @param mixed $document document object (e.g. User, Transaction)
+     * @return array
+     */
     public function validate($document): array
     {
         $result = $this->validator->validate($document);

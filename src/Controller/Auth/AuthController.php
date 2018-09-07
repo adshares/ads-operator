@@ -24,12 +24,17 @@ use Adshares\AdsOperator\Auth\UserRegistration;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Validator\ValidatorException;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Operation;
 use JMS\Serializer\DeserializationContext;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends ApiController
 {
+    /**
+     * @var UserRegistration
+     */
     private $userRegistration;
 
     public function __construct(UserRegistration $userRegistration)
@@ -37,6 +42,36 @@ class AuthController extends ApiController
         $this->userRegistration = $userRegistration;
     }
 
+    /**
+     * @Operation(
+     *     summary="Register a new user",
+     *     tags={"Auth"},
+     *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when post parameters are invalid"
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="Returned when operation is successful",
+     *      ),
+     *     @SWG\Parameter(
+     *          name="email",
+     *          in="formData",
+     *          type="string",
+     *          description="User's email"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="password",
+     *          in="formData",
+     *          type="string",
+     *          description="User's password"
+     *      )
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function registerAction(Request $request): Response
     {
         $content = (string) $request->getContent();
