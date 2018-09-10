@@ -26,15 +26,6 @@ use Doctrine\ODM\MongoDB\DocumentRepository;
 
 class UserRepository extends DocumentRepository implements UserRepositoryInterface
 {
-
-    public function findByEmail(string $email): ?User
-    {
-        /** @var User $user */
-        $user = $this->findOneBy(['email' => $email]);
-
-        return $user;
-    }
-
     public function signUp(User $user): void
     {
         $this->getDocumentManager()->persist($user);

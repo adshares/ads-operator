@@ -24,7 +24,5 @@ use Adshares\AdsOperator\Document\User;
 
 interface UserRepositoryInterface
 {
-    public function findByEmail(string $email):? User;
-
     public function signUp(User $user): void;
 }
