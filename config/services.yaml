@@ -92,6 +92,24 @@ services:
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
+    Adshares\AdsOperator\Controller\Auth\AuthController:
+      parent: Adshares\AdsOperator\Controller\ApiController
+      public: true
+      autowire: false
+      autoconfigure: false
+      arguments:
+        $userRegistration: '@Adshares\AdsOperator\Auth\UserRegistration'
+
+    Adshares\AdsOperator\Validator\DocumentValidator:
+        arguments: ['@validator']
+
+    Adshares\AdsOperator\Auth\UserRegistration:
+      class: Adshares\AdsOperator\Auth\UserRegistration
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
+        $userPasswordEncoder: '@security.password_encoder'
+
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
@@ -122,6 +140,11 @@ services:
         class: Doctrine\ODM\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Transaction']
+
+    Adshares\AdsOperator\Repository\Doctrine\UserRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\User']
 
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:

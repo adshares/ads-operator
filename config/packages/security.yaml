@@ -1,0 +1,15 @@
+security:
+    encoders:
+        Adshares\AdsOperator\Document\User:
+            algorithm: bcrypt
+    providers:
+        in_memory: { memory: ~ }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+        main:
+            anonymous: true
+
+    access_control:
+

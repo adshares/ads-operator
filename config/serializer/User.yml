@@ -1,0 +1,16 @@
+Adshares\AdsOperator\Document\User:
+  exclusion_policy: ALL
+  properties:
+    id:
+      expose: true
+      type: string
+      groups: [list, create, update]
+    email:
+      expose: true
+      type: string
+      groups: [list, create, update]
+    password:
+      expose: true
+      type: string
+      groups: [create, update]
+
