@@ -211,7 +211,7 @@ class MongoMigration implements DatabaseMigrationInterface
         } catch (\MongoDuplicateKeyException $ex) {
             $details = sprintf(
                 'Id: %s, NodeId: %s, BlockId: %s, MessageId: %s',
-                $document['id'],
+                $document['_id'],
                 $document['nodeId'],
                 $document['blockId'],
                 $document['messageId']

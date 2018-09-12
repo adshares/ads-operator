@@ -111,7 +111,7 @@ Feature: Transactions
         "type":"send_one",
         "size":26,
         "amount":"9223372036854775807",
-        "message":26,
+        "message":"0000000000000000000000000000000000000000000000000000000000000026",
         "msg_id":"3",
         "node":3,
         "sender_address":"0003-00000026-0000",
@@ -219,7 +219,7 @@ Feature: Transactions
         "type":"send_one",
         "size":16,
         "amount":"9223372036854775807",
-        "message":16,
+        "message":"0000000000000000000000000000000000000000000000000000000000000016",
         "msg_id":"2",
         "node":2,
         "sender_address":"0002-00000016-0000",
@@ -327,7 +327,7 @@ Feature: Transactions
         "type":"send_one",
         "size":6,
         "amount":"9223372036854775807",
-        "message":6,
+        "message":"0000000000000000000000000000000000000000000000000000000000000006",
         "msg_id":"1",
         "node":1,
         "sender_address":"0001-00000006-0000",
@@ -1176,7 +1176,7 @@ Feature: Transactions
          "type":"send_one",
          "size":6,
          "amount":"9223372036854775807",
-         "message":6,
+         "message":"0000000000000000000000000000000000000000000000000000000000000006",
          "msg_id":"1",
          "node":1,
          "sender_address":"0001-00000006-0000",
@@ -1196,7 +1196,7 @@ Feature: Transactions
          "type":"send_one",
          "size":16,
          "amount":"9223372036854775807",
-         "message":16,
+         "message":"0000000000000000000000000000000000000000000000000000000000000016",
          "msg_id":"2",
          "node":2,
          "sender_address":"0002-00000016-0000",
@@ -1215,7 +1215,7 @@ Feature: Transactions
          "node_id":"0003",
          "type":"send_one",
          "size":26,"amount":"9223372036854775807",
-         "message":26,
+         "message":"0000000000000000000000000000000000000000000000000000000000000026",
          "msg_id":"3",
          "node":3,
          "sender_address":"0003-00000026-0000",
@@ -1503,7 +1503,7 @@ Feature: Transactions
          "type":"send_one",
          "size":26,
          "amount":"9223372036854775807",
-         "message":26,
+         "message":"0000000000000000000000000000000000000000000000000000000000000026",
          "msg_id":"3",
          "node":3,
          "sender_address":"0003-00000026-0000",
@@ -1523,7 +1523,7 @@ Feature: Transactions
          "type":"send_one",
          "size":6,
          "amount":"9223372036854775807",
-         "message":6,
+         "message":"0000000000000000000000000000000000000000000000000000000000000006",
          "msg_id":"1",
          "node":1,
          "sender_address":"0001-00000006-0000",
@@ -1554,7 +1554,7 @@ Feature: Transactions
          "type":"send_one",
          "size":26,
          "amount":"9223372036854775807",
-         "message":26,
+         "message":"0000000000000000000000000000000000000000000000000000000000000026",
          "msg_id":"3",
          "node":3,
          "sender_address":"0003-00000026-0000",
@@ -1585,7 +1585,7 @@ Feature: Transactions
          "type":"send_one",
          "size":6,
          "amount":"9223372036854775807",
-         "message":6,
+         "message":"0000000000000000000000000000000000000000000000000000000000000006",
          "msg_id":"1",
          "node":1,
          "sender_address":"0001-00000006-0000",
@@ -1617,7 +1617,7 @@ Feature: Transactions
          "type":"send_one",
          "size":6,
          "amount":"9223372036854775807",
-         "message":6,
+         "message":"0000000000000000000000000000000000000000000000000000000000000006",
          "msg_id":"1",
          "node":1,
          "sender_address":"0001-00000006-0000",
@@ -1637,7 +1637,7 @@ Feature: Transactions
          "type":"send_one",
          "size":26,
          "amount":"9223372036854775807",
-         "message":26,
+         "message":"0000000000000000000000000000000000000000000000000000000000000026",
          "msg_id":"3",
          "node":3,
          "sender_address":"0003-00000026-0000",
@@ -1651,9 +1651,6 @@ Feature: Transactions
        }
      ]
    """
-
-
-
 
   Scenario: List transactions by non-existent account id
     Given I want to get the list of "blockexplorer/accounts/1001-00000006-0000/transactions"
@@ -1711,5 +1708,3 @@ Feature: Transactions
         "message":"No route found for \"GET \/api\/v1\/blockexplorer\/accounts\/\/transactions\""
       }
    """
-
-
