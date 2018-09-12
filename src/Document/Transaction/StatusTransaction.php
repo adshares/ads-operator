@@ -58,6 +58,7 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
+            'status' => $this->status,
             'senderAddress' => $this->getSenderAddress(),
             'targetAddress' => $this->getTargetAddress(),
         ];
