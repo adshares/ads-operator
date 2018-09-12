@@ -27,6 +27,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - List of transactions for a single block,
   - List of transactions for a single message,
 
+- Support for importing data from a network
+
 - Support for user area:
   - Register a new user
   - Login to the system 
