@@ -53,6 +53,7 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,
             'newPublicKey' => $this->newPublicKey,
+            'publicKey' => $this->publicKey,
             'oldPublicKey' => $this->oldPublicKey,
             'publicKeySignature' => $this->publicKeySignature,
             'signature' => $this->signature,
