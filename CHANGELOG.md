@@ -31,7 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Support for user area:
   - Register a new user
-  - Login to the system 
+  - Login to the system using JWT tokens 
           
 - README
 - LICENSE
