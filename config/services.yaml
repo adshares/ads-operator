@@ -164,8 +164,10 @@ services:
             $logger: '@logger'
         calls:
             - method: setWorkingDir
-              arguments:
-                  - '/tmp/.ads7'
+              arguments: ['%env(ADS_WORKING_DIR)%']
+            - method: setCommand
+              arguments: ['%env(ADS_BINARY)%']
+
 
     Vendor\Adshares\Ads\AdsClient:
         class: Adshares\Ads\AdsClient
