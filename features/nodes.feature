@@ -22,7 +22,7 @@ Feature: Nodes
       [
          {
           "account_count":6,
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
           "id":"0006",
           "ipv4":"191.123.21.23",
@@ -35,7 +35,7 @@ Feature: Nodes
         },
         {
           "account_count":5,
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "id":"0005",
           "ipv4":"191.123.21.23",
@@ -48,7 +48,7 @@ Feature: Nodes
         },
         {
           "account_count":4,
-          "balance":477024073846153840,
+          "balance":"477024073846153840",
           "hash":"70B8290E9DB0DC611CAAA3E38DF11B7D0E1EC41219AB00CF7B7B628644460429",
           "id":"0004",
           "ipv4":"191.123.21.23",
@@ -61,7 +61,7 @@ Feature: Nodes
         },
         {
           "account_count":3,
-          "balance":536652083076923070,
+          "balance":"536652083076923070",
           "hash":"A534B0451771A35021BF47E09F0865C3E652B78B8104CDF9944A5709870BF63B",
           "id":"0003",
           "ipv4":"191.123.21.23",
@@ -74,7 +74,7 @@ Feature: Nodes
         },
         {
           "account_count":2,
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"70D11F677A9B8F0A49BAD9DCE9F715FCE4AA76BDF23C14FB40142999A1E84577",
           "id":"0002",
           "ipv4":"191.123.21.23",
@@ -87,7 +87,7 @@ Feature: Nodes
         },
         {
           "account_count":1,
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "id":"0001",
           "ipv4":"191.123.21.23",
@@ -111,7 +111,7 @@ Feature: Nodes
       [
         {
           "account_count":6,
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
           "id":"0006",
           "ipv4":"191.123.21.23",
@@ -124,7 +124,7 @@ Feature: Nodes
         },
         {
           "account_count":5,
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "id":"0005",
           "ipv4":"191.123.21.23",
@@ -151,7 +151,7 @@ Feature: Nodes
       [
         {
           "account_count":4,
-          "balance":477024073846153840,
+          "balance":"477024073846153840",
           "hash":"70B8290E9DB0DC611CAAA3E38DF11B7D0E1EC41219AB00CF7B7B628644460429",
           "id":"0004",
           "ipv4":"191.123.21.23",
@@ -164,7 +164,7 @@ Feature: Nodes
         },
         {
           "account_count":5,
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "id":"0005",
           "ipv4":"191.123.21.23",
@@ -189,7 +189,7 @@ Feature: Nodes
       [
         {
           "account_count":1,
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "id":"0001",
           "ipv4":"191.123.21.23",
@@ -202,7 +202,7 @@ Feature: Nodes
         },
         {
           "account_count":2,
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"70D11F677A9B8F0A49BAD9DCE9F715FCE4AA76BDF23C14FB40142999A1E84577",
           "id":"0002",
           "ipv4":"191.123.21.23",
@@ -276,7 +276,7 @@ Feature: Nodes
     """
         {
           "account_count":5,
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "id":"0005",
           "ipv4":"191.123.21.23",

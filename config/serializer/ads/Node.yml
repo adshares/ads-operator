@@ -9,10 +9,7 @@ Adshares\Ads\Entity\Node:
             type: int
         balance:
             expose: true
-            type: int
-#            accessor:
-#                getter: getBalanceInADS
-#                setter: setBalance
+            type: string
         hash:
             expose: true
             type: string
