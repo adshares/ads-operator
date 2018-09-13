@@ -1,0 +1,33 @@
+Adshares\AdsOperator\Document\Transaction\LogAccountTransaction:
+    type: document
+    collection: transaction
+    embedOne:
+        networkAccount:
+            targetDocument: Adshares\AdsOperator\Document\Account
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        messageId:
+            type: string
+        nodeId:
+            type: string
+        type:
+            type: string
+        size:
+            type: int
+        msgId:
+            type: string
+        node:
+            type: int
+        signature:
+            type: string
+        time:
+            type: date
+        user:
+            type: int
+        senderAddress:
+            type: string

@@ -1,0 +1,31 @@
+@startuml
+hide footbox
+title 2FA verification
+
+participant "ADS Node" as Node
+participant Operator
+participant "ADS Client" as ADS
+
+Node -> Operator: verify transaction (raw data)
+activate Operator
+
+Operator -> Operator: check transaction
+alt transaction exists
+
+    Operator -> Operator: check 2FA status
+    Operator -> Operator: check user
+    Operator --> Node: [valid status & user] valid transaction
+
+else transaction not exists
+
+    Operator -> ADS: decode raw data
+    activate ADS
+    ADS --> Operator: transaction info
+    deactivate ADS
+    Operator -> Operator: save transaction
+
+end
+    Operator --> Node: invalid transaction
+    deactivate Operator
+
+@enduml

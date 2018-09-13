@@ -1,0 +1,36 @@
+Adshares\Ads\Entity\Node:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        accountCount:
+            expose: true
+            type: int
+        balance:
+            expose: true
+            type: string
+        hash:
+            expose: true
+            type: string
+        ipv4:
+            expose: true
+            type: string
+        messageHash:
+            expose: true
+            type: string
+        msid:
+            expose: true
+            type: string
+        mtim:
+            expose: true
+            type: DateTime
+        port:
+            expose: true
+            type: int
+        publicKey:
+            expose: true
+            type: string
+        status:
+            expose: true
+            type: int

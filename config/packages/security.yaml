@@ -1,0 +1,36 @@
+security:
+    encoders:
+        Adshares\AdsOperator\Document\User:
+            algorithm: bcrypt
+    providers:
+        user_provider:
+            mongodb: { class: Adshares\AdsOperator\Document\User, property: email }
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+
+        login:
+            pattern:  ^/api/%api_version%/auth/login
+            stateless: true
+            anonymous: true
+            json_login:
+                check_path:               /api/%api_version%/auth/login
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+
+        api:
+            pattern:   ^/api/
+            stateless: true
+            anonymous: true
+            provider: user_provider
+            lexik_jwt: ~
+
+    access_control:
+        - { path: ^/api/%api_version%/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/%api_version%/auth/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/%api_version%/auth, roles: IS_AUTHENTICATED_FULLY }
+
+        - { path: ^/api/%api_version%/blockexplorer, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/doc, roles: IS_AUTHENTICATED_ANONYMOUSLY }

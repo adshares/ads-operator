@@ -1,0 +1,11 @@
+Adshares\AdsOperator\Document\Transaction\SendManyTransactionWire:
+    type: embeddedDocument
+    fields:
+        amount:
+            type: string
+        targetAddress:
+            type: string
+        targetNode:
+            type: int
+        targetUser:
+            type: int

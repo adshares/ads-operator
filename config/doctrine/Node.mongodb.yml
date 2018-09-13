@@ -1,0 +1,30 @@
+Adshares\AdsOperator\Document\Node:
+    type: document
+    collection: node
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\NodeRepository
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        accountCount:
+            type: int
+        balance:
+            type: int
+        hash:
+            type: string
+        ipv4:
+            type: string
+        messageHash:
+            type: string
+        msid:
+            type: string
+        mtim:
+            type: date
+        port:
+            type: int
+        publicKey:
+            type: string
+        status:
+            type: int
+

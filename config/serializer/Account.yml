@@ -1,0 +1,10 @@
+Adshares\AdsOperator\Document\Account:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        nodeId:
+            expose: true
+            type: string
+
