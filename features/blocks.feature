@@ -21,7 +21,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":600000000000,
+          "dividend_balance":"600000000000",
           "dividend_pay":true,
           "id":"6B6180E0",
           "message_count":7,
@@ -39,7 +39,7 @@ Feature: Blocks
           "transaction_count":12
         },
         {
-          "dividend_balance":500000000000,
+          "dividend_balance":"500000000000",
           "dividend_pay":true,
           "id":"5B6180E0",
           "message_count":6,
@@ -57,7 +57,7 @@ Feature: Blocks
           "transaction_count":11
         },
         {
-          "dividend_balance":400000000000,
+          "dividend_balance":"400000000000",
           "dividend_pay":true,
           "id":"4B6180E0",
           "message_count":5,
@@ -75,7 +75,7 @@ Feature: Blocks
           "transaction_count":10
         },
         {
-          "dividend_balance":300000000000,
+          "dividend_balance":"300000000000",
           "dividend_pay":true,
           "id":"3B6180E0",
           "message_count":4,
@@ -93,7 +93,7 @@ Feature: Blocks
           "transaction_count":9
         },
         {
-          "dividend_balance":200000000000,
+          "dividend_balance":"200000000000",
           "dividend_pay":true,
           "id":"2B6180E0",
           "message_count":3,
@@ -111,7 +111,7 @@ Feature: Blocks
           "transaction_count":8
         },
         {
-          "dividend_balance":100000000000,
+          "dividend_balance":"100000000000",
           "dividend_pay":true,
           "id":"1B6180E0",
           "message_count":2,
@@ -140,7 +140,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":600000000000,
+          "dividend_balance":"600000000000",
           "dividend_pay":true,
           "id":"6B6180E0",
           "message_count":7,
@@ -158,7 +158,7 @@ Feature: Blocks
           "transaction_count":12
         },
         {
-          "dividend_balance":500000000000,
+          "dividend_balance":"500000000000",
           "dividend_pay":true,
           "id":"5B6180E0",
           "message_count":6,
@@ -176,7 +176,7 @@ Feature: Blocks
           "transaction_count":11
         },
         {
-          "dividend_balance":400000000000,
+          "dividend_balance":"400000000000",
           "dividend_pay":true,
           "id":"4B6180E0",
           "message_count":5,
@@ -206,7 +206,7 @@ Feature: Blocks
         """
       [
           {
-            "dividend_balance":100000000000,
+            "dividend_balance":"100000000000",
             "dividend_pay":true,
             "id":"1B6180E0",
             "message_count":2,
@@ -224,7 +224,7 @@ Feature: Blocks
             "transaction_count":7
            },
            {
-            "dividend_balance":200000000000,
+            "dividend_balance":"200000000000",
             "dividend_pay":true,
             "id":"2B6180E0",
             "message_count":3,
@@ -242,7 +242,7 @@ Feature: Blocks
             "transaction_count":8
            },
            {
-            "dividend_balance":300000000000,
+            "dividend_balance":"300000000000",
             "dividend_pay":true,
             "id":"3B6180E0",
             "message_count":4,
@@ -271,7 +271,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":600000000000,
+          "dividend_balance":"600000000000",
           "dividend_pay":true,
           "id":"6B6180E0",
           "message_count":7,
@@ -289,7 +289,7 @@ Feature: Blocks
           "transaction_count":12
          },
          {
-          "dividend_balance":500000000000,
+          "dividend_balance":"500000000000",
           "dividend_pay":true,
           "id":"5B6180E0",
           "message_count":6,
@@ -319,7 +319,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":600000000000,
+          "dividend_balance":"600000000000",
           "dividend_pay":true,
           "id":"6B6180E0",
           "message_count":7,
@@ -337,7 +337,7 @@ Feature: Blocks
           "transaction_count":12
          },
          {
-          "dividend_balance":500000000000,
+          "dividend_balance":"500000000000",
           "dividend_pay":true,
           "id":"5B6180E0",
           "message_count":6,
@@ -367,7 +367,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":100000000000,
+          "dividend_balance":"100000000000",
           "dividend_pay":true,
           "id":"1B6180E0",
           "message_count":2,
@@ -385,7 +385,7 @@ Feature: Blocks
           "transaction_count":7
          },
          {
-          "dividend_balance":200000000000,
+          "dividend_balance":"200000000000",
           "dividend_pay":true,
           "id":"2B6180E0",
           "message_count":3,
@@ -416,7 +416,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":500000000000,
+          "dividend_balance":"500000000000",
           "dividend_pay":true,
           "id":"5B6180E0",
           "message_count":6,
@@ -434,7 +434,7 @@ Feature: Blocks
           "transaction_count":11
         },
         {
-          "dividend_balance":600000000000,
+          "dividend_balance":"600000000000",
           "dividend_pay":true,
           "id":"6B6180E0",
           "message_count":7,
@@ -466,7 +466,7 @@ Feature: Blocks
     """
       [
         {
-          "dividend_balance":300000000000,
+          "dividend_balance":"300000000000",
           "dividend_pay":true,
           "id":"3B6180E0",
           "message_count":4,
@@ -484,7 +484,7 @@ Feature: Blocks
           "transaction_count":9
         },
         {
-          "dividend_balance":400000000000,
+          "dividend_balance":"400000000000",
           "dividend_pay":true,
           "id":"4B6180E0",
           "message_count":5,
@@ -563,7 +563,7 @@ Feature: Blocks
     And the response should contain:
     """
         {
-          "dividend_balance":100000000000,
+          "dividend_balance":"100000000000",
           "dividend_pay":true,
           "id":"1B6180E0",
           "message_count":2,

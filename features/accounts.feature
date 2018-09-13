@@ -26,7 +26,7 @@ Feature: Accounts
       [
         {
           "address":"0005-00000000-1269",
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":5,
@@ -41,7 +41,7 @@ Feature: Accounts
         },
         {
           "address":"0004-00000000-B838",
-          "balance":477024073846153840,
+          "balance":"477024073846153840",
           "hash":"70B8290E9DB0DC611CAAA3E38DF11B7D0E1EC41219AB00CF7B7B628644460429",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":4,
@@ -56,7 +56,7 @@ Feature: Accounts
         },
         {
           "address":"0003-00000000-DFEC",
-          "balance":536652083076923070,
+          "balance":"536652083076923070",
           "hash":"A534B0451771A35021BF47E09F0865C3E652B78B8104CDF9944A5709870BF63B",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":3,
@@ -71,7 +71,7 @@ Feature: Accounts
         },
         {
           "address":"0002-00000000-75BD",
-          "balance":596280092307692300,
+          "balance":"596280092307692300",
           "hash":"70D11F677A9B8F0A49BAD9DCE9F715FCE4AA76BDF23C14FB40142999A1E84577",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":2,
@@ -86,7 +86,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000005-CBCA",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":10,
@@ -101,7 +101,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000004-DBEB",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"5569B007386AB86D9B7760C5D6EF9E60DA1A1378FA2C602345D8E7C88B75129B",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":9,
@@ -116,7 +116,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000003-AB0C",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":8,
@@ -131,7 +131,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000002-BB2D",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":7,
@@ -146,7 +146,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000001-8B4E",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":6,
@@ -161,7 +161,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000000-9B6F",
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":1,
@@ -187,7 +187,7 @@ Feature: Accounts
       [
         {
           "address":"0005-00000000-1269",
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":5,
@@ -202,7 +202,7 @@ Feature: Accounts
         },
         {
           "address":"0004-00000000-B838",
-          "balance":477024073846153840,
+          "balance":"477024073846153840",
           "hash":"70B8290E9DB0DC611CAAA3E38DF11B7D0E1EC41219AB00CF7B7B628644460429",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":4,
@@ -217,7 +217,7 @@ Feature: Accounts
         },
         {
           "address":"0003-00000000-DFEC",
-          "balance":536652083076923070,
+          "balance":"536652083076923070",
           "hash":"A534B0451771A35021BF47E09F0865C3E652B78B8104CDF9944A5709870BF63B",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":3,
@@ -244,7 +244,7 @@ Feature: Accounts
       [
          {
           "address":"0001-00000000-9B6F",
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":1,
@@ -259,7 +259,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000001-8B4E",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":6,
@@ -285,7 +285,7 @@ Feature: Accounts
       [
         {
           "address":"0005-00000000-1269",
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":5,
@@ -300,7 +300,7 @@ Feature: Accounts
         },
         {
           "address":"0004-00000000-B838",
-          "balance":477024073846153840,
+          "balance":"477024073846153840",
           "hash":"70B8290E9DB0DC611CAAA3E38DF11B7D0E1EC41219AB00CF7B7B628644460429",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":4,
@@ -327,7 +327,7 @@ Feature: Accounts
       [
         {
           "address":"0001-00000000-9B6F",
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":1,
@@ -342,7 +342,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000001-8B4E",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":6,
@@ -370,7 +370,7 @@ Feature: Accounts
       [
         {
           "address":"0005-00000000-1269",
-          "balance":417396064615384610,
+          "balance":"417396064615384610",
           "hash":"07187918DEC935E75D00B967B8AC8FF350168ED27A9A6ADFE78A7141B60F0313",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":5,
@@ -399,7 +399,7 @@ Feature: Accounts
       [
         {
           "address":"0001-00000002-BB2D",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":7,
@@ -414,7 +414,7 @@ Feature: Accounts
         },
         {
           "address":"0001-00000003-AB0C",
-          "balance":1886044087591240,
+          "balance":"1886044087591240",
           "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":8,
@@ -490,7 +490,7 @@ Feature: Accounts
     """
         {
           "address":"0001-00000000-9B6F",
-          "balance":655908101538461530,
+          "balance":"655908101538461530",
           "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
           "local_change":"2018-07-31T08:49:36+02:00",
           "msid":1,
@@ -550,7 +550,7 @@ Feature: Accounts
      [
        {
         "address":"0001-00000005-CBCA",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"4F91E5E259BB89E012A28508EA180EA93A9E231857CC4E0CB2F2649BB11D3E3D",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":10,
@@ -565,7 +565,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000004-DBEB",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"5569B007386AB86D9B7760C5D6EF9E60DA1A1378FA2C602345D8E7C88B75129B",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":9,
@@ -580,7 +580,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000003-AB0C",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":8,
@@ -595,7 +595,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000002-BB2D",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":7,
@@ -610,7 +610,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000001-8B4E",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":6,
@@ -625,7 +625,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000000-9B6F",
-        "balance":655908101538461530,
+        "balance":"655908101538461530",
         "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":1,
@@ -652,7 +652,7 @@ Feature: Accounts
      [
        {
         "address":"0001-00000003-AB0C",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":8,
@@ -667,7 +667,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000002-BB2D",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":7,
@@ -695,7 +695,7 @@ Feature: Accounts
      [
         {
         "address":"0001-00000000-9B6F",
-        "balance":655908101538461530,
+        "balance":"655908101538461530",
         "hash":"524769EE119CBCC27A8F8DE7D8A55CA12E9773F4763C40394434F522C43A1463",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":1,
@@ -710,7 +710,7 @@ Feature: Accounts
        },
        {
         "address":"0001-00000001-8B4E",
-        "balance":1886044087591240,
+        "balance":"1886044087591240",
         "hash":"26710F00488043124564798C1D5B617CE54371C6334D54987FF0991A25A5324D",
         "local_change":"2018-07-31T08:49:36+02:00",
         "msid":6,

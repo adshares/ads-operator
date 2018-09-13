@@ -6,10 +6,7 @@ Adshares\Ads\Entity\Account:
             type: string
         balance:
             expose: true
-            type: int
-#            accessor: # access_type must be set to public_method
-#                getter: getBalanceInADS
-#                setter: setBalance
+            type: string
         hash:
             expose: true
             type: string
