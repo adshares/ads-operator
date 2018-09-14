@@ -5,3 +5,8 @@ user_registration:
 
 user_login:
   path: /login
+
+user_change_email:
+  path: /users/{id}/change-email
+  controller: Adshares\AdsOperator\Controller\Auth\UserController::changeEmailAction
+  methods: [POST]

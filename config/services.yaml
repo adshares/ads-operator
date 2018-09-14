@@ -110,6 +110,23 @@ services:
         $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
         $userPasswordEncoder: '@security.password_encoder'
 
+    Adshares\AdsOperator\Controller\Auth\UserController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+            $tokenStorage: '@security.token_storage'
+            $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
+            $jwtManager: '@lexik_jwt_authentication.jwt_manager'
+
+    Adshares\AdsOperator\Queue\MemoryQueue: ~
+
+    Adshares\AdsOperator\UseCase\ChangeUserEmail:
+      arguments:
+        $repository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $queue: '@Adshares\AdsOperator\Queue\MemoryQueue'
+
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'

@@ -20,6 +20,7 @@
 
 namespace Adshares\AdsOperator\Document;
 
+use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class User implements UserInterface
@@ -32,6 +33,8 @@ class User implements UserInterface
 
     private $createdAt;
 
+    private $updatedAt;
+
     public function __construct(string $email, string $password)
     {
         $this->email = $email;
@@ -43,6 +46,15 @@ class User implements UserInterface
         $this->password = $password;
     }
 
+    public function changeEmail(string $email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new InvalidEmailException(sprintf('Email %s is not valid.', $email));
+        }
+
+        $this->email = $email;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -51,6 +63,11 @@ class User implements UserInterface
     public function getCreatedAt()
     {
         return $this->createdAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 
     public function getRoles()

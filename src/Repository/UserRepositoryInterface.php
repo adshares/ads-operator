@@ -25,4 +25,6 @@ use Adshares\AdsOperator\Document\User;
 interface UserRepositoryInterface
 {
     public function signUp(User $user): void;
+
+    public function save(User $user): void;
 }

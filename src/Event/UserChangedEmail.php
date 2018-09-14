@@ -18,40 +18,29 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Event;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-
-class DocumentValidator implements DocumentValidatorInterface
+class UserChangedEmail implements EventInterface
 {
     /**
-     * @var ValidatorInterface
+     * @var string
      */
-    private $validator;
+    private $email;
 
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(string $email)
     {
-        $this->validator = $validator;
+        $this->email = $email;
     }
 
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
+    public function getName(): string
     {
-        $result = $this->validator->validate($document);
+        return 'user_changed_email';
+    }
 
-        if (0 === count($result)) {
-            return [];
-        }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
+    public function toArray(): array
+    {
+        return [
+            'email' => $this->email,
+        ];
     }
 }

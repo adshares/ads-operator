@@ -20,38 +20,7 @@
 
 namespace Adshares\AdsOperator\Validator;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-
-class DocumentValidator implements DocumentValidatorInterface
+interface DocumentValidatorInterface
 {
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
-
-    public function __construct(ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-    }
-
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
-    {
-        $result = $this->validator->validate($document);
-
-        if (0 === count($result)) {
-            return [];
-        }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
-    }
+    public function validate($document);
 }

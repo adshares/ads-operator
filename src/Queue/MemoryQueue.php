@@ -18,23 +18,18 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Queue;
 
-use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Adshares\AdsOperator\Event\EventInterface;
 
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+class MemoryQueue implements QueueInterface
 {
-    public function signUp(User $user): void
-    {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-    }
+    private $messages;
 
-    public function save(User $user): void
+    public function add(EventInterface $event)
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        $queueName = $event->getName();
+
+        $this->messages[$queueName][] = $event->toArray();
     }
 }

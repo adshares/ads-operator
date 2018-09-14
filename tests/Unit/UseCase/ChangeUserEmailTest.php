@@ -18,23 +18,14 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Tests\Unit\UseCase;
 
-use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use PHPUnit\Framework\TestCase;
 
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+class ChangeUserEmailTest extends TestCase
 {
-    public function signUp(User $user): void
+    public function testOne()
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-    }
-
-    public function save(User $user): void
-    {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        $this->assertEquals(true, true);
     }
 }

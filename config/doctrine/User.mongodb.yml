@@ -16,3 +16,8 @@ Adshares\AdsOperator\Document\User:
       gedmo:
         timestampable:
           on: create
+    updatedAt:
+      type: date
+      gedmo:
+        timestampable:
+          on: update

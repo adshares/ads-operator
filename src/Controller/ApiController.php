@@ -96,6 +96,11 @@ class ApiController
         return new Response($data, $status, $headers);
     }
 
+    protected function arrayResponse(array $data, int $status = Response::HTTP_OK)
+    {
+        return new JsonResponse($data, $status);
+    }
+
     protected function validationErrorResponse(array $data, int $status = Response::HTTP_BAD_REQUEST): Response
     {
         if (!isset($data['message'])) {
