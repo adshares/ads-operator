@@ -24,6 +24,7 @@ use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
+use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -43,16 +44,12 @@ class UserController extends ApiController
      */
     private $changeUserEmail;
 
-    private $passwordEncoder;
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ChangeUserEmail $changeUserEmail,
-        EncoderFactoryInterface $passwordEncoder
+        ChangeUserEmail $changeUserEmail
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
-        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function changeEmailAction(Request $request, string $id): Response
@@ -68,11 +65,6 @@ class UserController extends ApiController
 
         /** @var User $user */
         $user = $token->getUser();
-        $encoder = $this->passwordEncoder->getEncoder($user);
-
-        if (!$encoder->isPasswordValid($user->getPassword(), $contentDecoded['password'], $user->getSalt())) {
-            throw new BadRequestHttpException('Password is invalid.');
-        }
 
         if ($user->getId() !== $id) {
             $message = sprintf(
@@ -87,8 +79,10 @@ class UserController extends ApiController
         // Check 2FA code when it will be ready
 
         try {
-            $this->changeUserEmail->change($user, $contentDecoded['email']);
+            $this->changeUserEmail->change($user, $contentDecoded['email'], $contentDecoded['password']);
         } catch (InvalidEmailException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (BadPasswordException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         }
 

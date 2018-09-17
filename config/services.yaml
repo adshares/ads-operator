@@ -98,17 +98,10 @@ services:
       autowire: false
       autoconfigure: false
       arguments:
-        $userRegistration: '@Adshares\AdsOperator\Auth\UserRegistration'
+        $userRegistration: '@Adshares\AdsOperator\UseCase\UserRegistration'
 
     Adshares\AdsOperator\Validator\DocumentValidator:
         arguments: ['@validator']
-
-    Adshares\AdsOperator\Auth\UserRegistration:
-      class: Adshares\AdsOperator\Auth\UserRegistration
-      arguments:
-        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
-        $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
-        $userPasswordEncoder: '@security.password_encoder'
 
     Adshares\AdsOperator\Controller\Auth\UserController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -118,14 +111,26 @@ services:
         arguments:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
-            $passwordEncoder: '@security.encoder_factory'
 
     Adshares\AdsOperator\Queue\MemoryQueue: ~
+
+    Adshares\AdsOperator\UseCase\UserRegistration:
+      class: Adshares\AdsOperator\UseCase\UserRegistration
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
+        $userPasswordEncoder: '@security.password_encoder'
 
     Adshares\AdsOperator\UseCase\ChangeUserEmail:
       arguments:
         $repository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
         $queue: '@Adshares\AdsOperator\Queue\MemoryQueue'
+        $passwordChecker: '@Adshares\AdsOperator\Auth\PasswordChecker'
+        $logger: '@logger'
+
+    Adshares\AdsOperator\Auth\PasswordChecker:
+      arguments:
+        $encoderFactory: '@security.encoder_factory'
 
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:

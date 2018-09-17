@@ -20,13 +20,16 @@
 
 namespace Adshares\AdsOperator\UseCase;
 
+use Adshares\AdsOperator\Auth\PasswordCheckerInterface;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Event\UserChangedEmail;
 use Adshares\AdsOperator\Queue\Exception\QueueCannotAddMessage;
 use Adshares\AdsOperator\Queue\QueueInterface;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
+use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class ChangeUserEmail
 {
@@ -41,6 +44,11 @@ class ChangeUserEmail
     private $queue;
 
     /**
+     * @var PasswordCheckerInterface
+     */
+    private $passwordChecker;
+
+    /**
      * @var LoggerInterface
      */
     private $logger;
@@ -48,20 +56,27 @@ class ChangeUserEmail
     public function __construct(
         UserRepositoryInterface $repository,
         QueueInterface $queue,
+        PasswordCheckerInterface $passwordChecker,
         LoggerInterface $logger
     ) {
         $this->userRepository = $repository;
         $this->queue = $queue;
+        $this->passwordChecker = $passwordChecker;
         $this->logger = $logger;
     }
 
     /**
      * @param User $user
      * @param string $newEmail
+     * @param string $password
      * @throws InvalidEmailException
      */
-    public function change(User $user, string $newEmail): void
+    public function change(User $user, string $newEmail, string $password): void
     {
+        if (!$this->passwordChecker->isPasswordValid($user, $password)) {
+            throw new BadPasswordException('Given password is invalid.');
+        }
+
         $user->changeEmail($newEmail);
         $this->userRepository->save($user);
 

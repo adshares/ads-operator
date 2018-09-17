@@ -18,7 +18,7 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Auth;
+namespace Adshares\AdsOperator\UseCase;
 
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;

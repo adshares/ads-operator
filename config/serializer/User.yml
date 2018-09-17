@@ -13,4 +13,12 @@ Adshares\AdsOperator\Document\User:
       expose: true
       type: string
       groups: [create, update]
+    newEmail:
+      expose: true
+      type: string
+      groups: [change-email]
+    token:
+      expose: true
+      type: string
+      groups: [change-email]
 
