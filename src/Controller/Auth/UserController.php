@@ -61,12 +61,7 @@ class UserController
     public function changeEmailAction(Request $request, string $id): Response
     {
         $content = (string) $request->getContent();
-
-        try {
-            $contentDecoded = \GuzzleHttp\json_decode($content, true);
-        } catch (\InvalidArgumentException $ex) {
-            throw new \RuntimeException(sprintf('Could not decode given json %s.', $content));
-        }
+        $contentDecoded = \GuzzleHttp\json_decode($content, true);
 
         $token = $this->tokenStorage->getToken();
 

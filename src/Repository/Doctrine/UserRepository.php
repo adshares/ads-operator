@@ -28,8 +28,7 @@ class UserRepository extends DocumentRepository implements UserRepositoryInterfa
 {
     public function signUp(User $user): void
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        $this->save($user);
     }
 
     public function save(User $user): void
