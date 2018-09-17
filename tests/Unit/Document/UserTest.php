@@ -45,6 +45,7 @@ class UserTest extends TestCase
 
         $user->changeEmail('test@example.com');
 
-        $this->assertEquals('test@example.com', $user->getEmail());
+        $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals('test@example.com', $user->getNewEmail());
     }
 }

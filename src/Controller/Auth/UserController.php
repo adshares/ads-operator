@@ -20,18 +20,17 @@
 
 namespace Adshares\AdsOperator\Controller\Auth;
 
+use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class UserController
+class UserController extends ApiController
 {
     /**
      * @var TokenStorageInterface
@@ -43,19 +42,12 @@ class UserController
      */
     private $changeUserEmail;
 
-    /**
-     * @var JWTManager
-     */
-    private $jwtManager;
-
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ChangeUserEmail $changeUserEmail,
-        JWTManager $jwtManager
+        ChangeUserEmail $changeUserEmail
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
-        $this->jwtManager = $jwtManager;
     }
 
     public function changeEmailAction(Request $request, string $id): Response
@@ -90,6 +82,6 @@ class UserController
             throw new BadRequestHttpException($ex->getMessage());
         }
 
-        return new JsonResponse(['token' => $this->jwtManager->create($user)]);
+        return $this->response(null, Response::HTTP_NO_CONTENT);
     }
 }

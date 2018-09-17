@@ -25,11 +25,17 @@ class UserChangedEmail implements EventInterface
     /**
      * @var string
      */
-    private $email;
+    private $oldEmail;
 
-    public function __construct(string $email)
+    /**
+     * @var string
+     */
+    private $newEmail;
+
+    public function __construct(string $oldEmail, string $newEmail)
     {
-        $this->email = $email;
+        $this->oldEmail = $oldEmail;
+        $this->newEmail = $newEmail;
     }
 
     public function getName(): string
@@ -40,7 +46,8 @@ class UserChangedEmail implements EventInterface
     public function toArray(): array
     {
         return [
-            'email' => $this->email,
+            'new_email' => $this->newEmail,
+            'old_email' => $this->oldEmail,
         ];
     }
 }

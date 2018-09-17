@@ -54,15 +54,15 @@ class ChangeUserEmail
 
     /**
      * @param User $user
-     * @param string $email
+     * @param string $newEmail
      * @throws InvalidEmailException
      */
-    public function change(User $user, string $email): void
+    public function change(User $user, string $newEmail): void
     {
-        $user->changeEmail($email);
+        $user->changeEmail($newEmail);
         $this->userRepository->save($user);
 
-        $event = new UserChangedEmail($email);
+        $event = new UserChangedEmail($user->getEmail(), $newEmail);
 
         try {
             $this->queue->publish($event);

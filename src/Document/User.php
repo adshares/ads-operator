@@ -29,6 +29,10 @@ class User implements UserInterface
 
     private $email;
 
+    private $newEmail;
+
+    private $token;
+
     private $password;
 
     private $createdAt;
@@ -52,7 +56,8 @@ class User implements UserInterface
             throw new InvalidEmailException(sprintf('Email %s is not valid.', $email));
         }
 
-        $this->email = $email;
+        $this->newEmail = $email;
+        $this->token = sha1($this->getEmail().time().$this->getId());
     }
 
     public function getId()
@@ -93,6 +98,16 @@ class User implements UserInterface
     public function getEmail()
     {
         return $this->getUsername();
+    }
+
+    public function getNewEmail()
+    {
+        return $this->newEmail;
+    }
+
+    public function getToken()
+    {
+        return $this->token;
     }
 
     public function eraseCredentials()
