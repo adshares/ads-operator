@@ -20,20 +20,18 @@
 
 namespace Adshares\AdsOperator\Controller\Auth;
 
-use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTManager;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class UserController extends ApiController
+class UserController
 {
     /**
      * @var TokenStorageInterface
@@ -73,14 +71,20 @@ class UserController extends ApiController
         $token = $this->tokenStorage->getToken();
 
         if (!$token) {
-            throw new UnauthorizedHttpException('Token does not exists.');
+            throw new UnauthorizedHttpException('', 'Token does not exists.');
         }
 
         /** @var User $user */
         $user = $token->getUser();
 
         if ($user->getId() !== $id) {
-            throw new UnauthorizedHttpException(sprintf('Does not have permission to modify user: %s', $id));
+            $message = sprintf(
+                'User %s does not have permission to modify user: %s',
+                $user->getId(),
+                $id
+            );
+
+            throw new UnauthorizedHttpException('', $message);
         }
 
         // Check 2FA code when it will be ready
@@ -91,6 +95,6 @@ class UserController extends ApiController
             throw new BadRequestHttpException($ex->getMessage());
         }
 
-        return $this->arrayResponse(['token' => $this->jwtManager->create($user)]);
+        return new JsonResponse(['token' => $this->jwtManager->create($user)]);
     }
 }

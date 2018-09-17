@@ -111,7 +111,6 @@ services:
         $userPasswordEncoder: '@security.password_encoder'
 
     Adshares\AdsOperator\Controller\Auth\UserController:
-        parent: Adshares\AdsOperator\Controller\ApiController
         public: true
         autowire: false
         autoconfigure: false
