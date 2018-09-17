@@ -71,7 +71,7 @@ class UserController
         $token = $this->tokenStorage->getToken();
 
         if (!$token) {
-            throw new UnauthorizedHttpException('', 'Token does not exists.');
+            throw new UnauthorizedHttpException('', 'Token does not exist.');
         }
 
         /** @var User $user */
