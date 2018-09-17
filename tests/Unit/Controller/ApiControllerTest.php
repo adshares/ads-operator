@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -226,6 +226,24 @@ final class ApiControllerTest extends TestCase
         $result = $this->invokeMethod($apiController, 'setSerializer', [$serializationMock]);
 
         $this->assertNull($result);
+    }
+
+    public function testNormalizeSortWhenValueIsNull()
+    {
+        $apiController = new ApiController();
+        $result = $this->invokeMethod($apiController, 'normalizeSort', [null]);
+
+        $this->assertNull($result);
+    }
+
+    public function testNormalizeSortWhenValueIsNotNull()
+    {
+        $value = 'one_two_three';
+        $expected = 'oneTwoThree';
+        $apiController = new ApiController();
+        $result = $this->invokeMethod($apiController, 'normalizeSort', [$value]);
+
+        $this->assertEquals($expected, $result);
     }
 
 

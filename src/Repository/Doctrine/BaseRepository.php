@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -34,9 +34,10 @@ class BaseRepository extends DocumentRepository
      * @param string $order
      * @param int $limit
      * @param int $offset
+     * @param array $conditions
      * @return array
      */
-    public function fetchList(string $sort, string $order, int $limit, int $offset): array
+    public function fetchList(string $sort, string $order, int $limit, int $offset, array $conditions = []): array
     {
         $results = [];
 
@@ -45,11 +46,18 @@ class BaseRepository extends DocumentRepository
                 ->createQueryBuilder()
                 ->sort($sort, $order)
                 ->limit($limit)
-                ->skip($offset)
-                ->getQuery()
-                ->execute();
+                ->skip($offset);
 
-            $data = $cursor->toArray();
+            if ($conditions) {
+                foreach ($conditions as $columnName => $value) {
+                    $cursor->field($columnName)->equals($value);
+                }
+            }
+
+            $data = $cursor
+                ->getQuery()
+                ->execute()
+                ->toArray();
 
             foreach ($data as $node) {
                 $results[] = $node;

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -183,7 +183,7 @@ class Importer
      */
     private function updateAccounts(Node $node): void
     {
-        $accountResponse = $this->client->getAccounts((int)$node->getId());
+            $accountResponse = $this->client->getAccounts(hexdec($node->getId()));
         $accounts = $accountResponse->getAccounts();
 
         /** @var Account $account */

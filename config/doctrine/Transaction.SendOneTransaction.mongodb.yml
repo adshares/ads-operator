@@ -29,7 +29,7 @@ Adshares\AdsOperator\Document\Transaction\SendOneTransaction:
         amount:
             type: string
         message:
-            type: int
+            type: string
         senderAddress:
             type: string
         senderFee:

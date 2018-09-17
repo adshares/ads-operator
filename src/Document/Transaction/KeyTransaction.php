@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -48,10 +48,12 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,
             'newPublicKey' => $this->newPublicKey,
+            'publicKey' => $this->publicKey,
             'oldPublicKey' => $this->oldPublicKey,
             'publicKeySignature' => $this->publicKeySignature,
             'signature' => $this->signature,

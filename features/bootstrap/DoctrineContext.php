@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -30,9 +30,12 @@ use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\StatusTransaction;
+use Adshares\AdsOperator\Document\User;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\ODM\MongoDB\DocumentManager;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+
 
 class DoctrineContext implements Context
 {
@@ -41,9 +44,15 @@ class DoctrineContext implements Context
      */
     private $documentManger;
 
-    public function __construct(DocumentManager $documentManger)
+    /**
+     * @var UserPasswordEncoderInterface
+     */
+    private $userPasswordEncoder;
+
+    public function __construct(DocumentManager $documentManger, UserPasswordEncoderInterface $userPasswordEncoder)
     {
         $this->documentManger = $documentManger;
+        $this->userPasswordEncoder = $userPasswordEncoder;
 
         $database = $this->documentManger->getDocumentDatabase(Node::class);
         $database->drop();
@@ -88,4 +97,24 @@ class DoctrineContext implements Context
         $this->documentManger->flush();
     }
 
+    /**
+     * @Given users already exist in application:
+     */
+    public function usersExistInApplication(TableNode $table): void
+    {
+        foreach ($table->getHash() as $user) {
+            $this->createUser($user['email'], $user['password']);
+        }
+
+        $this->documentManger->flush();
+    }
+
+    public function createUser(string $email,string $password)
+    {
+        $user = new User($email, $password);
+        $encodedPassword = $this->userPasswordEncoder->encodePassword($user, $password);
+        $user->setPassword($encodedPassword);
+
+        $this->documentManger->persist($user);
+    }
 }

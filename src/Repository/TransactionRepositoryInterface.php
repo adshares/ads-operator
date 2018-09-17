@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -60,6 +60,38 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      */
     public function getTransactionsByMessageId(
         string $messageId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByNodeId(
+        string $nodeId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
+     * @param string $blockId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactionsByBlockId(
+        string $blockId,
         string $sort,
         string $order,
         int $limit,

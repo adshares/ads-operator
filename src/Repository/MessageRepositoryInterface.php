@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -44,6 +44,22 @@ interface MessageRepositoryInterface extends ListRepositoryInterface
      */
     public function getMessagesByBlockId(
         string $blockId,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
+     * @param string $nodeId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getMessagesByNodeId(
+        string $nodeId,
         string $sort,
         string $order,
         int $limit,

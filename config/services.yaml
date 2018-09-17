@@ -52,6 +52,9 @@ services:
         autoconfigure: false
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\NodeRepository'
+          $accountRepository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+          $messageRepository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\BlockController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -61,6 +64,7 @@ services:
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\BlockRepository'
           $messageRepository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
     Adshares\AdsOperator\Controller\Blockexplorer\AccountController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -88,10 +92,29 @@ services:
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
+    Adshares\AdsOperator\Controller\Auth\AuthController:
+      parent: Adshares\AdsOperator\Controller\ApiController
+      public: true
+      autowire: false
+      autoconfigure: false
+      arguments:
+        $userRegistration: '@Adshares\AdsOperator\Auth\UserRegistration'
+
+    Adshares\AdsOperator\Validator\DocumentValidator:
+        arguments: ['@validator']
+
+    Adshares\AdsOperator\Auth\UserRegistration:
+      class: Adshares\AdsOperator\Auth\UserRegistration
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
+        $userPasswordEncoder: '@security.password_encoder'
+
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
             $connection: '@doctrine_mongodb.odm.default_connection'
             $databaseName: '%env(MONGODB_DB)%'
+            $logger: '@logger'
 
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
         class: Doctrine\ODM\DocumentRepository
@@ -118,6 +141,11 @@ services:
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Transaction']
 
+    Adshares\AdsOperator\Repository\Doctrine\UserRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\User']
+
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
@@ -136,8 +164,10 @@ services:
             $logger: '@logger'
         calls:
             - method: setWorkingDir
-              arguments:
-                  - '/tmp/.ads7'
+              arguments: ['%env(ADS_WORKING_DIR)%']
+            - method: setCommand
+              arguments: ['%env(ADS_BINARY)%']
+
 
     Vendor\Adshares\Ads\AdsClient:
         class: Adshares\Ads\AdsClient

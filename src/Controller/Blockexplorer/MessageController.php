@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -43,6 +43,7 @@ class MessageController extends ApiController
     /**
      * BlockController constructor.
      * @param MessageRepositoryInterface $repository
+     * @param TransactionRepositoryInterface $transactionRepository
      */
     public function __construct(
         MessageRepositoryInterface $repository,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -39,6 +39,7 @@ class SendManyTransaction extends BaseSendManyTransaction implements ArrayableIn
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -59,6 +59,19 @@ class ApiContext implements Context
     }
 
     /**
+     * @Given I want to create a :resource
+     */
+    public function iWantToCreateA(string $resource)
+    {
+        $mappings = [
+            'user' => 'auth/register',
+        ];
+
+        $this->resource = $mappings[$resource];
+        $this->method = 'post';
+    }
+
+    /**
      * @Given I want to sort by :value
      */
     public function iWantToSortBy(string $sort)
@@ -88,6 +101,14 @@ class ApiContext implements Context
     public function iWantToOffsetTo(int $offset)
     {
         $this->offset = $offset;
+    }
+
+    /**
+     * @Given I provide the data:
+     */
+    public function iProvideTheData(PyStringNode $body)
+    {
+        $this->body = $body->getRaw();
     }
 
     /**

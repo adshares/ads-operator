@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -21,6 +21,7 @@
 namespace Adshares\AdsOperator\Controller;
 
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -93,6 +94,23 @@ class ApiController
         $headers = array_merge($headers, ['content-type' => 'application/json']);
 
         return new Response($data, $status, $headers);
+    }
+
+    protected function validationErrorResponse(array $data, int $status = Response::HTTP_BAD_REQUEST): Response
+    {
+        if (!isset($data['message'])) {
+            $data['message'] = 'Validation failed';
+        }
+
+        if (!isset($data['code'])) {
+            $data['code'] = $status;
+        }
+
+        if (!isset($data['errors'])) {
+            $data['errors'] = [];
+        }
+
+        return new JsonResponse($data, $status);
     }
 
     /**

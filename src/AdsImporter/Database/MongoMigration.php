@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -26,11 +26,13 @@ use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Doctrine\MongoDB\Connection;
 use MongoDB\BSON\UTCDateTime;
 use Doctrine\MongoDB\Collection;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class MongoMigration
@@ -87,14 +89,21 @@ class MongoMigration implements DatabaseMigrationInterface
     private $accountTransactionCollection;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * MongoMigration constructor.
      *
      * @param Connection $connection
      * @param string $databaseName
+     * @param LoggerInterface $logger
      */
-    public function __construct(Connection $connection, string $databaseName)
+    public function __construct(Connection $connection, string $databaseName, LoggerInterface $logger)
     {
         $this->connection = $connection;
+        $this->logger = $logger;
         $this->db = $this->connection->selectDatabase($databaseName);
 
         $this->selectCollections();
@@ -131,7 +140,15 @@ class MongoMigration implements DatabaseMigrationInterface
         try {
             $this->messageCollection->insert($document);
         } catch (\MongoDuplicateKeyException $ex) {
-            // do nothing when a block exists in the database
+            $details = sprintf(
+                'Id: %s, NodeId: %s, BlockId: %s, Length: %s',
+                $message->getId(),
+                $message->getNodeId(),
+                $message->getBlockId(),
+                $message->getLength()
+            );
+
+            $this->addExceptionToLog(sprintf('MESSAGE_DUPLICATED [%s]', $details));
         }
     }
 
@@ -152,7 +169,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'oldHash' => $block->getOldHash(),
             'vipHash' => $block->getVipHash(),
             'nodeCount' => $block->getNodeCount(),
-            'time' => new UTCDateTime((int)$block->getTime()->format('U')*1000),
+            'time' => $this->createMongoDate($block->getTime()),
             'voteYes' => $block->getVoteYes(),
             'voteNo' => $block->getVoteNo(),
             'voteTotal' => $block->getVoteTotal(),
@@ -162,7 +179,9 @@ class MongoMigration implements DatabaseMigrationInterface
         try {
             $this->blockCollection->insert($document);
         } catch (\MongoDuplicateKeyException $ex) {
-            // do nothing when a block exists in the database
+            $details = sprintf('Id: %s', $block->getId());
+
+            $this->addExceptionToLog(sprintf('BLOCK_DUPLICATED [%s]', $details));
         }
     }
 
@@ -173,14 +192,32 @@ class MongoMigration implements DatabaseMigrationInterface
     {
         $document = $transaction->toArray();
 
+        if ($transaction instanceof LogAccountTransaction) {
+            $networkAccount = $document['networkAccount'];
+
+            $networkAccount['localChange'] = $this->createMongoDate($networkAccount['localChange']);
+            $networkAccount['remoteChange'] = $this->createMongoDate($networkAccount['remoteChange']);
+            $networkAccount['time'] = $this->createMongoDate($networkAccount['time']);
+
+            $document['networkAccount'] = $networkAccount;
+        }
+
         if (isset($document['time']) && $document['time'] instanceof \DateTime) {
-            $document['time'] = new UTCDateTime((int)$document['time']->format('U')*1000);
+            $document['time'] = $this->createMongoDate($document['time']);
         }
 
         try {
             $this->transactionCollection->insert($document);
         } catch (\MongoDuplicateKeyException $ex) {
-            return;
+            $details = sprintf(
+                'Id: %s, NodeId: %s, BlockId: %s, MessageId: %s',
+                $document['_id'],
+                $document['nodeId'],
+                $document['blockId'],
+                $document['messageId']
+            );
+
+            $this->addExceptionToLog(sprintf('TRANSACTION_DUPLICATED [%s]', $details));
         }
 
         if ($transaction instanceof SendOneTransaction) {
@@ -235,7 +272,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'messageHash' => $node->getMessageHash(),
             'ipv4' => $node->getIpv4(),
             'msid' => $node->getMsid(),
-            'mtim' => new UTCDateTime((int)$node->getMtim()->format('U')*1000),
+            'mtim' => $this->createMongoDate($node->getMtim()),
             'port' => $node->getPort(),
             'publicKey' => $node->getPublicKey(),
             'status' => $node->getStatus(),
@@ -263,9 +300,9 @@ class MongoMigration implements DatabaseMigrationInterface
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
             'hash' => $account->getHash(),
-            'localChange' => new UTCDateTime((int)$account->getLocalChange()->format('U')*1000),
-            'remoteChange' => new UTCDateTime((int)$account->getRemoteChange()->format('U')*1000),
-            'time' => new UTCDateTime((int)$account->getTime()->format('U')*1000),
+            'localChange' => $this->createMongoDate($account->getLocalChange()),
+            'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
+            'time' => $this->createMongoDate($account->getTime()),
             'msid' => $account->getMsid(),
             'pairedAddress' => $account->getPairedAddress(),
             'publicKey' => $account->getPublicKey(),
@@ -292,5 +329,24 @@ class MongoMigration implements DatabaseMigrationInterface
         }
 
         return null;
+    }
+
+    /**
+     * @param \DateTime $date
+     * @return UTCDateTime
+     */
+    private function createMongoDate(\DateTime $date): UTCDateTime
+    {
+        return new UTCDateTime((int)$date->format('U')*1000);
+    }
+
+    /**
+     * @param string $message
+     */
+    private function addExceptionToLog(string $message): void
+    {
+        $pattern = '[ADS Synchronization] [DATABASE] %s';
+
+        $this->logger->error(sprintf($pattern, $message));
     }
 }

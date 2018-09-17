@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -19,8 +19,6 @@
  */
 
 namespace Adshares\AdsOperator\Document;
-
-use Adshares\Ads\Util\AdsConverter;
 
 /**
  * Class Node
@@ -56,13 +54,5 @@ class Node extends \Adshares\Ads\Entity\Node
     public static function validateId(string $id): bool
     {
         return (bool) preg_match('/^[0-9A-F]{4}$/', $id);
-    }
-
-    /**
-     * @return string
-     */
-    public function getBalanceInADS(): string
-    {
-        return AdsConverter::clicksToAds($this->balance).' ADS';
     }
 }

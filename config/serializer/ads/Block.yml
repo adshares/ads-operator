@@ -6,7 +6,7 @@ Adshares\Ads\Entity\Block:
             type: string
         dividendBalance:
             expose: true
-            type: int
+            type: string
         dividendPay:
             expose: true
             type: boolean

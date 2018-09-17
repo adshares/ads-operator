@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z. o.o.
+ * Copyright (C) 2018 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -48,6 +48,7 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
             '_id' => $this->id,
             'size' => $this->size,
             'type' => $this->type,
+            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
             'messageId' => $this->messageId,
             'msgId' => $this->msgId,
@@ -57,6 +58,7 @@ class StatusTransaction extends BaseStatusTransaction implements ArrayableInterf
             'targetUser' => $this->targetUser,
             'time' => $this->time,
             'user' => $this->user,
+            'status' => $this->status,
             'senderAddress' => $this->getSenderAddress(),
             'targetAddress' => $this->getTargetAddress(),
         ];
