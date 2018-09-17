@@ -30,7 +30,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserController extends ApiController
 {
@@ -56,6 +55,10 @@ class UserController extends ApiController
     {
         $content = (string) $request->getContent();
         $contentDecoded = \GuzzleHttp\json_decode($content, true);
+
+        if (!isset($contentDecoded['email']) || !isset($contentDecoded['password'])) {
+            throw new BadRequestHttpException('Email and password are required.');
+        }
 
         $token = $this->tokenStorage->getToken();
 
