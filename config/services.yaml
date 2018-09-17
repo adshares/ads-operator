@@ -118,6 +118,7 @@ services:
         arguments:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
+            $passwordEncoder: '@security.encoder_factory'
 
     Adshares\AdsOperator\Queue\MemoryQueue: ~
 

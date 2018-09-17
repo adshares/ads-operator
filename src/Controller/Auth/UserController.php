@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class UserController extends ApiController
 {
@@ -42,12 +43,16 @@ class UserController extends ApiController
      */
     private $changeUserEmail;
 
+    private $passwordEncoder;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ChangeUserEmail $changeUserEmail
+        ChangeUserEmail $changeUserEmail,
+        EncoderFactoryInterface $passwordEncoder
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
+        $this->passwordEncoder = $passwordEncoder;
     }
 
     public function changeEmailAction(Request $request, string $id): Response
@@ -63,6 +68,11 @@ class UserController extends ApiController
 
         /** @var User $user */
         $user = $token->getUser();
+        $encoder = $this->passwordEncoder->getEncoder($user);
+
+        if (!$encoder->isPasswordValid($user->getPassword(), $contentDecoded['password'], $user->getSalt())) {
+            throw new BadRequestHttpException('Password is invalid.');
+        }
 
         if ($user->getId() !== $id) {
             $message = sprintf(

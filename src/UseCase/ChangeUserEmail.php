@@ -45,8 +45,11 @@ class ChangeUserEmail
      */
     private $logger;
 
-    public function __construct(UserRepositoryInterface $repository, QueueInterface $queue, LoggerInterface $logger)
-    {
+    public function __construct(
+        UserRepositoryInterface $repository,
+        QueueInterface $queue,
+        LoggerInterface $logger
+    ) {
         $this->userRepository = $repository;
         $this->queue = $queue;
         $this->logger = $logger;
