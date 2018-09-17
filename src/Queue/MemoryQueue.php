@@ -26,7 +26,7 @@ class MemoryQueue implements QueueInterface
 {
     private $messages;
 
-    public function add(EventInterface $event)
+    public function publish(EventInterface $event)
     {
         $queueName = $event->getName();
 

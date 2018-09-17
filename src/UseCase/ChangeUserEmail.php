@@ -65,7 +65,7 @@ class ChangeUserEmail
         $event = new UserChangedEmail($email);
 
         try {
-            $this->queue->add($event);
+            $this->queue->publish($event);
         } catch (QueueCannotAddMessage $ex) {
             $context = array_merge(['queue_name' => $event->getName()], $event->toArray());
             $this->logger->error('[Queue] Could not add a message to the queue.', $context);

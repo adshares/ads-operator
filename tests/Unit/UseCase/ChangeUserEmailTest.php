@@ -20,12 +20,75 @@
 
 namespace Adshares\AdsOperator\Tests\Unit\UseCase;
 
+use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
+use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Queue\Exception\QueueCannotAddMessage;
+use Adshares\AdsOperator\Queue\QueueInterface;
+use Adshares\AdsOperator\Repository\UserRepositoryInterface;
+use Adshares\AdsOperator\UseCase\ChangeUserEmail;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 class ChangeUserEmailTest extends TestCase
 {
-    public function testOne()
+    public function testChangeWhenEmailIsInvalid()
     {
-        $this->assertEquals(true, true);
+        $this->expectException(InvalidEmailException::class);
+
+        $repository = $this->createMock(UserRepositoryInterface::class);
+        $queue = $this->createMock(QueueInterface::class);
+        $logger = new NullLogger();
+        $user = new User('user@example.pl', sha1('test'));
+
+        $changeUserEmail = new ChangeUserEmail($repository, $queue, $logger);
+        $changeUserEmail->change($user, 'test.o2.pl');
+    }
+
+    public function testChangeWhenEmailIsValidButQueueThrowsAnException()
+    {
+        $repository = $this->createMock(UserRepositoryInterface::class);
+        $repository
+            ->expects($this->once())
+            ->method('save');
+
+        $queue = $this->createMock(QueueInterface::class);
+        $queue
+            ->expects($this->once())
+            ->method('publish')
+            ->will($this->throwException(new QueueCannotAddMessage()));
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('error');
+
+        $user = new User('user@example.pl', sha1('test'));
+
+        $changeUserEmail = new ChangeUserEmail($repository, $queue, $logger);
+        $changeUserEmail->change($user, 'test@o2.pl');
+    }
+
+    public function testChangeEmailWhenEmailAndQueueAreValid()
+    {
+        $repository = $this->createMock(UserRepositoryInterface::class);
+        $repository
+            ->expects($this->once())
+            ->method('save');
+
+        $queue = $this->createMock(QueueInterface::class);
+        $queue
+            ->expects($this->once())
+            ->method('publish');
+
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->never())
+            ->method('error');
+
+        $user = new User('user@example.pl', sha1('test'));
+
+        $changeUserEmail = new ChangeUserEmail($repository, $queue, $logger);
+        $changeUserEmail->change($user, 'test@o2.pl');
     }
 }

@@ -20,12 +20,31 @@
 
 namespace Adshares\AdsOperator\Tests\Unit\Document;
 
+use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
+use Adshares\AdsOperator\Document\User;
 use PHPUnit\Framework\TestCase;
 
 class UserTest extends TestCase
 {
-    public function testOne()
+    public function testChangeEmailWhenEmailIsInvalid()
     {
-        $this->assertEquals(true, true);
+        $this->expectException(InvalidEmailException::class);
+
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+
+        $user->changeEmail('test.example.com');
+    }
+
+    public function testChangeEmailWhenValid()
+    {
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+
+        $user->changeEmail('test@example.com');
+
+        $this->assertEquals('test@example.com', $user->getEmail());
     }
 }

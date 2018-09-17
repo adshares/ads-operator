@@ -30,5 +30,5 @@ interface QueueInterface
      * @throws QueueCannotAddMessage
      * @return mixed
      */
-    public function add(EventInterface $event);
+    public function publish(EventInterface $event);
 }
