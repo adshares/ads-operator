@@ -29,7 +29,6 @@ use Adshares\AdsOperator\Queue\QueueInterface;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class ChangeUserEmail
 {
@@ -86,7 +85,14 @@ class ChangeUserEmail
             $this->queue->publish($event);
         } catch (QueueCannotAddMessage $ex) {
             $context = array_merge(['queue_name' => $event->getName()], $event->toArray());
-            $this->logger->error('[Queue] Could not add a message to the queue.', $context);
+            $this->logger->error(
+                sprintf(
+                    '[Queue] Could not add a message to the queue: %s (%s)',
+                    $event->getName(),
+                    $ex->getMessage()
+                ),
+                $context
+            );
         }
     }
 }

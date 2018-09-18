@@ -5,6 +5,7 @@ user_registration:
 
 user_login:
   path: /login
+  methods: [POST]
 
 user_change_email:
   path: /users/{id}/change-email
