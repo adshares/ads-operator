@@ -23,8 +23,12 @@ namespace Adshares\AdsOperator\Controller\Auth;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
+use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
+use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
+use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -43,12 +47,16 @@ class UserController extends ApiController
      */
     private $changeUserEmail;
 
+    private $confirmChangeUserEmail;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ChangeUserEmail $changeUserEmail
+        ChangeUserEmail $changeUserEmail,
+        ConfirmChangeUserEmail $confirmChangeUserEmail
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
+        $this->confirmChangeUserEmail = $confirmChangeUserEmail;
     }
 
     public function changeEmailAction(Request $request, string $id): Response
@@ -86,6 +94,21 @@ class UserController extends ApiController
         } catch (InvalidEmailException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         } catch (BadPasswordException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        }
+
+        return $this->response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function confirmChangeEmailAction(Request $request, string $id, string $token): Response
+    {
+        try {
+            $this->confirmChangeUserEmail->confirm($id, $token);
+        } catch (UserNotFoundException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (BadTokenValueException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (UserExistsException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         }
 

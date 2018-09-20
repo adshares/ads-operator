@@ -18,37 +18,35 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Event;
+namespace Adshares\AdsOperator\Mailer;
 
-class UserChangedEmail implements EventInterface
+use Adshares\AdsOperator\Mailer\Exception\CannotSendEmailException;
+
+class SwiftMailer implements MailerInterface
 {
-    const EVENT_NAME = 'user_changed_email';
     /**
-     * @var string
+     * @var \Swift_Mailer
      */
-    private $oldEmail;
+    private $mailer;
 
-    /**
-     * @var string
-     */
-    private $newEmail;
-
-    public function __construct(string $oldEmail, string $newEmail)
+    public function __construct(\Swift_Mailer $mailer)
     {
-        $this->oldEmail = $oldEmail;
-        $this->newEmail = $newEmail;
+        $this->mailer = $mailer;
     }
 
-    public function getName(): string
+    public function send(string $from, string $to, string $subject, string $body, array $headers = []): void
     {
-        return self::EVENT_NAME;
-    }
+        $message = (new \Swift_Message($subject))
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($body, 'text/html');
 
-    public function toArray(): array
-    {
-        return [
-            'new_email' => $this->newEmail,
-            'old_email' => $this->oldEmail,
-        ];
+        if (0 === $this->mailer->send($message)) {
+            throw new CannotSendEmailException(sprintf(
+                'Email from %s to %s could not be delivered.',
+                $from,
+                $to
+            ));
+        }
     }
 }

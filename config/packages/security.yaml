@@ -30,6 +30,7 @@ security:
     access_control:
         - { path: ^/api/%api_version%/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/%api_version%/auth/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/%api_version%/auth/users/[0-9a-z]+/confirm-change-email/[0-9a-z]+, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/%api_version%/auth, roles: IS_AUTHENTICATED_FULLY }
 
         - { path: ^/api/%api_version%/blockexplorer, roles: IS_AUTHENTICATED_ANONYMOUSLY }

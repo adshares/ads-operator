@@ -111,6 +111,7 @@ services:
         arguments:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
+            $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
@@ -178,6 +179,39 @@ services:
       class: Adshares\AdsOperator\Queue\RabbitMQ
       arguments:
         $connection: '@Vendor\PhpAmqpLib\Connection\AMQPStreamConnection'
+
+    Adshares\AdsOperator\Command\SendChangeEmailConfirmationCommand:
+      class: Adshares\AdsOperator\Command\SendChangeEmailConfirmationCommand
+      arguments:
+        $queue: '@Adshares\AdsOperator\Queue\QueueEngine'
+
+    Adshares\AdsOperator\UseCase\SendChangeUserEmailConfirmation:
+      class: Adshares\AdsOperator\UseCase\SendChangeUserEmailConfirmation
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $emailProvider: '@Adshares\AdsOperator\Mail\MailerEngine'
+        $template: '@Adshares\AdsOperator\Template\TemplateEngine'
+        $templatePath: '%env(CHANGE_EMAIL_CONFIRMATION_TEMPLATE)%'
+        $senderEmail: '%env(MAILER_SENDER)%'
+        $subject: 'Confirm your request about changing an email address'
+        $url: '%env(API_URI)%/api/%api_version%'
+        $logger: '@logger'
+
+    Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail:
+      class: Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+
+    Adshares\AdsOperator\Mail\MailerEngine:
+      class: Adshares\AdsOperator\Mailer\SwiftMailer
+      arguments:
+        $mailer: '@swiftmailer.mailer'
+
+    Adshares\AdsOperator\Template\TemplateEngine:
+      class: Adshares\AdsOperator\Template\TwigTemplate
+      arguments:
+        $template: '@twig'
+
 
     Vendor\PhpAmqpLib\Connection\AMQPStreamConnection:
         class: PhpAmqpLib\Connection\AMQPStreamConnection

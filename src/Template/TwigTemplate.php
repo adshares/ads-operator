@@ -18,25 +18,25 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Queue;
+namespace Adshares\AdsOperator\Template;
 
-use Adshares\AdsOperator\Event\EventInterface;
+use Adshares\AdsOperator\Template\Exception\CannotFindTemplateException;
 
-class MemoryQueue implements QueueInterface
+class TwigTemplate implements TemplateInterface
 {
-    private $messages;
+    private $template;
 
-    public function publish(EventInterface $event)
+    public function __construct(\Twig_Environment $template)
     {
-        $queueName = $event->getName();
-
-        $this->messages[$queueName][] = $event->toArray();
+        $this->template = $template;
     }
 
-    public function consume(string $queueName, callable $callback): void
+    public function render(string $path, array $params): string
     {
-        while (count($this->messages[$queueName]) > 0) {
-            $callback(array_pop($this->messages[$queueName]));
+        try {
+            return $this->template->render($path, $params);
+        } catch (\Twig_Error_Loader $ex) {
+            throw new CannotFindTemplateException(sprintf('Unable to find template `%s`', $path));
         }
     }
 }

@@ -1,0 +1,2 @@
+swiftmailer:
+    delivery_addresses: ['mailcatcher@adshares.net']
