@@ -112,8 +112,6 @@ services:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
 
-    Adshares\AdsOperator\Queue\MemoryQueue: ~
-
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
       arguments:
@@ -124,7 +122,7 @@ services:
     Adshares\AdsOperator\UseCase\ChangeUserEmail:
       arguments:
         $repository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
-        $queue: '@Adshares\AdsOperator\Queue\MemoryQueue'
+        $queue: '@Adshares\AdsOperator\Queue\QueueEngine'
         $passwordChecker: '@Adshares\AdsOperator\Auth\PasswordChecker'
         $logger: '@logger'
 
@@ -175,6 +173,21 @@ services:
             $logger: '@logger'
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
+
+    Adshares\AdsOperator\Queue\QueueEngine:
+      class: Adshares\AdsOperator\Queue\RabbitMQ
+      arguments:
+        $connection: '@Vendor\PhpAmqpLib\Connection\AMQPStreamConnection'
+
+    Vendor\PhpAmqpLib\Connection\AMQPStreamConnection:
+        class: PhpAmqpLib\Connection\AMQPStreamConnection
+        lazy: true
+        arguments:
+          $host: '%env(QUEUE_HOST)%'
+          $port: '%env(QUEUE_PORT)%'
+          $user: '%env(QUEUE_USER)%'
+          $password: '%env(QUEUE_PASSWORD)%'
+          $vhost: '%env(QUEUE_VHOST)%'
 
     Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver

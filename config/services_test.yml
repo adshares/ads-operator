@@ -4,3 +4,5 @@ services:
     arguments: [ base_uri: '%env(API_URI)%' ]
     public: true
 
+  Adshares\AdsOperator\Queue\QueueEngine:
+    class: Adshares\AdsOperator\Queue\MemoryQueue
