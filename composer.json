@@ -1,6 +1,6 @@
 {
-    "name": "adshares/ads-manager",
-    "description": "ADS Manager - REST API for ADS Panel",
+    "name": "adshares/ads-operator",
+    "description": "ADS Operator - Blockexplorer",
     "type": "project",
     "license": "proprietary",
     "keywords": [

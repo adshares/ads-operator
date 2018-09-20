@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0]  - 2018-09-13
+## [0.1.0]  - 2018-09-20
 ### Added
 - Support for all block explorer endpoints:
   - List of nodes,
