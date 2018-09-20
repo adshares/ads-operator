@@ -18,22 +18,17 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Queue;
 
-use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Adshares\AdsOperator\Event\EventInterface;
+use Adshares\AdsOperator\Queue\Exception\QueueCannotAddMessage;
 
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+interface QueueInterface
 {
-    public function signUp(User $user): void
-    {
-        $this->save($user);
-    }
-
-    public function save(User $user): void
-    {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
-    }
+    /**
+     * @param EventInterface $event
+     * @throws QueueCannotAddMessage
+     * @return mixed
+     */
+    public function publish(EventInterface $event);
 }

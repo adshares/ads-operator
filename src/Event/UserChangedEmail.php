@@ -18,22 +18,36 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Event;
 
-use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
-
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+class UserChangedEmail implements EventInterface
 {
-    public function signUp(User $user): void
+    /**
+     * @var string
+     */
+    private $oldEmail;
+
+    /**
+     * @var string
+     */
+    private $newEmail;
+
+    public function __construct(string $oldEmail, string $newEmail)
     {
-        $this->save($user);
+        $this->oldEmail = $oldEmail;
+        $this->newEmail = $newEmail;
     }
 
-    public function save(User $user): void
+    public function getName(): string
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        return 'user_changed_email';
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'new_email' => $this->newEmail,
+            'old_email' => $this->oldEmail,
+        ];
     }
 }

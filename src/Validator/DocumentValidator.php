@@ -22,7 +22,7 @@ namespace Adshares\AdsOperator\Validator;
 
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class DocumentValidator
+class DocumentValidator implements DocumentValidatorInterface
 {
     /**
      * @var ValidatorInterface

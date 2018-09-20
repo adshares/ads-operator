@@ -18,22 +18,27 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Auth;
 
 use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+class PasswordChecker implements PasswordCheckerInterface
 {
-    public function signUp(User $user): void
+    /**
+     * @var EncoderFactoryInterface
+     */
+    private $encoderFactory;
+
+    public function __construct(EncoderFactoryInterface $encoderFactory)
     {
-        $this->save($user);
+        $this->encoderFactory = $encoderFactory;
     }
 
-    public function save(User $user): void
+    public function isPasswordValid(User $user, string $password): bool
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        $encoder = $this->encoderFactory->getEncoder($user);
+
+        return $encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt());
     }
 }

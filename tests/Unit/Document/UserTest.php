@@ -18,22 +18,34 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Tests\Unit\Document;
 
+use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
-use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use PHPUnit\Framework\TestCase;
 
-class UserRepository extends DocumentRepository implements UserRepositoryInterface
+class UserTest extends TestCase
 {
-    public function signUp(User $user): void
+    public function testChangeEmailWhenEmailIsInvalid()
     {
-        $this->save($user);
+        $this->expectException(InvalidEmailException::class);
+
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+
+        $user->changeEmail('test.example.com');
     }
 
-    public function save(User $user): void
+    public function testChangeEmailWhenValid()
     {
-        $this->getDocumentManager()->persist($user);
-        $this->getDocumentManager()->flush();
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+
+        $user->changeEmail('test@example.com');
+
+        $this->assertEquals($email, $user->getEmail());
+        $this->assertEquals('test@example.com', $user->getNewEmail());
     }
 }
