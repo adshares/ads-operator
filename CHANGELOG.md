@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0]  - 2018-09-24
+## [0.1.0] - 2018-09-24
 ### Added
 - Support for all block explorer endpoints:
   - List of nodes,
@@ -33,7 +33,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Register a new user
   - Login to the system using JWT tokens 
           
-- README
-- LICENSE
-- CHANGELOG
-- CONTRIBUTING
+          
+- Readme
+- License
+- Changelog
+- Contributing
+
+
+[Unreleased]: https://github.com/adshares/ads-operator/compare/v0.1.0...HEAD
+
+[0.1.0]: https://github.com/adshares/ads-operator/releases/tag/v0.1.0
