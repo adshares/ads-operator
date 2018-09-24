@@ -17,10 +17,10 @@
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager#develop "Develop")
 
 
-ADS Operator consist of three parts:
-1. ADS Importer script to fetch data from ADS blockchain
-2. Explorer web application
-3. User management and transactional system 
+ADS Operator system consists of three parts:
+* ADS Importer script to synchronize blockchain data
+* Block explorer web application to provide detailed information about ADS blockchain
+* User management and transactional system 
 
 ## Getting Started
 
