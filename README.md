@@ -12,7 +12,6 @@
     <a href="https://github.com/adshares/ads-operator/wiki">Wiki</a>
 </p>
 
-[![Quality Status](https://sonarcloud.io/api/project_badges/measure?project=adshares-ads-manager&metric=alert_status)](https://sonarcloud.io/dashboard?id=adshares-ads-manager)
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=master)](https://travis-ci.org/adshares/ads-manager#master "Master")
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager#develop "Develop")
 
