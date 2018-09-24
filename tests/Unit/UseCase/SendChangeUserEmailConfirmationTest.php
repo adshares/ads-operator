@@ -40,7 +40,7 @@ class SendChangeUserEmailConfirmationTest extends TestCase
         $userRepository = $this->createMock(UserRepositoryInterface::class);
         $userRepository
             ->expects($this->once())
-            ->method('findByEmail')
+            ->method('findByNewEmail')
             ->willReturn($user);
 
         $template = $this->createMock(TemplateInterface::class);
@@ -76,7 +76,7 @@ class SendChangeUserEmailConfirmationTest extends TestCase
         $userRepository = $this->createMock(UserRepositoryInterface::class);
         $userRepository
             ->expects($this->once())
-            ->method('findByEmail')
+            ->method('findByNewEmail')
             ->will($this->throwException(new UserNotFoundException()));
 
         $template = $this->createMock(TemplateInterface::class);
