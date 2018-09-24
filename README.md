@@ -12,8 +12,8 @@
     <a href="https://github.com/adshares/ads-operator/wiki">Wiki</a>
 </p>
 
-[![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=master)](https://travis-ci.org/adshares/ads-manager#master "Master")
-[![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager#develop "Develop")
+[![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=master)](https://travis-ci.org/adshares/ads-operator#master "Master")
+[![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-operator#develop "Develop")
 
 
 ADS Operator system consists of three parts:
