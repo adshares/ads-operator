@@ -25,7 +25,7 @@ If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete the following information):**
 
- - OS name and version: [e.g. Ububtu 18.04 x64]
+ - OS name and version: [e.g. Ubuntu 18.04 x64]
 
 **Additional context**
 
