@@ -1,0 +1,9 @@
+blockexplorer:
+    resource: "./routes/blockexplorer.yaml"
+    type:     yaml
+    prefix:   /api/%api_version%/blockexplorer/
+
+auth:
+    resource: "./routes/auth.yaml"
+    type:     yaml
+    prefix:   /api/%api_version%/auth/

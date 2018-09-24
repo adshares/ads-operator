@@ -1,0 +1,39 @@
+Adshares\Ads\Entity\Account:
+    exclusion_policy: ALL
+    properties:
+        address:
+            expose: true
+            type: string
+        balance:
+            expose: true
+            type: string
+        hash:
+            expose: true
+            type: string
+        localChange:
+            expose: true
+            type: DateTime
+        msid:
+            expose: true
+            type: int
+        node:
+            expose: true
+            type: int
+        pairedAddress:
+            expose: true
+            type: string
+        pairedNode:
+            expose: true
+            type: int
+        publicKey:
+            expose: true
+            type: string
+        remoteChange:
+            expose: true
+            type: DateTime
+        status:
+            expose: true
+            type: int
+        time:
+            expose: true
+            type: DateTime

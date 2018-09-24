@@ -1,0 +1,28 @@
+Adshares\AdsOperator\Document\Transaction:
+    type: mappedSuperclass
+    collection: transaction
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\TransactionRepository
+    inheritanceType: SINGLE_COLLECTION
+    discriminatorField: type
+    discriminatorMap:
+        broadcast: Adshares\AdsOperator\Document\Transaction\BroadcastTransaction
+        connection: Adshares\AdsOperator\Document\Transaction\ConnectionTransaction
+        empty: Adshares\AdsOperator\Document\Transaction\EmptyTransaction
+        account_created: Adshares\AdsOperator\Document\Transaction\KeyTransaction
+        change_account_key: Adshares\AdsOperator\Document\Transaction\KeyTransaction
+        change_node_key: Adshares\AdsOperator\Document\Transaction\KeyTransaction
+        log_account: Adshares\AdsOperator\Document\Transaction\LogAccountTransaction
+        send_one: Adshares\AdsOperator\Document\Transaction\SendOneTransaction
+        send_many: Adshares\AdsOperator\Document\Transaction\SendManyTransaction
+        set_account_status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+        set_node_status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+        unset_account_status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+        unset_node_status: Adshares\AdsOperator\Document\Transaction\StatusTransaction
+        create_account: Adshares\AdsOperator\Document\Transaction\NetworkTransaction
+        create_node: Adshares\AdsOperator\Document\Transaction\NetworkTransaction
+        retrieve_funds: Adshares\AdsOperator\Document\Transaction\NetworkTransaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string

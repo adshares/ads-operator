@@ -1,0 +1,9 @@
+Adshares\AdsOperator\Document\Message:
+    exclusion_policy: ALL
+    properties:
+        transactionCount:
+            expose: true
+            type: int
+        nodeId:
+            expose: true
+            type: string

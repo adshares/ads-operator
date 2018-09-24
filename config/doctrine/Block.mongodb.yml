@@ -1,0 +1,42 @@
+Adshares\AdsOperator\Document\Block:
+    type: document
+    collection: block
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\BlockRepository
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        dividendBalance:
+            type: int
+        dividendPay:
+            type: bool
+        messageCount:
+            type: int
+        minHash:
+            type: string
+        msgHash:
+            type: string
+        nodeCount:
+            type: int
+        nodes:
+            type: collection
+        nodHash:
+            type: string
+        nowHash:
+            type: string
+        oldHash:
+            type: string
+        vipHash:
+            type: string
+        time:
+            type: date
+        voteNo:
+            type: int
+        voteYes:
+            type: int
+        voteTotal:
+            type: int
+        transactionCount:
+            type: int
+

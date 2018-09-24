@@ -1,0 +1,38 @@
+Adshares\AdsOperator\Document\Transaction\StatusTransaction:
+    type: document
+    collection: transaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        messageId:
+            type: string
+        nodeId:
+            type: string
+        type:
+            type: string
+        size:
+            type: int
+        msgId:
+            type: string
+        status:
+            type: int
+        node:
+            type: int
+        signature:
+            type: string
+        time:
+            type: date
+        user:
+            type: int
+        targetNode:
+            type: int
+        targetUser:
+            type: int
+        targetAddress:
+            type: string
+        senderAddress:
+            type: string

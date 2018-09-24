@@ -1,0 +1,179 @@
+# This file is the entry point to configure your own services.
+# Files in the packages/ subdirectory configure your dependencies.
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    api_version: 'v1'
+    entityMap:
+        Block: '\Adshares\AdsOperator\Document\Block'
+        Message: '\Adshares\AdsOperator\Document\Message'
+        Account: '\Adshares\AdsOperator\Document\Account'
+        Node: '\Adshares\AdsOperator\Document\Node'
+        BroadcastTransaction: '\Adshares\AdsOperator\Document\Transaction\BroadcastTransaction'
+        ConnectionTransaction: '\Adshares\AdsOperator\Document\Transaction\ConnectionTransaction'
+        EmptyTransaction: '\Adshares\AdsOperator\Document\Transaction\EmptyTransaction'
+        KeyTransaction: '\Adshares\AdsOperator\Document\Transaction\KeyTransaction'
+        LogAccountTransaction: '\Adshares\AdsOperator\Document\Transaction\LogAccountTransaction'
+        NetworkTransaction: '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction'
+        SendManyTransaction: '\Adshares\AdsOperator\Document\Transaction\SendManyTransaction'
+        SendOneTransaction: '\Adshares\AdsOperator\Document\Transaction\SendOneTransaction'
+        StatusTransaction: '\Adshares\AdsOperator\Document\Transaction\StatusTransaction'
+
+services:
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true      # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        public: false       # Allows optimizing the container by removing unused services; this also means
+                            # fetching services directly from the container via $container->get() won't work.
+                            # The best practice is to be explicit about your dependencies anyway.
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    Adshares\AdsOperator\:
+        resource: '../src/*'
+        exclude: '../src/{Entity,Migrations,Tests,Kernel.php}'
+
+    Adshares\AdsOperator\EventListener\ApiExceptionListener:
+        arguments:
+          $environment: '%env(APP_ENV)%'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception }
+
+    Adshares\AdsOperator\Controller\ApiController:
+        calls:
+            - [setSerializer, ['@jms_serializer']]
+
+    Adshares\AdsOperator\Controller\Blockexplorer\NodeController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\NodeRepository'
+          $accountRepository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+          $messageRepository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\BlockController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\BlockRepository'
+          $messageRepository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\AccountController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\AccountRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\MessageController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\MessageRepository'
+          $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
+
+    Adshares\AdsOperator\Controller\Blockexplorer\TransactionController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+          $repository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
+
+    Adshares\AdsOperator\Controller\Auth\AuthController:
+      parent: Adshares\AdsOperator\Controller\ApiController
+      public: true
+      autowire: false
+      autoconfigure: false
+      arguments:
+        $userRegistration: '@Adshares\AdsOperator\Auth\UserRegistration'
+
+    Adshares\AdsOperator\Validator\DocumentValidator:
+        arguments: ['@validator']
+
+    Adshares\AdsOperator\Auth\UserRegistration:
+      class: Adshares\AdsOperator\Auth\UserRegistration
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
+        $userPasswordEncoder: '@security.password_encoder'
+
+    Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
+        arguments:
+            $connection: '@doctrine_mongodb.odm.default_connection'
+            $databaseName: '%env(MONGODB_DB)%'
+            $logger: '@logger'
+
+    Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Node']
+
+    Adshares\AdsOperator\Repository\Doctrine\BlockRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Block']
+
+    Adshares\AdsOperator\Repository\Doctrine\AccountRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Account']
+
+    Adshares\AdsOperator\Repository\Doctrine\MessageRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Message']
+
+    Adshares\AdsOperator\Repository\Doctrine\TransactionRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Transaction']
+
+    Adshares\AdsOperator\Repository\Doctrine\UserRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\User']
+
+    Adshares\AdsOperator\AdsImporter\Importer:
+        arguments:
+            $client: '@Vendor\Adshares\Ads\AdsClient'
+            $databaseMigration: '@Adshares\AdsOperator\AdsImporter\Database\MongoMigration'
+            $logger: '@logger'
+            $genesisTime: '%env(GENESIS_TIME)%'
+            $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
+
+    Vendor\Adshares\Ads\Driver\CliDriver:
+        class: Adshares\Ads\Driver\CliDriver
+        arguments:
+            $address: '%env(ADS_ADDRESS)%'
+            $secret: '%env(ADS_SECRET)%'
+            $host: '%env(ADS_HOST)%'
+            $port: '%env(ADS_PORT)%'
+            $logger: '@logger'
+        calls:
+            - method: setWorkingDir
+              arguments: ['%env(ADS_WORKING_DIR)%']
+            - method: setCommand
+              arguments: ['%env(ADS_BINARY)%']
+
+
+    Vendor\Adshares\Ads\AdsClient:
+        class: Adshares\Ads\AdsClient
+        arguments:
+            $driver: '@Vendor\Adshares\Ads\Driver\CliDriver'
+        calls:
+            - method: setEntityMap
+              arguments:
+                  - '%entityMap%'
