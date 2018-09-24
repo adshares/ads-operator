@@ -12,6 +12,7 @@
     <a href="https://github.com/adshares/ads-operator/wiki">Wiki</a>
 </p>
 
+[![Quality Status](https://sonarcloud.io/api/project_badges/measure?project=adshares-ads-manager&metric=alert_status)](https://sonarcloud.io/dashboard?id=adshares-ads-manager)
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=master)](https://travis-ci.org/adshares/ads-operator#master "Master")
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-operator#develop "Develop")
 
@@ -28,10 +29,8 @@ Clone the repo: `git@github.com:adshares/ads-operator.git` and follow the instru
 
 ## Documentation
 * [Installation](https://github.com/adshares/ads-operator/wiki/Installation)
-* [Quality](https://github.com/adshares/ads-operator/wiki/Quality)
-
-## Usage
 * [Usage](https://github.com/adshares/ads-operator/wiki/Usage)
+* [Quality](https://github.com/adshares/ads-operator/wiki/Quality)
 
 
 ## Contributing
@@ -41,14 +40,14 @@ Please follow our [Contributing Guidelines](https://github.com/adshares/ads-oper
 ## Versioning
 
 We use [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for versioning. For the versions available, see the 
-[tags on this repository](https://github.com/adshares/ads-tools/tags).
+[tags on this repository](https://github.com/adshares/ads-operator/tags).
 
 
 ## Authors
 
-* **Przemysław Furtak** - _Architect_, Core Developer - [c3zi](https://github.com/c3zi)
-* **Maciej Pilarczyk** - _Architect_ - [m-pilarczyk](https://github.com/m-pilarczyk)
-* **Michał Dźwigała** - _Quality Assurance Tester_ - [michaldzwigala](https://github.com/michaldzwigala)
+* **[Przemysław Furtak](https://github.com/c3zi)** - _Architect, Core Developer_ 
+* **[Maciej Pilarczyk](https://github.com/m-pilarczyk)** - _Architect_
+* **[Michał Dźwigała](https://github.com/michaldzwigala)** - _Quality Assurance Tester_
 
 See also the list of [contributors](https://github.com/adshares/ads-operator/graphs/contributors) who participated in this 
 project.

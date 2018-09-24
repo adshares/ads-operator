@@ -26,6 +26,7 @@ If applicable, add screenshots to help explain your problem.
 **Environment (please complete the following information):**
 
  - OS name and version: [e.g. Ubuntu 18.04 x64]
+ - Database engine and version [e.g. MongoDB v. 4.0.0]
 
 **Additional context**
 

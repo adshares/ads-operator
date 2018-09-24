@@ -21,6 +21,7 @@
         <directory suffix=".php">./src</directory>
         <exclude>
             <directory suffix=".php">./src/Controller/Blockexplorer</directory>
+            <directory suffix=".php">./src/Controller/Auth</directory>
             <directory suffix=".php">./src/Repository</directory>
             <file>./src/Kernel.php</file>
         </exclude>
