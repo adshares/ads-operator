@@ -17,63 +17,26 @@
 [![Build Status](https://travis-ci.org/adshares/ads-operator.svg?branch=develop)](https://travis-ci.org/adshares/ads-manager#develop "Develop")
 
 
-## Documentation
-
-- [Wiki](https://github.com/adshares/adserver/wiki)
-- [Changelog](CHANGELOG.md)
-
-
-# ADS Operator
 ADS Operator consist of three parts:
 1. ADS Importer script to fetch data from ADS blockchain
-2. Blockexplorer web application
+2. Explorer web application
 3. User management and transactional system 
 
 ## Getting Started
 
-### Installing
-
-It's described on the Wiki (https://github.com/adshares/ads-operator/wiki/Installation)
+Clone the repo: `git@github.com:adshares/ads-operator.git` and follow the instruction on [Wiki](https://github.com/adshares/ads-operator/wiki/Installation).
  
 
+## Documentation
+* [Installation](https://github.com/adshares/ads-operator/wiki/Installation)
+* [Quality](https://github.com/adshares/ads-operator/wiki/Quality)
 
 ## Usage
-
-### ADS Operator Importer
-Importer script copies data from Blockchain to MongoDB database. 
-Make sure you have installed MongoDB and configure connection in `.env` file. 
-
-To import data run the command below:
-
-``` 
-./bin/console ads:import 
-```
-
-### ADS Operator REST API
-
-API documentation is available at `http://ads-operator.ads/api/doc`
-
-Official documentation is still in progress.
+* [Usage](https://github.com/adshares/ads-operator/wiki/Usage)
 
 
-## Quality
-Application was created using BDD (business) and TDD (unit) approach. 
-
-To run unit tests execute:
-```
-./vendor/bin/phpunit
-```
-
-To run BDD tests execute:
-```
-./vendor/bin/behat
-```
-**Sensio Security Checker**, **PHP Static Analysis Tool**, **PHP Codesniffer**, **PHP Parallel Lint** were used to test code quality.
-
-To run all above tools in one command execute:
-```
-composer qa-check
-```
+## Contributing
+Please follow our [Contributing Guidelines](https://github.com/adshares/ads-operator/blob/master/docs/CONTRIBUTING.md)
 
 
 ## Versioning
@@ -84,17 +47,15 @@ We use [Semantic Versioning](https://semver.org/spec/v2.0.0.html) for versioning
 
 ## Authors
 
-* **Przemysław Furtak** - _programmer_ - [c3zi](https://github.com/c3zi)
-* **Maciej Pilarczyk** - _programmer_ - [m-pilarczyk](https://github.com/m-pilarczyk)
+* **Przemysław Furtak** - _Architect_, Core Developer - [c3zi](https://github.com/c3zi)
+* **Maciej Pilarczyk** - _Architect_ - [m-pilarczyk](https://github.com/m-pilarczyk)
+* **Michał Dźwigała** - _Quality Assurance Tester_ - [michaldzwigala](https://github.com/michaldzwigala)
 
 See also the list of [contributors](https://github.com/adshares/ads-operator/graphs/contributors) who participated in this 
 project.
 
 
-## License ![CC BY-ND](https://mirrors.creativecommons.org/presskit/buttons/80x15/svg/by-nd.svg "CC BY-ND 4.0")
+## License
 
-This work is licensed under the Creative Commons Attribution-NoDerivatives 4.0 International License. To view a copy of 
-this license, visit http://creativecommons.org/licenses/by-nd/4.0/ or send a letter to Creative Commons, PO Box 1866, 
-Mountain View, CA 94042, USA.
- 
-See the [LICENSE](LICENSE) file for details.
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](https://github.com/adshares/ads-operator/blob/master/LICENSE) file for details.
+
