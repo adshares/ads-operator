@@ -18,25 +18,9 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Queue;
+namespace Adshares\AdsOperator\Repository\Exception;
 
-use Adshares\AdsOperator\Event\EventInterface;
-
-class MemoryQueue implements QueueInterface
+class UserNotFoundException extends \RuntimeException
 {
-    private $messages;
 
-    public function publish(EventInterface $event)
-    {
-        $queueName = $event->getName();
-
-        $this->messages[$queueName][] = $event->toArray();
-    }
-
-    public function consume(string $queueName, callable $callback): void
-    {
-        while (count($this->messages[$queueName]) > 0) {
-            $callback(array_pop($this->messages[$queueName]));
-        }
-    }
 }

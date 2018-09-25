@@ -31,4 +31,11 @@ interface QueueInterface
      * @return mixed
      */
     public function publish(EventInterface $event);
+
+    /**
+     * @param string $queueName
+     * @param callable $callback
+     * @return void
+     */
+    public function consume(string $queueName, callable $callback): void;
 }

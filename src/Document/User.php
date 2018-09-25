@@ -50,6 +50,11 @@ class User implements UserInterface
         $this->password = $password;
     }
 
+    public function setId(string $id)
+    {
+        $this->id = $id;
+    }
+
     public function changeEmail(string $email)
     {
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -58,6 +63,13 @@ class User implements UserInterface
 
         $this->newEmail = $email;
         $this->token = sha1($this->getEmail().time().$this->getId());
+    }
+
+    public function confirmChangeEmail()
+    {
+        $this->email = $this->newEmail;
+        $this->newEmail = null;
+        $this->token = null;
     }
 
     public function getId()

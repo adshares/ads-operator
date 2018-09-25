@@ -23,13 +23,20 @@ namespace Adshares\AdsOperator\Controller\Auth;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
+use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
+use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
+use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Model;
 
 class UserController extends ApiController
 {
@@ -43,14 +50,60 @@ class UserController extends ApiController
      */
     private $changeUserEmail;
 
+    /**
+     * @var ConfirmChangeUserEmail
+     */
+    private $confirmChangeUserEmail;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        ChangeUserEmail $changeUserEmail
+        ChangeUserEmail $changeUserEmail,
+        ConfirmChangeUserEmail $confirmChangeUserEmail
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
+        $this->confirmChangeUserEmail = $confirmChangeUserEmail;
     }
 
+
+    /**
+     * @Operation(
+     *     summary="Change a user email",
+     *     tags={"Auth"},
+     *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when post parameters are invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=401,
+     *          description="Returned when user is unauthorized or does not have permissions"
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="Returned when operation is successful",
+     *     ),
+     *     @SWG\Parameter(
+     *          name="",
+     *          in="body",
+     *          required=true,
+     *          description="User data",
+     *          @SWG\Schema(type="object",
+     *              @SWG\Property(property="email", type="string"),
+     *              @SWG\Property(property="password", type="string")
+     *          )
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="User Id"
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
     public function changeEmailAction(Request $request, string $id): Response
     {
         $content = (string) $request->getContent();
@@ -86,6 +139,50 @@ class UserController extends ApiController
         } catch (InvalidEmailException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         } catch (BadPasswordException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        }
+
+        return $this->response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Confirm changing an email",
+     *     tags={"Auth"},
+     *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when user does not exist or token is invalid or user with 'new_email' exists"
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="Returned when operation is successful",
+     *     ),
+     *     @SWG\Parameter(
+     *          name="id",
+     *          in="path",
+     *          type="string",
+     *          description="User Id"
+     *     ),
+     *     @SWG\Parameter(
+     *          name="token",
+     *          in="path",
+     *          type="string",
+     *          description="Token"
+     *     )
+     * )
+     *
+     * @return Response
+     */
+    public function confirmChangeEmailAction(string $id, string $token): Response
+    {
+        try {
+            $this->confirmChangeUserEmail->confirm($id, $token);
+        } catch (UserNotFoundException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (BadTokenValueException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (UserExistsException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         }
 

@@ -48,4 +48,21 @@ class UserTest extends TestCase
         $this->assertEquals($email, $user->getEmail());
         $this->assertEquals('test@example.com', $user->getNewEmail());
     }
+
+    public function testConfirmChangeEmail()
+    {
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+        $user->changeEmail('test@example.com');
+
+        $this->assertNotNull($user->getNewEmail());
+        $this->assertNotNull($user->getToken());
+
+        $user->confirmChangeEmail();
+
+        $this->assertEquals('test@example.com', $user->getEmail());
+        $this->assertNull($user->getNewEmail());
+        $this->assertNull($user->getToken());
+    }
 }
