@@ -1,2 +1,2 @@
 swiftmailer:
-    delivery_addresses: ['mailcatcher@adshares.net']
+    delivery_addresses: ['%env(MAILER_DELIVERY_ADDRESS)%']
