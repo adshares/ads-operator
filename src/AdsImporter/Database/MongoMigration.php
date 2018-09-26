@@ -188,7 +188,7 @@ class MongoMigration implements DatabaseMigrationInterface
             $document['time'] = $this->createMongoDate($document['time']);
         }
 
-        $this->transactionCollection->update(['_id' => $transaction->getId()], $document, ['upsert' => true]);
+        $this->transactionCollection->update(['_id' => $document['_id']], $document, ['upsert' => true]);
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];
