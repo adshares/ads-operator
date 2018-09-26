@@ -142,7 +142,7 @@ class Importer
         $from = $this->databaseMigration->getNewestBlockTime();
 
         if ($from) {
-            return $from + $this->blockSeqTime;
+            return $from;
         }
 
         return $this->genesisTime;

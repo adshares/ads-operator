@@ -89,7 +89,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddMessage(): void
     {
-        $this->prepareConnectionMockWithMethod('insert');
+        $this->prepareConnectionMockWithMethod('update');
         $message = $this->createMock(Message::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -98,16 +98,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddBlock(): void
     {
-        $this->prepareConnectionMockWithMethod('insert');
-        $block = $this->createMock(Block::class);
-
-        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
-        $mongoMigration->addBlock($block);
-    }
-
-    public function testAddBlocWhenDuplicated(): void
-    {
-        $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
+        $this->prepareConnectionMockWithMethod('update');
         $block = $this->createMock(Block::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -200,6 +191,11 @@ class MongoMigrationTest extends TestCase
             ->method('getTargetAddress')
             ->willReturn('0001-00000000-1234');
 
+        $transaction
+            ->expects($this->once())
+            ->method('toArray')
+            ->willReturn(['_id' => '0004:000018D1:0001']);
+
         $mongoMigration = $this->createMongoMigrationInstance($this->prepareConnectionForOneAndManyTransactions());
         $mongoMigration->addTransaction($transaction);
         $this->assertTrue(true);
@@ -217,6 +213,11 @@ class MongoMigrationTest extends TestCase
             ->expects($this->exactly(1))
             ->method('getTargetAddress')
             ->willReturn('0001-00000000-9B6F');
+
+        $transaction
+            ->expects($this->once())
+            ->method('toArray')
+            ->willReturn(['_id' => '0004:000018D1:0001']);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->prepareConnectionForOneAndManyTransactions());
         $mongoMigration->addTransaction($transaction);
@@ -239,6 +240,11 @@ class MongoMigrationTest extends TestCase
             ->willReturn('0001-00000000-9B6F');
 
         $transaction
+            ->expects($this->once())
+            ->method('toArray')
+            ->willReturn(['_id' => '0004:000018D1:0001']);
+
+        $transaction
             ->expects($this->exactly(1))
             ->method('getWires')
             ->willReturn([$wires]);
@@ -250,7 +256,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNode():void
     {
-        $this->prepareConnectionMockWithMethod('insert');
+        $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -259,7 +265,6 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNodeWhenMongoExceptionIsThrown():void
     {
-        $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
