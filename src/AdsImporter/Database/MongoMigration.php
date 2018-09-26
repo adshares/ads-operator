@@ -93,6 +93,10 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $logger;
 
+    private $mongoUpdateOptions = [
+        'upsert' => true,
+    ];
+
     /**
      * MongoMigration constructor.
      *
@@ -137,7 +141,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'length' => $message->getLength(),
         ];
 
-        $this->messageCollection->update(['_id' => $message->getId()], $document, ['upsert' => true]);
+        $this->messageCollection->update(['_id' => $message->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -164,7 +168,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'transactionCount' => $block->getTransactionCount(),
         ];
 
-        $this->blockCollection->update(['_id' => $block->getId()], $document, ['upsert' => true]);
+        $this->blockCollection->update(['_id' => $block->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -188,7 +192,7 @@ class MongoMigration implements DatabaseMigrationInterface
             $document['time'] = $this->createMongoDate($document['time']);
         }
 
-        $this->transactionCollection->update(['_id' => $document['_id']], $document, ['upsert' => true]);
+        $this->transactionCollection->update(['_id' => $document['_id']], $document, $this->mongoUpdateOptions);
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];
@@ -249,7 +253,7 @@ class MongoMigration implements DatabaseMigrationInterface
 
         ];
 
-        $this->nodeCollection->update(['_id' => $node->getId()], $document, ['upsert' => true]);
+        $this->nodeCollection->update(['_id' => $node->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -274,7 +278,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'status' => $account->getStatus(),
         ];
 
-        $this->accountCollection->update(['_id' => $account->getAddress()], $document, ['upsert' => true]);
+        $this->accountCollection->update(['_id' => $account->getAddress()], $document, $this->mongoUpdateOptions);
     }
 
     /**
