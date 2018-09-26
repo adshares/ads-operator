@@ -89,7 +89,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddMessage(): void
     {
-        $this->prepareConnectionMockWithMethod('insert');
+        $this->prepareConnectionMockWithMethod('update');
         $message = $this->createMock(Message::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -98,16 +98,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddBlock(): void
     {
-        $this->prepareConnectionMockWithMethod('insert');
-        $block = $this->createMock(Block::class);
-
-        $mongoMigration = $this->createMongoMigrationInstance($this->connection);
-        $mongoMigration->addBlock($block);
-    }
-
-    public function testAddBlocWhenDuplicated(): void
-    {
-        $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
+        $this->prepareConnectionMockWithMethod('update');
         $block = $this->createMock(Block::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -250,7 +241,7 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNode():void
     {
-        $this->prepareConnectionMockWithMethod('insert');
+        $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
@@ -259,7 +250,6 @@ class MongoMigrationTest extends TestCase
 
     public function testAddOrUpdateNodeWhenMongoExceptionIsThrown():void
     {
-        $this->prepareConnectionMockWithMethod('insert', $this->throwException(new \MongoDuplicateKeyException()));
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
 
