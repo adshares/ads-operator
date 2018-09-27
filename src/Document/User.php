@@ -33,6 +33,8 @@ class User implements UserInterface
 
     private $token;
 
+    private $accounts = [];
+
     private $password;
 
     private $createdAt;
@@ -70,6 +72,11 @@ class User implements UserInterface
         $this->email = $this->newEmail;
         $this->newEmail = null;
         $this->token = null;
+    }
+
+    public function isMyAccount(string $address): bool
+    {
+        return in_array($address, $this->accounts);
     }
 
     public function getId()

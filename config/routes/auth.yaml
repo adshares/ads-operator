@@ -16,3 +16,13 @@ user_change_email_confirm:
   path: /users/{id}/confirm-change-email/{token}
   controller: Adshares\AdsOperator\Controller\Auth\UserController::confirmChangeEmailAction
   methods: [GET]
+
+user_change_key:
+  path: /users/change-key
+  controller: Adshares\AdsOperator\Controller\Auth\UserController::changeKeyAction
+  methods: [POST]
+
+user_change_key_confirm:
+  path: /users/confirm-change-key
+  controller: Adshares\AdsOperator\Controller\Auth\UserController::confirmChangeKeyAction
+  methods: [POST]

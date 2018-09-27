@@ -112,6 +112,7 @@ services:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
             $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
+            $changeKey: '@Adshares\AdsOperator\UseCase\Transaction\UserChangeKey'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
@@ -201,6 +202,12 @@ services:
       class: Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail
       arguments:
         $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+
+
+    Adshares\AdsOperator\UseCase\Transaction\UserChangeKey:
+      class: Adshares\AdsOperator\UseCase\Transaction\UserChangeKey
+      arguments:
+        $client: '@Vendor\Adshares\Ads\AdsClient'
 
     Adshares\AdsOperator\Mail\MailerEngine:
       class: Adshares\AdsOperator\Mailer\SwiftMailer
