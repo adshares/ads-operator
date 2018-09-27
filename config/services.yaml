@@ -98,17 +98,38 @@ services:
       autowire: false
       autoconfigure: false
       arguments:
-        $userRegistration: '@Adshares\AdsOperator\Auth\UserRegistration'
+        $userRegistration: '@Adshares\AdsOperator\UseCase\UserRegistration'
 
     Adshares\AdsOperator\Validator\DocumentValidator:
         arguments: ['@validator']
 
-    Adshares\AdsOperator\Auth\UserRegistration:
-      class: Adshares\AdsOperator\Auth\UserRegistration
+    Adshares\AdsOperator\Controller\Auth\UserController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+        arguments:
+            $tokenStorage: '@security.token_storage'
+            $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
+            $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
+
+    Adshares\AdsOperator\UseCase\UserRegistration:
+      class: Adshares\AdsOperator\UseCase\UserRegistration
       arguments:
         $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
         $validator: '@Adshares\AdsOperator\Validator\DocumentValidator'
         $userPasswordEncoder: '@security.password_encoder'
+
+    Adshares\AdsOperator\UseCase\ChangeUserEmail:
+      arguments:
+        $repository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $queue: '@Adshares\AdsOperator\Queue\QueueEngine'
+        $passwordChecker: '@Adshares\AdsOperator\Auth\PasswordChecker'
+        $logger: '@logger'
+
+    Adshares\AdsOperator\Auth\PasswordChecker:
+      arguments:
+        $encoderFactory: '@security.encoder_factory'
 
     Adshares\AdsOperator\AdsImporter\Database\MongoMigration:
         arguments:
@@ -153,6 +174,54 @@ services:
             $logger: '@logger'
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
+
+    Adshares\AdsOperator\Queue\QueueEngine:
+      class: Adshares\AdsOperator\Queue\RabbitMQ
+      arguments:
+        $connection: '@Vendor\PhpAmqpLib\Connection\AMQPStreamConnection'
+
+    Adshares\AdsOperator\Command\SendChangeEmailConfirmationCommand:
+      class: Adshares\AdsOperator\Command\SendChangeEmailConfirmationCommand
+      arguments:
+        $queue: '@Adshares\AdsOperator\Queue\QueueEngine'
+
+    Adshares\AdsOperator\UseCase\SendChangeUserEmailConfirmation:
+      class: Adshares\AdsOperator\UseCase\SendChangeUserEmailConfirmation
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $emailProvider: '@Adshares\AdsOperator\Mail\MailerEngine'
+        $template: '@Adshares\AdsOperator\Template\TemplateEngine'
+        $templatePath: '%env(CHANGE_EMAIL_CONFIRMATION_TEMPLATE)%'
+        $senderEmail: '%env(MAILER_SENDER)%'
+        $subject: 'Confirm your request about changing an email address'
+        $url: '%env(API_URI)%/api/%api_version%'
+        $logger: '@logger'
+
+    Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail:
+      class: Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+
+    Adshares\AdsOperator\Mail\MailerEngine:
+      class: Adshares\AdsOperator\Mailer\SwiftMailer
+      arguments:
+        $mailer: '@swiftmailer.mailer'
+
+    Adshares\AdsOperator\Template\TemplateEngine:
+      class: Adshares\AdsOperator\Template\TwigTemplate
+      arguments:
+        $template: '@twig'
+
+
+    Vendor\PhpAmqpLib\Connection\AMQPStreamConnection:
+        class: PhpAmqpLib\Connection\AMQPStreamConnection
+        lazy: true
+        arguments:
+          $host: '%env(QUEUE_HOST)%'
+          $port: '%env(QUEUE_PORT)%'
+          $user: '%env(QUEUE_USER)%'
+          $password: '%env(QUEUE_PASSWORD)%'
+          $vhost: '%env(QUEUE_VHOST)%'
 
     Vendor\Adshares\Ads\Driver\CliDriver:
         class: Adshares\Ads\Driver\CliDriver

@@ -21,6 +21,7 @@
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
@@ -28,7 +29,45 @@ class UserRepository extends DocumentRepository implements UserRepositoryInterfa
 {
     public function signUp(User $user): void
     {
+        $this->save($user);
+    }
+
+    public function save(User $user): void
+    {
         $this->getDocumentManager()->persist($user);
         $this->getDocumentManager()->flush();
+    }
+
+    public function findByEmail(string $email): User
+    {
+        $user = $this->findOneBy(['email' => $email]);
+
+        if (!$user instanceof User) {
+            throw new UserNotFoundException(sprintf('User %s (email) not found', $email));
+        }
+
+        return $user;
+    }
+
+    public function findById(string $id): User
+    {
+        $user = $this->findOneBy(['id' => $id]);
+
+        if (!$user instanceof User) {
+            throw new UserNotFoundException(sprintf('User %s (id) not found', $id));
+        }
+
+        return $user;
+    }
+
+    public function findByNewEmail(string $email): User
+    {
+        $user = $this->findOneBy(['newEmail' => $email]);
+
+        if (!$user instanceof User) {
+            throw new UserNotFoundException(sprintf('User %s (newEmail) not found', $email));
+        }
+
+        return $user;
     }
 }
