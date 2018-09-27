@@ -221,7 +221,7 @@ class UserController extends ApiController
      *          description="User data",
      *          @SWG\Schema(type="object",
      *              @SWG\Property(property="oldPassword", type="string"),
-     *              @SWG\Property(property="password", type="string")
+     *              @SWG\Property(property="password", type="string"),
      *              @SWG\Property(property="confirmedPassword", type="string")
      *          )
      *     )
