@@ -6,8 +6,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
-- User registration 
-- User login (based on JWT)
 - User email change
 
 ## [0.1.1] - 2018-09-26
