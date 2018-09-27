@@ -102,7 +102,7 @@ final class ImporterTest extends TestCase
     public function testStartTimeWhenBlockCollectionIsNotEmpty(): void
     {
         $newestBlockTime = time() - 3600;
-        $nextBlockTime = $newestBlockTime + self::BLOCK_SEQ_TIME;
+        $nextBlockTime = $newestBlockTime;
         $genesisTime = time() - 3600*24*30;
 
         $database = $this->createMock(DatabaseMigrationInterface::class);
