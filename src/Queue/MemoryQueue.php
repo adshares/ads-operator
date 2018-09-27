@@ -18,40 +18,25 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Queue;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Adshares\AdsOperator\Event\EventInterface;
 
-class DocumentValidator implements DocumentValidatorInterface
+class MemoryQueue implements QueueInterface
 {
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private $messages;
 
-    public function __construct(ValidatorInterface $validator)
+    public function publish(EventInterface $event)
     {
-        $this->validator = $validator;
+        $queueName = $event->getName();
+
+        $this->messages[$queueName][] = $event->toArray();
     }
 
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
+    public function consume(string $queueName, callable $callback): void
     {
-        $result = $this->validator->validate($document);
-
-        if (0 === count($result)) {
-            return [];
+        while (count($this->messages[$queueName]) > 0) {
+            $callback(array_pop($this->messages[$queueName]));
         }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
     }
 }

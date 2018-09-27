@@ -18,40 +18,24 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Queue;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Adshares\AdsOperator\Event\EventInterface;
+use Adshares\AdsOperator\Queue\Exception\QueueCannotAddMessage;
 
-class DocumentValidator implements DocumentValidatorInterface
+interface QueueInterface
 {
     /**
-     * @var ValidatorInterface
+     * @param EventInterface $event
+     * @throws QueueCannotAddMessage
+     * @return mixed
      */
-    private $validator;
-
-    public function __construct(ValidatorInterface $validator)
-    {
-        $this->validator = $validator;
-    }
+    public function publish(EventInterface $event);
 
     /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
+     * @param string $queueName
+     * @param callable $callback
+     * @return void
      */
-    public function validate($document): array
-    {
-        $result = $this->validator->validate($document);
-
-        if (0 === count($result)) {
-            return [];
-        }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
-    }
+    public function consume(string $queueName, callable $callback): void;
 }

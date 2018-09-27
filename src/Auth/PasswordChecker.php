@@ -18,40 +18,27 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Auth;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Adshares\AdsOperator\Document\User;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
-class DocumentValidator implements DocumentValidatorInterface
+class PasswordChecker implements PasswordCheckerInterface
 {
     /**
-     * @var ValidatorInterface
+     * @var EncoderFactoryInterface
      */
-    private $validator;
+    private $encoderFactory;
 
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(EncoderFactoryInterface $encoderFactory)
     {
-        $this->validator = $validator;
+        $this->encoderFactory = $encoderFactory;
     }
 
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
+    public function isPasswordValid(User $user, string $password): bool
     {
-        $result = $this->validator->validate($document);
+        $encoder = $this->encoderFactory->getEncoder($user);
 
-        if (0 === count($result)) {
-            return [];
-        }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
+        return $encoder->isPasswordValid($user->getPassword(), $password, $user->getSalt());
     }
 }

@@ -18,9 +18,9 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Tests\Unit\Auth;
+namespace Adshares\AdsOperator\Tests\Unit\UseCase;
 
-use Adshares\AdsOperator\Auth\UserRegistration;
+use Adshares\AdsOperator\UseCase\UserRegistration;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
 use Adshares\AdsOperator\Validator\DocumentValidator;

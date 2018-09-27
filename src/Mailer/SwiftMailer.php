@@ -18,40 +18,35 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Mailer;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Adshares\AdsOperator\Mailer\Exception\CannotSendEmailException;
 
-class DocumentValidator implements DocumentValidatorInterface
+class SwiftMailer implements MailerInterface
 {
     /**
-     * @var ValidatorInterface
+     * @var \Swift_Mailer
      */
-    private $validator;
+    private $mailer;
 
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(\Swift_Mailer $mailer)
     {
-        $this->validator = $validator;
+        $this->mailer = $mailer;
     }
 
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
+    public function send(string $from, string $to, string $subject, string $body, array $headers = []): void
     {
-        $result = $this->validator->validate($document);
+        $message = (new \Swift_Message($subject))
+            ->setFrom($from)
+            ->setTo($to)
+            ->setBody($body, 'text/html');
 
-        if (0 === count($result)) {
-            return [];
+        if (0 === $this->mailer->send($message)) {
+            throw new CannotSendEmailException(sprintf(
+                'Email from %s to %s could not be delivered.',
+                $from,
+                $to
+            ));
         }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
     }
 }

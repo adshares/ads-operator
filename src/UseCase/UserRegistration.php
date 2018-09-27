@@ -18,11 +18,11 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Auth;
+namespace Adshares\AdsOperator\UseCase;
 
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\UserRepositoryInterface;
-use Adshares\AdsOperator\Validator\DocumentValidator;
+use Adshares\AdsOperator\Validator\DocumentValidatorInterface;
 use Adshares\AdsOperator\Validator\ValidatorException;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
@@ -34,7 +34,7 @@ class UserRegistration
     private $userRepository;
 
     /**
-     * @var DocumentValidator
+     * @var DocumentValidatorInterface
      */
     private $validator;
 
@@ -45,7 +45,7 @@ class UserRegistration
 
     public function __construct(
         UserRepositoryInterface $userRepository,
-        DocumentValidator $validator,
+        DocumentValidatorInterface $validator,
         UserPasswordEncoderInterface $userPasswordEncoder
     ) {
         $this->userRepository = $userRepository;

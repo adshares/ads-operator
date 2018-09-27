@@ -18,40 +18,25 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Validator;
+namespace Adshares\AdsOperator\Template;
 
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Adshares\AdsOperator\Template\Exception\CannotFindTemplateException;
 
-class DocumentValidator implements DocumentValidatorInterface
+class TwigTemplate implements TemplateInterface
 {
-    /**
-     * @var ValidatorInterface
-     */
-    private $validator;
+    private $template;
 
-    public function __construct(ValidatorInterface $validator)
+    public function __construct(\Twig_Environment $template)
     {
-        $this->validator = $validator;
+        $this->template = $template;
     }
 
-    /**
-     * @param mixed $document document object (e.g. User, Transaction)
-     * @return array
-     */
-    public function validate($document): array
+    public function render(string $path, array $params): string
     {
-        $result = $this->validator->validate($document);
-
-        if (0 === count($result)) {
-            return [];
+        try {
+            return $this->template->render($path, $params);
+        } catch (\Twig_Error_Loader $ex) {
+            throw new CannotFindTemplateException(sprintf('Unable to find template `%s`', $path));
         }
-
-        $errors = [];
-
-        foreach ($result as $error) {
-            $errors[$error->getPropertyPath()][] = $error->getMessage();
-        }
-
-        return $errors;
     }
 }
