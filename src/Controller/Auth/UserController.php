@@ -25,6 +25,7 @@ use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
+use Adshares\AdsOperator\UseCase\ChangeUserPassword;
 use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
@@ -51,6 +52,11 @@ class UserController extends ApiController
     private $changeUserEmail;
 
     /**
+     * @var ChangeUserPassword
+     */
+    private $changeUserPassword;
+
+    /**
      * @var ConfirmChangeUserEmail
      */
     private $confirmChangeUserEmail;
@@ -58,11 +64,13 @@ class UserController extends ApiController
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ChangeUserEmail $changeUserEmail,
-        ConfirmChangeUserEmail $confirmChangeUserEmail
+        ConfirmChangeUserEmail $confirmChangeUserEmail,
+        ChangeUserPassword $changeUserPassword
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
         $this->confirmChangeUserEmail = $confirmChangeUserEmail;
+        $this->changeUserPassword = $changeUserPassword;
     }
 
 
@@ -183,6 +191,74 @@ class UserController extends ApiController
         } catch (BadTokenValueException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         } catch (UserExistsException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        }
+
+        return $this->response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Operation(
+     *     summary="Change a user password",
+     *     tags={"Auth"},
+     *
+     *      @SWG\Response(
+     *          response=400,
+     *          description="Returned when post parameters are invalid"
+     *     ),
+     *      @SWG\Response(
+     *          response=401,
+     *          description="Returned when user is unauthorized or does not have permissions"
+     *     ),
+     *     @SWG\Response(
+     *          response=204,
+     *          description="Returned when operation is successful",
+     *     ),
+     *     @SWG\Parameter(
+     *          name="",
+     *          in="body",
+     *          required=true,
+     *          description="User data",
+     *          @SWG\Schema(type="object",
+     *              @SWG\Property(property="oldPassword", type="string"),
+     *              @SWG\Property(property="password", type="string")
+     *              @SWG\Property(property="confirmedPassword", type="string")
+     *          )
+     *     )
+     * )
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function changePasswordAction(Request $request): Response
+    {
+        $content = (string) $request->getContent();
+        $contentDecoded = \GuzzleHttp\json_decode($content, true);
+
+        $oldPassword = $contentDecoded['oldPassword'] ?? null;
+        $newPassword = $contentDecoded['password'] ?? null;
+        $confirmedPassword = $contentDecoded['confirmedPassword'] ?? null;
+
+        if (!$oldPassword || !$newPassword || !$confirmedPassword) {
+            throw new BadRequestHttpException('`oldPassword`, `password` and `confirmedPassword` are required.');
+        }
+
+        if ($newPassword !== $confirmedPassword) {
+            throw new BadRequestHttpException('Passwords are not the same.');
+        }
+
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            throw new UnauthorizedHttpException('', 'Token does not exist.');
+        }
+
+        /** @var User $user */
+        $user = $token->getUser();
+
+        try {
+            $this->changeUserPassword->change($user, $oldPassword, $newPassword);
+        } catch (BadPasswordException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         }
 
