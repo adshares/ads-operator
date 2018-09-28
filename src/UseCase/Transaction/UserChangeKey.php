@@ -39,14 +39,25 @@ class UserChangeKey
     {
         // check if $address belongs to $user
         if (!$user->isMyAccount($address)) {
-
+            // throw new \Exception('sdfsdfdsf');
         }
 
-        $getAccount = $this->client->getAccount($address);
+        $getAccountResponse = $this->client->getAccount($address);
+        $account = $getAccountResponse->getAccount();
 
         $command = new ChangeAccountKeyCommand($publicKey, $signature);
+        $command->setSender($address);
+        $command->setLastHash($account->getHash());
+        $command->setLastMsid($account->getMsid());
         $response = $this->client->changeAccountKey($command, self::DRY_RUN);
 
-        return $getAccount;
+        // save in DB
+        $transaction = new LocalTransaction();
+        $transaction->dry_run = true;
+        $transaction->type = 'changeAccountKeyCommand';
+        $transaction->data = $response->getTx()->getData();
+        $transaction->command = $command;
+
+        return $response;
     }
 }
