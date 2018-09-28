@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2018-09-28
+### Added
+- Import data starting from the last block
+- Use MongoDB `upsert` functionality to insert or update data
+- User email change
+- User password change
+
+### Changed
+- Update ADS PHP Client library
+- Removed transformation from hexadecimal `nodeId` to decimal regarding to the new version of ADS PHP Client 
+
 ## [0.1.0] - 2018-09-24
 ### Added
 - Support for all block explorer endpoints:
@@ -40,6 +51,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Contributing
 
 
-[Unreleased]: https://github.com/adshares/ads-operator/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/adshares/ads-operator/compare/v0.2.0...HEAD
 
+[0.2.0]: https://github.com/adshares/ads-operator/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/adshares/ads-operator/releases/tag/v0.1.0

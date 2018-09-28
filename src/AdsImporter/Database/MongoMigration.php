@@ -93,6 +93,10 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private $logger;
 
+    private $mongoUpdateOptions = [
+        'upsert' => true,
+    ];
+
     /**
      * MongoMigration constructor.
      *
@@ -137,19 +141,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'length' => $message->getLength(),
         ];
 
-        try {
-            $this->messageCollection->insert($document);
-        } catch (\MongoDuplicateKeyException $ex) {
-            $details = sprintf(
-                'Id: %s, NodeId: %s, BlockId: %s, Length: %s',
-                $message->getId(),
-                $message->getNodeId(),
-                $message->getBlockId(),
-                $message->getLength()
-            );
-
-            $this->addExceptionToLog(sprintf('MESSAGE_DUPLICATED [%s]', $details));
-        }
+        $this->messageCollection->update(['_id' => $message->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -176,13 +168,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'transactionCount' => $block->getTransactionCount(),
         ];
 
-        try {
-            $this->blockCollection->insert($document);
-        } catch (\MongoDuplicateKeyException $ex) {
-            $details = sprintf('Id: %s', $block->getId());
-
-            $this->addExceptionToLog(sprintf('BLOCK_DUPLICATED [%s]', $details));
-        }
+        $this->blockCollection->update(['_id' => $block->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -206,19 +192,7 @@ class MongoMigration implements DatabaseMigrationInterface
             $document['time'] = $this->createMongoDate($document['time']);
         }
 
-        try {
-            $this->transactionCollection->insert($document);
-        } catch (\MongoDuplicateKeyException $ex) {
-            $details = sprintf(
-                'Id: %s, NodeId: %s, BlockId: %s, MessageId: %s',
-                $document['_id'],
-                $document['nodeId'],
-                $document['blockId'],
-                $document['messageId']
-            );
-
-            $this->addExceptionToLog(sprintf('TRANSACTION_DUPLICATED [%s]', $details));
-        }
+        $this->transactionCollection->update(['_id' => $document['_id']], $document, $this->mongoUpdateOptions);
 
         if ($transaction instanceof SendOneTransaction) {
             $data = [];
@@ -279,12 +253,7 @@ class MongoMigration implements DatabaseMigrationInterface
 
         ];
 
-        try {
-            $this->nodeCollection->insert($document);
-        } catch (\MongoDuplicateKeyException $ex) {
-            unset($document['_id']);
-            $this->nodeCollection->update(['_id' => $node->getId()], $document);
-        }
+        $this->nodeCollection->update(['_id' => $node->getId()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -309,7 +278,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'status' => $account->getStatus(),
         ];
 
-        $this->accountCollection->update(['address' => $account->getAddress()], $document, ['upsert' => true]);
+        $this->accountCollection->update(['_id' => $account->getAddress()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -338,15 +307,5 @@ class MongoMigration implements DatabaseMigrationInterface
     private function createMongoDate(\DateTime $date): UTCDateTime
     {
         return new UTCDateTime((int)$date->format('U')*1000);
-    }
-
-    /**
-     * @param string $message
-     */
-    private function addExceptionToLog(string $message): void
-    {
-        $pattern = '[ADS Synchronization] [DATABASE] %s';
-
-        $this->logger->error(sprintf($pattern, $message));
     }
 }

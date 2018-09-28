@@ -41,7 +41,10 @@
         "adshares/ads-client": "^1.0",
         "lexik/jwt-authentication-bundle": "^2.5",
         "symfony/validator": "^4.1",
-        "stof/doctrine-extensions-bundle": "^1.3"
+        "stof/doctrine-extensions-bundle": "^1.3",
+        "php-amqplib/php-amqplib": "^2.7",
+        "symfony/proxy-manager-bridge": "^4.1",
+        "symfony/swiftmailer-bundle": "^3.2"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0",
