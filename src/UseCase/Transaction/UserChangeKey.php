@@ -49,14 +49,26 @@ class UserChangeKey
         $command->setSender($address);
         $command->setLastHash($account->getHash());
         $command->setLastMsid($account->getMsid());
+
+        $a = serialize($command);
+
+
         $response = $this->client->changeAccountKey($command, self::DRY_RUN);
+
+
 
         // save in DB
         $transaction = new LocalTransaction();
         $transaction->dry_run = true;
         $transaction->type = 'changeAccountKeyCommand';
         $transaction->data = $response->getTx()->getData();
-        $transaction->command = $command;
+        $transaction->params = [
+            'address' => $address,
+            'publicKey' => $publicKey,
+            'signature' => $signature,
+            'hash' => $account->getHash(),
+            'msid' => $account->getMsid(),
+        ];
 
         return $response;
     }
