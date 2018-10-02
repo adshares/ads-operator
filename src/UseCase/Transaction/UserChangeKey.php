@@ -20,56 +20,74 @@
 
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
-use Adshares\Ads\AdsClient;
-use Adshares\Ads\Command\ChangeAccountKeyCommand;
+use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\LocalTransaction;
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\LocalTransactionRepositoryInterface;
+use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
+use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 
 class UserChangeKey
 {
-    const DRY_RUN = true;
+    const USER_CHANGE_ACCOUNT_KEY = 'ChangeAccountKey';
 
-    private $client;
+    /**
+     * @var RunTransaction
+     */
+    private $transaction;
 
-    public function __construct(AdsClient $client)
+    /**
+     * @var LocalTransactionRepositoryInterface
+     */
+    private $transactionRepository;
+
+    public function __construct(RunTransaction $transaction, LocalTransactionRepositoryInterface $transactionRepository)
     {
-        $this->client = $client;
+        $this->transaction = $transaction;
+        $this->transactionRepository = $transactionRepository;
     }
 
-    public function change(User $user, string $address, string $publicKey, string $signature)
+    public function change(User $user, string $address, string $publicKey, string $signature): LocalTransaction
     {
-        // check if $address belongs to $user
         if (!$user->isMyAccount($address)) {
-            // throw new \Exception('sdfsdfdsf');
+            throw new AddressDoesNotBelongToUserException(sprintf(
+                'Address %s does not belong to user %s',
+                $address,
+                $user->getId()
+            ));
         }
 
-        $getAccountResponse = $this->client->getAccount($address);
-        $account = $getAccountResponse->getAccount();
+        if (!Account::validateId($address)) {
+            throw new InvalidValueException('Address value is invalid.');
+        }
 
-        $command = new ChangeAccountKeyCommand($publicKey, $signature);
-        $command->setSender($address);
-        $command->setLastHash($account->getHash());
-        $command->setLastMsid($account->getMsid());
+        if (strlen($publicKey) !== 64) {
+            throw new InvalidValueException('Public key value is invalid.');
+        }
 
-        $a = serialize($command);
+        if (strlen($signature) !== 128) {
+            throw new InvalidValueException('Signature value is invalid.');
+        }
 
-
-        $response = $this->client->changeAccountKey($command, self::DRY_RUN);
-
-
-
-        // save in DB
-        $transaction = new LocalTransaction();
-        $transaction->dry_run = true;
-        $transaction->type = 'changeAccountKeyCommand';
-        $transaction->data = $response->getTx()->getData();
-        $transaction->params = [
-            'address' => $address,
+        $params = [
             'publicKey' => $publicKey,
             'signature' => $signature,
-            'hash' => $account->getHash(),
-            'msid' => $account->getMsid(),
         ];
 
-        return $response;
+        $response = $this->transaction->run(self::USER_CHANGE_ACCOUNT_KEY, $address, $params);
+
+        $transaction = new LocalTransaction(
+            uniqid(),
+            $user->getId(),
+            self::USER_CHANGE_ACCOUNT_KEY,
+            $response['hash'],
+            $response['msid'],
+            $response['data'],
+            $params
+        );
+
+        $this->transactionRepository->add($transaction);
+
+        return $transaction;
     }
 }

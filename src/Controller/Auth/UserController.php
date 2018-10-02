@@ -27,8 +27,10 @@ use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
 use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
+use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
+use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
 use Adshares\AdsOperator\UseCase\Transaction\UserChangeKey;
 use Documents\Address;
@@ -58,6 +60,9 @@ class UserController extends ApiController
      */
     private $confirmChangeUserEmail;
 
+    /**
+     * @var UserChangeKey
+     */
     private $changeKey;
 
     public function __construct(
@@ -214,20 +219,14 @@ class UserController extends ApiController
         $signature = $contentDecoded['signature'] ?? '';
         $address = $contentDecoded['address'] ?? '';
 
-        if (!Account::validateId($address)) {
-            throw new BadRequestHttpException('`address` value is invalid.');
+        try {
+            $localTransaction = $this->changeKey->change($user, $address, $publicKey, $signature);
+        } catch (AddressDoesNotBelongToUserException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (InvalidValueException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
         }
 
-        if (strlen($publicKey) !== 64) {
-            throw new BadRequestHttpException('`publicKey` value is invalid.');
-        }
-
-        if (strlen($signature) !== 128) {
-            throw new BadRequestHttpException('`signature` value is invalid.');
-        }
-
-        $this->changeKey->change($user, $address, $publicKey, $signature);
-
-        return $this->response(null, Response::HTTP_NO_CONTENT);
+        return $this->response($this->serializer->serialize($localTransaction, 'json'), Response::HTTP_OK);
     }
 }
