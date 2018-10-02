@@ -55,7 +55,8 @@ class RunTransaction
         $command->setLastHash($account->getHash());
         $command->setLastMsid($account->getMsid());
 
-        $response = $this->client->changeAccountKey($command, $isDry);
+
+        $response = $this->client->{$type}($command, $isDry);
 
         return [
             'address' => $address,

@@ -41,7 +41,7 @@ class FactoryCommand
             throw new UnsupportedTransactionException(sprintf('Unsupported transaction type: %s', $type));
         }
 
-        $class = "\Adshares\Ads\Command\\".$type."Command";
+        $class = "\Adshares\Ads\Command\\".ucfirst($type)."Command";
 
         if (!class_exists($class)) {
             throw new UnsupportedTransactionException(sprintf('Class %s does not exist.', $class));

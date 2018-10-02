@@ -29,7 +29,7 @@ use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 
 class UserChangeKey
 {
-    const USER_CHANGE_ACCOUNT_KEY = 'ChangeAccountKey';
+    const USER_CHANGE_ACCOUNT_KEY = 'changeAccountKey';
 
     /**
      * @var RunTransaction
