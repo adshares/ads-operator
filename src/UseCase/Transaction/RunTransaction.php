@@ -46,6 +46,12 @@ class RunTransaction
      */
     public function run(string $type, string $address, array $params, bool $isDry = true)
     {
+        $methodName = ($type === 'sendOne' || $type === 'sendMany') ? 'runTransaction' : $type;
+
+        if (!method_exists($this->client, $methodName)) {
+            throw new UnsupportedTransactionException(sprintf('Unsupported transaction type: %s', $type));
+        }
+
         $getAccountResponse = $this->client->getAccount($address);
         $account = $getAccountResponse->getAccount();
 
@@ -54,7 +60,6 @@ class RunTransaction
         $command->setSender($address);
         $command->setLastHash($account->getHash());
         $command->setLastMsid($account->getMsid());
-
 
         $response = $this->client->{$type}($command, $isDry);
 
