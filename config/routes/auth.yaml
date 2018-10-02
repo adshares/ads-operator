@@ -17,6 +17,12 @@ user_change_email_confirm:
   controller: Adshares\AdsOperator\Controller\Auth\UserController::confirmChangeEmailAction
   methods: [GET]
 
+user_change_password:
+  path: /users/change-password
+  controller: Adshares\AdsOperator\Controller\Auth\UserController::changePasswordAction
+  methods: [POST]
+
+
 user_change_key:
   path: /users/change-key
   controller: Adshares\AdsOperator\Controller\Auth\UserController::changeKeyAction

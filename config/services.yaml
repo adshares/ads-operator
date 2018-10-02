@@ -112,6 +112,7 @@ services:
             $tokenStorage: '@security.token_storage'
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
             $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
+            $changeUserPassword: '@Adshares\AdsOperator\UseCase\ChangeUserPassword'
             $changeKey: '@Adshares\AdsOperator\UseCase\Transaction\UserChangeKey'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
@@ -127,6 +128,13 @@ services:
         $queue: '@Adshares\AdsOperator\Queue\QueueEngine'
         $passwordChecker: '@Adshares\AdsOperator\Auth\PasswordChecker'
         $logger: '@logger'
+
+    Adshares\AdsOperator\UseCase\ChangeUserPassword:
+      class: Adshares\AdsOperator\UseCase\ChangeUserPassword
+      arguments:
+        $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+        $passwordChecker: '@Adshares\AdsOperator\Auth\PasswordChecker'
+        $passwordEncoder: '@security.password_encoder'
 
     Adshares\AdsOperator\Auth\PasswordChecker:
       arguments:
