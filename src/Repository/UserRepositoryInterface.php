@@ -21,8 +21,32 @@
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 
 interface UserRepositoryInterface
 {
     public function signUp(User $user): void;
+
+    public function save(User $user): void;
+
+    /**
+     * @param string $email
+     * @throws UserNotFoundException
+     * @return User
+     */
+    public function findByEmail(string $email): User;
+
+    /**
+     * @param string $email
+     * @throws UserNotFoundException
+     * @return User
+     */
+    public function findByNewEmail(string $email): User;
+
+    /**
+     * @param string $id
+     * @throws UserNotFoundException
+     * @return User
+     */
+    public function findById(string $id): User;
 }

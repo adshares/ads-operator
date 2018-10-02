@@ -20,7 +20,7 @@
 
 namespace Adshares\AdsOperator\Controller\Auth;
 
-use Adshares\AdsOperator\Auth\UserRegistration;
+use Adshares\AdsOperator\UseCase\UserRegistration;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Validator\ValidatorException;

@@ -9,6 +9,12 @@ Adshares\AdsOperator\Document\User:
       type: string
     email:
       type: string
+      unique: true
+    newEmail:
+      type: string
+      unique: true
+    token:
+      type: string
     password:
       type: string
     createdAt:
@@ -16,3 +22,8 @@ Adshares\AdsOperator\Document\User:
       gedmo:
         timestampable:
           on: create
+    updatedAt:
+      type: date
+      gedmo:
+        timestampable:
+          on: update

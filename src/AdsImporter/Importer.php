@@ -142,7 +142,7 @@ class Importer
         $from = $this->databaseMigration->getNewestBlockTime();
 
         if ($from) {
-            return $from + $this->blockSeqTime;
+            return $from;
         }
 
         return $this->genesisTime;
@@ -183,7 +183,7 @@ class Importer
      */
     private function updateAccounts(Node $node): void
     {
-            $accountResponse = $this->client->getAccounts(hexdec($node->getId()));
+        $accountResponse = $this->client->getAccounts($node->getId());
         $accounts = $accountResponse->getAccounts();
 
         /** @var Account $account */
