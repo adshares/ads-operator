@@ -16,3 +16,6 @@ Adshares\AdsOperator\Document\LocalTransaction:
     data:
       expose: true
       type: string
+    fee:
+      expose: true
+      type: int

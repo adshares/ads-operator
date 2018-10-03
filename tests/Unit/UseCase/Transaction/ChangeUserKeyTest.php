@@ -100,6 +100,7 @@ class ChangeUserKeyTest extends TestCase
     {
         $response = [
             'hash' => 'F209A4FF8CD27DABB5FADFAE84BB37D62B2DB5260129E6B8E35CFE4448C9C370',
+            'fee' => 1000000,
             'msid' => 7,
             'data' => '0901000000000001000000CD76B45B01A9D37766EF74C17C12D5666220741494AB4D49AF3015CE7C3685CA6560CF3E',
         ];

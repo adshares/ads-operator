@@ -17,5 +17,7 @@ Adshares\AdsOperator\Document\LocalTransaction:
       type: string
     data:
       type: string
+    fee:
+      type: int
     params:
       type: hash

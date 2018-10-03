@@ -34,6 +34,8 @@ class LocalTransaction
 
     private $data;
 
+    private $fee;
+
     private $params;
 
     public function __construct(
@@ -43,6 +45,7 @@ class LocalTransaction
         string $hash,
         string $msid,
         string $data,
+        string $fee,
         array $params
     ) {
         $this->id = $id;
@@ -51,6 +54,7 @@ class LocalTransaction
         $this->msid = $msid;
         $this->data = $data;
         $this->type = $type;
+        $this->fee = $fee;
         $this->params = $params;
     }
 

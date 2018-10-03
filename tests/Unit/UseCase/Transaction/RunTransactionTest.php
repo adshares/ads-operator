@@ -53,26 +53,25 @@ class RunTransactionTest extends TestCase
 
         $hash = StringHelper::randHex(64);
         $msid = 5;
+        $fee = 1000000;
         $data = StringHelper::randHex(57);
 
         $rawData = [
             'hash' => $hash,
             'msid' => $msid,
+            'fee' => $fee,
         ];
 
         $response = $this->createMock(ChangeAccountKeyResponse::class);
+
         $response
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('getTx')
-            ->willReturn(new class($data) extends Tx {
-                public function __construct(string $data)
+            ->willReturn(new class($data, $fee) extends Tx {
+                public function __construct(string $data, int $fee)
                 {
                     $this->data = $data;
-                }
-
-                public function getData(): string
-                {
-                    return $this->data;
+                    $this->fee = $fee;
                 }
             });
 
@@ -85,8 +84,9 @@ class RunTransactionTest extends TestCase
         $expected = [
             'address' => $this->address,
             'data' => $data,
+            'fee' => $fee,
             'hash' => $hash,
-            'msid' => $msid
+            'msid' => $msid,
         ];
 
         $transaction = new RunTransaction($client);

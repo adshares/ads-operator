@@ -66,6 +66,7 @@ class RunTransaction
         return [
             'address' => $address,
             'data' => $response->getTx()->getData(),
+            'fee' => $response->getTx()->getFee(),
             'hash' => $account->getHash(),
             'msid' => $account->getMsid(),
         ];

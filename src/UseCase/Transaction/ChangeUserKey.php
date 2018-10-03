@@ -83,6 +83,7 @@ class ChangeUserKey
             $response['hash'],
             $response['msid'],
             $response['data'],
+            $response['fee'],
             $params
         );
 
