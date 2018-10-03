@@ -34,7 +34,7 @@ class UserChangeKey
     /**
      * @var RunTransaction
      */
-    private $transaction;
+    private $runTransaction;
 
     /**
      * @var LocalTransactionRepositoryInterface
@@ -43,12 +43,24 @@ class UserChangeKey
 
     public function __construct(RunTransaction $transaction, LocalTransactionRepositoryInterface $transactionRepository)
     {
-        $this->transaction = $transaction;
+        $this->runTransaction = $transaction;
         $this->transactionRepository = $transactionRepository;
     }
 
     public function change(User $user, string $address, string $publicKey, string $signature): LocalTransaction
     {
+        if (!Account::validateId($address)) {
+            throw new InvalidValueException('Address value is invalid.');
+        }
+
+        if (strlen($publicKey) !== 64 || !ctype_xdigit($publicKey)) {
+            throw new InvalidValueException('Public key value is invalid.');
+        }
+
+        if (strlen($signature) !== 128 || !ctype_xdigit($signature)) {
+            throw new InvalidValueException('Signature value is invalid.');
+        }
+
         if (!$user->isMyAccount($address)) {
             throw new AddressDoesNotBelongToUserException(sprintf(
                 'Address %s does not belong to user %s',
@@ -57,24 +69,12 @@ class UserChangeKey
             ));
         }
 
-        if (!Account::validateId($address)) {
-            throw new InvalidValueException('Address value is invalid.');
-        }
-
-        if (strlen($publicKey) !== 64) {
-            throw new InvalidValueException('Public key value is invalid.');
-        }
-
-        if (strlen($signature) !== 128) {
-            throw new InvalidValueException('Signature value is invalid.');
-        }
-
         $params = [
             'publicKey' => $publicKey,
             'signature' => $signature,
         ];
 
-        $response = $this->transaction->run(self::USER_CHANGE_ACCOUNT_KEY, $address, $params);
+        $response = $this->runTransaction->run(self::USER_CHANGE_ACCOUNT_KEY, $address, $params);
 
         $transaction = new LocalTransaction(
             uniqid(),

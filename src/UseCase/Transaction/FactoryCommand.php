@@ -48,7 +48,10 @@ class FactoryCommand
         }
 
         if ($type === UserChangeKey::USER_CHANGE_ACCOUNT_KEY) {
-            return new $class($params['publicKey'], $params['signature']);
+            $publicKey = $params['publicKey'] ?? '';
+            $signature = $params['signature'] ?? '';
+
+            return new $class($publicKey, $signature);
         }
     }
 }
