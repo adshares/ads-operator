@@ -54,7 +54,7 @@ class RunTransactionTest extends TestCase
         $hash = StringHelper::randHex(64);
         $msid = 5;
         $fee = 1000000;
-        $data = StringHelper::randHex(57);
+        $data = StringHelper::randHex(58);
 
         $rawData = [
             'hash' => $hash,
