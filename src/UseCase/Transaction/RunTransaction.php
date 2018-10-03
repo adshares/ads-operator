@@ -55,7 +55,7 @@ class RunTransaction
         $getAccountResponse = $this->client->getAccount($address);
         $account = $getAccountResponse->getAccount();
 
-        $command = FactoryCommand::create($type, $params);
+        $command = CommandFactory::create($type, $params);
 
         $command->setSender($address);
         $command->setLastHash($account->getHash());

@@ -22,22 +22,22 @@ namespace Adshares\AdsOperator\Tests\Unit\UseCase\Transaction;
 
 use Adshares\Ads\Command\ChangeAccountKeyCommand;
 use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
-use Adshares\AdsOperator\UseCase\Transaction\FactoryCommand;
+use Adshares\AdsOperator\UseCase\Transaction\CommandFactory;
 use PHPUnit\Framework\TestCase;
 
-class FactoryCommandTest extends TestCase
+class CommandFactoryTest extends TestCase
 {
     public function testCreateCommandWhenTypeIsUnsupported()
     {
         $this->expectException(UnsupportedTransactionException::class);
         $type = 'unsupportedType';
 
-        FactoryCommand::create($type, []);
+        CommandFactory::create($type, []);
     }
 
     public function testCreateWhenChangeAccountKeyType()
     {
         $type = 'changeAccountKey';
-        $this->assertInstanceOf(ChangeAccountKeyCommand::class, FactoryCommand::create($type, []));
+        $this->assertInstanceOf(ChangeAccountKeyCommand::class, CommandFactory::create($type, []));
     }
 }

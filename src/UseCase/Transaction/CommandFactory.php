@@ -23,7 +23,7 @@ namespace Adshares\AdsOperator\UseCase\Transaction;
 use Adshares\Ads\Command\AbstractTransactionCommand;
 use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
 
-class FactoryCommand
+class CommandFactory
 {
     /**
      * @param string $type
