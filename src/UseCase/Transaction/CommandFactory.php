@@ -34,7 +34,7 @@ class CommandFactory
     public static function create(string $type, array $params): AbstractTransactionCommand
     {
         $supportedTypes = [
-            UserChangeKey::USER_CHANGE_ACCOUNT_KEY,
+            ChangeUserKey::USER_CHANGE_ACCOUNT_KEY,
         ];
 
         if (!in_array($type, $supportedTypes)) {
@@ -47,7 +47,7 @@ class CommandFactory
             throw new UnsupportedTransactionException(sprintf('Class %s does not exist.', $class));
         }
 
-        if ($type === UserChangeKey::USER_CHANGE_ACCOUNT_KEY) {
+        if ($type === ChangeUserKey::USER_CHANGE_ACCOUNT_KEY) {
             $publicKey = $params['publicKey'] ?? '';
             $signature = $params['signature'] ?? '';
 

@@ -27,10 +27,10 @@ use Adshares\AdsOperator\Tests\Unit\StringHelper;
 use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 use Adshares\AdsOperator\UseCase\Transaction\RunTransaction;
-use Adshares\AdsOperator\UseCase\Transaction\UserChangeKey;
+use Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey;
 use PHPUnit\Framework\TestCase;
 
-class UserChangeKeyTest extends TestCase
+class ChangeUserKeyTest extends TestCase
 {
     private $address = '0001-00000000-9B6F';
 
@@ -38,7 +38,7 @@ class UserChangeKeyTest extends TestCase
     {
         $this->expectException(AddressDoesNotBelongToUserException::class);
 
-        $userChangeKey = new UserChangeKey($this->createRunTransaction(), $this->createLocalTransactionRepository());
+        $userChangeKey = new ChangeUserKey($this->createRunTransaction(), $this->createLocalTransactionRepository());
         $user = new User('user@adshares.net', sha1('test'));
 
         $userChangeKey->change($user, $this->address, StringHelper::randHex(64), StringHelper::randHex(128));
@@ -51,7 +51,7 @@ class UserChangeKeyTest extends TestCase
     {
         $this->expectException(InvalidValueException::class);
 
-        $userChangeKey = new UserChangeKey($this->createRunTransaction(), $this->createLocalTransactionRepository());
+        $userChangeKey = new ChangeUserKey($this->createRunTransaction(), $this->createLocalTransactionRepository());
         $user = new User('user@adshares.net', sha1('test'));
 
         $userChangeKey->change($user, $address, $publicKey, $signature);
@@ -114,7 +114,7 @@ class UserChangeKeyTest extends TestCase
             ->expects($this->once())
             ->method('add');
 
-        $userChangeKey = new UserChangeKey($runTransaction, $localTransactionRepository);
+        $userChangeKey = new ChangeUserKey($runTransaction, $localTransactionRepository);
         $user = new User('user@adshares.net', sha1('test'));
         $user->setId(uniqid());
         $user->addAccount($this->address);

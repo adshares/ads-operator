@@ -113,7 +113,7 @@ services:
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
             $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
             $changeUserPassword: '@Adshares\AdsOperator\UseCase\ChangeUserPassword'
-            $changeKey: '@Adshares\AdsOperator\UseCase\Transaction\UserChangeKey'
+            $changeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
@@ -218,8 +218,8 @@ services:
         $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
 
 
-    Adshares\AdsOperator\UseCase\Transaction\UserChangeKey:
-      class: Adshares\AdsOperator\UseCase\Transaction\UserChangeKey
+    Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey:
+      class: Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey
       arguments:
         $transaction: '@Adshares\AdsOperator\UseCase\Transaction\RunTransaction'
         $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository'

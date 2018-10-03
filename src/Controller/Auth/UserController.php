@@ -21,7 +21,6 @@
 namespace Adshares\AdsOperator\Controller\Auth;
 
 use Adshares\AdsOperator\Controller\ApiController;
-use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
@@ -33,8 +32,7 @@ use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
-use Adshares\AdsOperator\UseCase\Transaction\UserChangeKey;
-use Documents\Address;
+use Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -67,22 +65,22 @@ class UserController extends ApiController
     private $confirmChangeUserEmail;
 
     /**
-     * @var UserChangeKey
+     * @var ChangeUserKey
      */
-    private $changeKey;
+    private $changeUserKey;
 
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ChangeUserEmail $changeUserEmail,
         ConfirmChangeUserEmail $confirmChangeUserEmail,
         ChangeUserPassword $changeUserPassword,
-        UserChangeKey $changeKey
+        ChangeUserKey $changeUserKey
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
         $this->confirmChangeUserEmail = $confirmChangeUserEmail;
         $this->changeUserPassword = $changeUserPassword;
-        $this->changeKey = $changeKey;
+        $this->changeUserKey = $changeUserKey;
     }
 
 
@@ -296,7 +294,7 @@ class UserController extends ApiController
         $address = $contentDecoded['address'] ?? '';
 
         try {
-            $localTransaction = $this->changeKey->change($user, $address, $publicKey, $signature);
+            $localTransaction = $this->changeUserKey->change($user, $address, $publicKey, $signature);
         } catch (AddressDoesNotBelongToUserException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         } catch (InvalidValueException $ex) {

@@ -27,7 +27,7 @@ use Adshares\AdsOperator\Repository\LocalTransactionRepositoryInterface;
 use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 
-class UserChangeKey
+class ChangeUserKey
 {
     const USER_CHANGE_ACCOUNT_KEY = 'changeAccountKey';
 
