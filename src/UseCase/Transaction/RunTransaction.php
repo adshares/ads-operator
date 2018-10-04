@@ -21,6 +21,11 @@
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
 use Adshares\Ads\AdsClient;
+use Adshares\Ads\Driver\CommandError;
+use Adshares\Ads\Entity\Tx;
+use Adshares\Ads\Exception\CommandException;
+use Adshares\AdsOperator\UseCase\Exception\TooLowBalanceException;
+use Adshares\AdsOperator\UseCase\Exception\TransactionCannotBeProceedException;
 use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
 
 class RunTransaction
@@ -39,36 +44,104 @@ class RunTransaction
      * @param string $type
      * @param string $address
      * @param array $params
-     * @param bool $isDry
      * @throws UnsupportedTransactionException
-     * @return array
+     * @return CommandResponse
      *
      */
-    public function run(string $type, string $address, array $params, bool $isDry = true)
+    public function dryRun(string $type, string $address, array $params): CommandResponse
+    {
+        $this->validate($type);
+        $account = $this->getAccount($address);
+
+        $command = CommandFactory::create($type, $params);
+        $command->setSender($address);
+        $command->setLastHash($account->getHash());
+        $command->setLastMsid($account->getMsid());
+
+        $response = $this->client->{$type}($command, true);
+
+        /** @var Tx $tx */
+        $tx = $response->getTx();
+
+        $commandResponse = new CommandResponse(
+            $address,
+            $tx->getData(),
+            $tx->getFee(),
+            $account->getHash(),
+            $account->getMsid()
+        );
+        $commandResponse->setTime($tx->getTime());
+
+        return $commandResponse;
+    }
+
+    /**
+     * @param string $type
+     * @param string $address
+     * @param string $signature
+     * @param \DateTime $time
+     * @param array $params
+     * @throws UnsupportedTransactionException
+     * @throws TooLowBalanceException
+     * @throws TransactionCannotBeProceedException
+     * @return CommandResponse
+     */
+    public function run(
+        string $type,
+        string $address,
+        string $signature,
+        \DateTime $time,
+        array $params
+    ): CommandResponse {
+        $this->validate($type);
+        $account = $this->getAccount($address);
+
+        $command = CommandFactory::create($type, $params);
+        $command->setSender($address);
+        $command->setLastHash($account->getHash());
+        $command->setLastMsid($account->getMsid());
+        $command->setTimestamp($time->getTimestamp());
+        $command->setSignature($signature);
+
+        try {
+            $response = $this->client->{$type}($command, false);
+        } catch (CommandException $ex) {
+            if ($ex->getCode() === CommandError::LOW_BALANCE) {
+                throw new TooLowBalanceException('To low balance on account.');
+            }
+
+            throw new TransactionCannotBeProceedException($ex->getMessage());
+        }
+
+        /** @var Tx $tx */
+        $tx = $response->getTx();
+
+        $commandResponse = new CommandResponse(
+            $address,
+            $tx->getData(),
+            $tx->getFee(),
+            $account->getHash(),
+            $account->getMsid()
+        );
+        $commandResponse->setTransactionId($tx->getId());
+
+        return $commandResponse;
+    }
+
+    private function validate(string $type): void
     {
         $methodName = ($type === 'sendOne' || $type === 'sendMany') ? 'runTransaction' : $type;
 
         if (!method_exists($this->client, $methodName)) {
             throw new UnsupportedTransactionException(sprintf('Unsupported transaction type: %s', $type));
         }
+    }
 
+    private function getAccount(string $address)
+    {
         $getAccountResponse = $this->client->getAccount($address);
         $account = $getAccountResponse->getAccount();
 
-        $command = CommandFactory::create($type, $params);
-
-        $command->setSender($address);
-        $command->setLastHash($account->getHash());
-        $command->setLastMsid($account->getMsid());
-
-        $response = $this->client->{$type}($command, $isDry);
-
-        return [
-            'address' => $address,
-            'data' => $response->getTx()->getData(),
-            'fee' => $response->getTx()->getFee(),
-            'hash' => $account->getHash(),
-            'msid' => $account->getMsid(),
-        ];
+        return $account;
     }
 }

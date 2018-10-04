@@ -18,15 +18,40 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\UseCase\Transaction;
 
-use Adshares\AdsOperator\Document\LocalTransaction;
-
-interface LocalTransactionRepositoryInterface
+class CommandResponse
 {
-    public function add(LocalTransaction $transaction): void;
+    public $address;
 
-    public function modify(LocalTransaction $transaction): void;
+    public $data;
 
-    public function findById(string $id): LocalTransaction;
+    public $fee;
+
+    public $hash;
+
+    public $msid;
+
+    public $time;
+
+    public $transactionId;
+
+    public function __construct(string $address, string $data, ?int $fee, string $hash, int $msid)
+    {
+        $this->address = $address;
+        $this->data = $data;
+        $this->fee = $fee;
+        $this->hash = $hash;
+        $this->msid = $msid;
+    }
+
+    public function setTime(\DateTime $time): void
+    {
+        $this->time = $time;
+    }
+
+    public function setTransactionId(?string $transactionId): void
+    {
+        $this->transactionId = $transactionId;
+    }
 }

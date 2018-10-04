@@ -40,7 +40,7 @@ class RunTransactionTest extends TestCase
         $type = 'unsupportedType';
 
         $transaction = new RunTransaction($this->createAdsClient());
-        $transaction->run($type, $this->address, []);
+        $transaction->run($type, $this->address, StringHelper::randHex(128), new \DateTime(), []);
     }
 
     public function testWhenChangeAccountKeyTransaction()
@@ -90,7 +90,9 @@ class RunTransactionTest extends TestCase
         ];
 
         $transaction = new RunTransaction($client);
-        $this->assertEquals($expected, $transaction->run($type, $this->address, $params));
+        $result = $transaction->run($type, $this->address, StringHelper::randHex(128), new \DateTime(), $params);
+
+        $this->assertEquals($expected, $result);
     }
 
     private function createAdsClient()

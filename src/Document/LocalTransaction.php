@@ -26,6 +26,10 @@ class LocalTransaction
 
     private $userId;
 
+    private $transactionId = null;
+
+    private $address;
+
     private $type;
 
     private $hash;
@@ -36,26 +40,37 @@ class LocalTransaction
 
     private $fee;
 
+    private $time;
+
     private $params;
 
     public function __construct(
         string $id,
         string $userId,
+        string $address,
         string $type,
         string $hash,
         string $msid,
         string $data,
         string $fee,
+        \DateTime $time,
         array $params
     ) {
         $this->id = $id;
         $this->userId = $userId;
+        $this->address = $address;
         $this->hash = $hash;
         $this->msid = $msid;
         $this->data = $data;
         $this->type = $type;
         $this->fee = $fee;
+        $this->time = $time;
         $this->params = $params;
+    }
+
+    public function setTransactionId(string $transactionId): void
+    {
+        $this->transactionId = $transactionId;
     }
 
     public function getId(): string
@@ -76,5 +91,25 @@ class LocalTransaction
     public function getData(): string
     {
         return $this->data;
+    }
+
+    public function getUserId(): string
+    {
+        return $this->userId;
+    }
+
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    public function getTime(): \DateTime
+    {
+        return $this->time;
+    }
+
+    public function getParams(): array
+    {
+        return $this->params;
     }
 }

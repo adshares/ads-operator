@@ -18,15 +18,9 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Repository\Exception;
 
-use Adshares\AdsOperator\Document\LocalTransaction;
-
-interface LocalTransactionRepositoryInterface
+class LocalTransactionNotFoundException extends \RuntimeException
 {
-    public function add(LocalTransaction $transaction): void;
 
-    public function modify(LocalTransaction $transaction): void;
-
-    public function findById(string $id): LocalTransaction;
 }

@@ -20,14 +20,12 @@
 
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
-use Adshares\AdsOperator\Document\Account;
-use Adshares\AdsOperator\Document\LocalTransaction;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\LocalTransactionRepositoryInterface;
-use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
+use Adshares\AdsOperator\UseCase\Exception\UnauthorizedOperationException;
 
-class ChangeUserKey
+class ConfirmChangeUserKey
 {
     const USER_CHANGE_ACCOUNT_KEY = 'changeAccountKey';
 
@@ -47,50 +45,35 @@ class ChangeUserKey
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function change(User $user, string $address, string $publicKey, string $signature): LocalTransaction
+    public function confirm(User $user, string $signature, string $id)
     {
-        if (!Account::validateId($address)) {
-            throw new InvalidValueException('Address value is invalid.');
-        }
-
-        if (strlen($publicKey) !== 64 || !ctype_xdigit($publicKey)) {
-            throw new InvalidValueException('Public key value is invalid.');
-        }
-
         if (strlen($signature) !== 128 || !ctype_xdigit($signature)) {
-            throw new InvalidValueException('Signature value is invalid.');
+            throw new InvalidValueException(sprintf('Signature value %s is invalid.', $signature));
         }
 
-        if (!$user->isMyAccount($address)) {
-            throw new AddressDoesNotBelongToUserException(sprintf(
-                'Address %s does not belong to user %s',
-                $address,
-                $user->getId()
+        $transaction = $this->transactionRepository->findById($id);
+
+        if ($transaction->getUserId() !== $user->getId()) {
+            throw new UnauthorizedOperationException(sprintf(
+                'User %s is not authorized to confirm a transaction (user: %s, transaction: %s).',
+                $user->getId(),
+                $transaction->getUserId(),
+                $transaction->getId()
             ));
         }
 
-        $params = [
-            'publicKey' => $publicKey,
-            'signature' => $signature,
-        ];
+        $params = $transaction->getParams();
 
-        $response = $this->runTransaction->dryRun(self::USER_CHANGE_ACCOUNT_KEY, $address, $params);
-
-        $transaction = new LocalTransaction(
-            uniqid(),
-            $user->getId(),
-            $address,
+        $response = $this->runTransaction->run(
             self::USER_CHANGE_ACCOUNT_KEY,
-            $response->hash,
-            $response->msid,
-            $response->data,
-            $response->fee,
-            $response->time,
+            $transaction->getAddress(),
+            $signature,
+            $transaction->getTime(),
             $params
         );
 
-        $this->transactionRepository->add($transaction);
+        $transaction->setTransactionId($response->transactionId);
 
-        return $transaction;
+        $this->transactionRepository->modify($transaction);
     }
 }
