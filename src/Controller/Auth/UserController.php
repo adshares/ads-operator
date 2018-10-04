@@ -27,9 +27,12 @@ use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
 use Adshares\AdsOperator\UseCase\ChangeUserPassword;
 use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
+use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
+use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
+use Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -61,16 +64,23 @@ class UserController extends ApiController
      */
     private $confirmChangeUserEmail;
 
+    /**
+     * @var ChangeUserKey
+     */
+    private $changeUserKey;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ChangeUserEmail $changeUserEmail,
         ConfirmChangeUserEmail $confirmChangeUserEmail,
-        ChangeUserPassword $changeUserPassword
+        ChangeUserPassword $changeUserPassword,
+        ChangeUserKey $changeUserKey
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
         $this->confirmChangeUserEmail = $confirmChangeUserEmail;
         $this->changeUserPassword = $changeUserPassword;
+        $this->changeUserKey = $changeUserKey;
     }
 
 
@@ -263,5 +273,34 @@ class UserController extends ApiController
         }
 
         return $this->response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function changeKeyAction(Request $request): Response
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            throw new UnauthorizedHttpException('', 'Token does not exist.');
+        }
+
+        /** @var User $user */
+        $user = $token->getUser();
+
+        $content = (string) $request->getContent();
+        $contentDecoded = \GuzzleHttp\json_decode($content, true);
+
+        $publicKey = $contentDecoded['publicKey'] ?? '';
+        $signature = $contentDecoded['signature'] ?? '';
+        $address = $contentDecoded['address'] ?? '';
+
+        try {
+            $localTransaction = $this->changeUserKey->change($user, $address, $publicKey, $signature);
+        } catch (AddressDoesNotBelongToUserException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (InvalidValueException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        }
+
+        return $this->response($this->serializer->serialize($localTransaction, 'json'), Response::HTTP_OK);
     }
 }

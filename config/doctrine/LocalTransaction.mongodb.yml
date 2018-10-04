@@ -1,0 +1,23 @@
+Adshares\AdsOperator\Document\LocalTransaction:
+  type: document
+  collection: localTransaction
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository
+  fields:
+    id:
+      id: true
+      strategy: NONE
+      type: string
+    userId:
+      type: string
+    type:
+      type: string
+    hash:
+      type: string
+    msid:
+      type: string
+    data:
+      type: string
+    fee:
+      type: int
+    params:
+      type: hash

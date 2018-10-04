@@ -22,6 +22,8 @@ Adshares\AdsOperator\Document\User:
       gedmo:
         timestampable:
           on: create
+    accounts:
+      type: collection
     updatedAt:
       type: date
       gedmo:

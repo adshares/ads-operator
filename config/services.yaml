@@ -113,6 +113,7 @@ services:
             $changeUserEmail: '@Adshares\AdsOperator\UseCase\ChangeUserEmail'
             $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
             $changeUserPassword: '@Adshares\AdsOperator\UseCase\ChangeUserPassword'
+            $changeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
@@ -175,6 +176,12 @@ services:
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\User']
 
+    Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository:
+      class: Doctrine\ODM\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\LocalTransaction']
+
+
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:
             $client: '@Vendor\Adshares\Ads\AdsClient'
@@ -209,6 +216,19 @@ services:
       class: Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail
       arguments:
         $userRepository: '@Adshares\AdsOperator\Repository\Doctrine\UserRepository'
+
+
+    Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey:
+      class: Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey
+      arguments:
+        $transaction: '@Adshares\AdsOperator\UseCase\Transaction\RunTransaction'
+        $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository'
+
+    Adshares\AdsOperator\UseCase\Transaction\RunTransaction:
+      class: Adshares\AdsOperator\UseCase\Transaction\RunTransaction
+      arguments:
+        $adsClient: '@Vendor\Adshares\Ads\AdsClient'
+
 
     Adshares\AdsOperator\Mail\MailerEngine:
       class: Adshares\AdsOperator\Mailer\SwiftMailer
