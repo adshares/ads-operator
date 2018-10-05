@@ -108,7 +108,7 @@ class RunTransaction
             $response = $this->client->{$type}($command, false);
         } catch (CommandException $ex) {
             if ($ex->getCode() === CommandError::LOW_BALANCE) {
-                throw new TooLowBalanceException('To low balance on account.');
+                throw new TooLowBalanceException('Too low balance on account.');
             }
 
             throw new TransactionCannotBeProceedException($ex->getMessage());

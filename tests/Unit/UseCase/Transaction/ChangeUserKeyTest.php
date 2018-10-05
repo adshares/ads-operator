@@ -136,7 +136,7 @@ class ChangeUserKeyTest extends TestCase
         $this->assertEquals($response->data, $transaction->getData());
     }
 
-    public function createRunTransaction()
+    private function createRunTransaction()
     {
         return $this->createMock(RunTransaction::class);
     }

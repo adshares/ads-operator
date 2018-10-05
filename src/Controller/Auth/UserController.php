@@ -331,7 +331,7 @@ class UserController extends ApiController
 
         try {
             $localTransaction = $this->confirmChangeUserKey->confirm($user, $signature, $id);
-        } catch (AddressDoesNotBelongToUserException | InvalidValueException | TooLowBalanceException $ex) {
+        } catch (InvalidValueException | TooLowBalanceException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
         } catch (LocalTransactionNotFoundException $ex) {
             throw new NotFoundHttpException($ex->getMessage());
