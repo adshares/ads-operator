@@ -20,6 +20,7 @@
 
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
+use Adshares\AdsOperator\Document\LocalTransaction;
 use Adshares\AdsOperator\Document\User;
 use Adshares\AdsOperator\Repository\LocalTransactionRepositoryInterface;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
@@ -45,7 +46,7 @@ class ConfirmChangeUserKey
         $this->transactionRepository = $transactionRepository;
     }
 
-    public function confirm(User $user, string $signature, string $id)
+    public function confirm(User $user, string $signature, string $id): LocalTransaction
     {
         if (strlen($signature) !== 128 || !ctype_xdigit($signature)) {
             throw new InvalidValueException(sprintf('Signature value %s is invalid.', $signature));
@@ -75,5 +76,7 @@ class ConfirmChangeUserKey
         $transaction->setTransactionId($response->transactionId);
 
         $this->transactionRepository->modify($transaction);
+
+        return $transaction;
     }
 }

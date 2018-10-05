@@ -4,6 +4,9 @@ Adshares\AdsOperator\Document\LocalTransaction:
     id:
       expose: true
       type: string
+    transactionId:
+      expose: true
+      type: string
     type:
       expose: true
       type: string
