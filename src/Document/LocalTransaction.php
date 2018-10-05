@@ -50,9 +50,9 @@ class LocalTransaction
         string $address,
         string $type,
         string $hash,
-        string $msid,
+        int $msid,
         string $data,
-        string $fee,
+        int $fee,
         \DateTime $time,
         array $params
     ) {

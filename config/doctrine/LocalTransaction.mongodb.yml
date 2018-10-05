@@ -18,7 +18,7 @@ Adshares\AdsOperator\Document\LocalTransaction:
     hash:
       type: string
     msid:
-      type: string
+      type: int
     time:
       type: date
     data:

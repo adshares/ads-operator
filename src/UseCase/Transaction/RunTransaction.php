@@ -141,8 +141,7 @@ class RunTransaction
     private function getAccount(string $address)
     {
         $getAccountResponse = $this->client->getAccount($address);
-        $account = $getAccountResponse->getAccount();
 
-        return $account;
+        return $getAccountResponse->getAccount();
     }
 }

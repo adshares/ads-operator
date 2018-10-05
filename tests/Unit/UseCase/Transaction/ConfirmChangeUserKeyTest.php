@@ -38,7 +38,10 @@ class ConfirmChangeUserKeyTest extends TestCase
         $this->expectException(InvalidValueException::class);
 
         $signature = StringHelper::randHex(120); // 128 characters length is correct
-        $confirmUserChangeKey = new ConfirmChangeUserKey($this->createRunTransaction(), $this->createLocalTransactionRepository());
+        $confirmUserChangeKey = new ConfirmChangeUserKey(
+            $this->createRunTransaction(),
+            $this->createLocalTransactionRepository()
+        );
         $user = new User('user@adshares.net', sha1('test'));
 
         $confirmUserChangeKey->confirm($user, $signature, uniqid());
@@ -76,17 +79,16 @@ class ConfirmChangeUserKeyTest extends TestCase
 
         $confirmUserChangeKey = new ConfirmChangeUserKey($this->createRunTransaction(), $transactionRepository);
         $user = new User('user@adshares.net', sha1('test'));
-        $user->setId(1);
+        $user->setId('1');
 
         $confirmUserChangeKey->confirm($user, $signature, uniqid());
-
     }
 
     private function createLocalTransaction()
     {
         return new LocalTransaction(
             uniqid(),
-            1234,
+            '1234',
             '0001-00000001-0001',
             ConfirmChangeUserKey::USER_CHANGE_ACCOUNT_KEY,
             StringHelper::randHex(64),
