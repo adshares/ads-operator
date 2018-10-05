@@ -70,6 +70,7 @@ class RunTransaction
             $account->getHash(),
             $account->getMsid()
         );
+
         $commandResponse->setTime($tx->getTime());
 
         return $commandResponse;
