@@ -108,6 +108,7 @@ class RunTransaction
         $command->setSignature($signature);
 
         try {
+            /** @var AbstractResponse $response */
             $response = $this->client->{$type}($command, false);
         } catch (CommandException $ex) {
             if ($ex->getCode() === CommandError::LOW_BALANCE) {
@@ -150,7 +151,11 @@ class RunTransaction
                 throw new AccountNotFoundException(sprintf('Failed to get data for account %s', $address));
             }
 
-            throw new TransactionCannotBeProceedException('Transaction cannot be proceed', 0, $ex);
+            throw new TransactionCannotBeProceedException(
+                sprintf('Transaction cannot be proceed for account: %s', $address),
+                0,
+                $ex
+            );
         }
 
         return $getAccountResponse->getAccount();
