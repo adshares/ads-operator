@@ -38,6 +38,7 @@ services:
     Adshares\AdsOperator\EventListener\ApiExceptionListener:
         arguments:
           $environment: '%env(APP_ENV)%'
+          $logger: '@logger'
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
@@ -235,7 +236,6 @@ services:
       class: Adshares\AdsOperator\UseCase\Transaction\RunTransaction
       arguments:
         $adsClient: '@Vendor\Adshares\Ads\AdsClient'
-
 
     Adshares\AdsOperator\Mail\MailerEngine:
       class: Adshares\AdsOperator\Mailer\SwiftMailer

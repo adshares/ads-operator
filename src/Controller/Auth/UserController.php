@@ -28,6 +28,7 @@ use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
 use Adshares\AdsOperator\UseCase\ChangeUserPassword;
 use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
+use Adshares\AdsOperator\UseCase\Exception\AccountNotFoundException;
 use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
@@ -307,6 +308,8 @@ class UserController extends ApiController
             throw new BadRequestHttpException($ex->getMessage());
         } catch (InvalidValueException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
+        } catch (AccountNotFoundException $ex) {
+            throw new NotFoundHttpException($ex->getMessage());
         }
 
         return $this->response($this->serializer->serialize($localTransaction, 'json'), Response::HTTP_OK);
@@ -333,7 +336,7 @@ class UserController extends ApiController
             $localTransaction = $this->confirmChangeUserKey->confirm($user, $signature, $id);
         } catch (InvalidValueException | TooLowBalanceException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
-        } catch (LocalTransactionNotFoundException $ex) {
+        } catch (LocalTransactionNotFoundException | AccountNotFoundException $ex) {
             throw new NotFoundHttpException($ex->getMessage());
         }
 

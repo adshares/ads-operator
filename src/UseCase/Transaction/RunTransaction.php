@@ -24,9 +24,11 @@ use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
 use Adshares\Ads\Entity\Tx;
 use Adshares\Ads\Exception\CommandException;
+use Adshares\Ads\Response\AbstractResponse;
 use Adshares\AdsOperator\UseCase\Exception\TooLowBalanceException;
 use Adshares\AdsOperator\UseCase\Exception\TransactionCannotBeProceedException;
 use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
+use Adshares\AdsOperator\UseCase\Exception\AccountNotFoundException;
 
 class RunTransaction
 {
@@ -58,6 +60,7 @@ class RunTransaction
         $command->setLastHash($account->getHash());
         $command->setLastMsid($account->getMsid());
 
+        /** @var AbstractResponse $response */
         $response = $this->client->{$type}($command, true);
 
         /** @var Tx $tx */
@@ -111,7 +114,7 @@ class RunTransaction
                 throw new TooLowBalanceException('Too low balance on account.');
             }
 
-            throw new TransactionCannotBeProceedException($ex->getMessage());
+            throw new TransactionCannotBeProceedException('Transaction cannot be proceed', 0, $ex);
         }
 
         /** @var Tx $tx */
@@ -140,7 +143,15 @@ class RunTransaction
 
     private function getAccount(string $address)
     {
-        $getAccountResponse = $this->client->getAccount($address);
+        try {
+            $getAccountResponse = $this->client->getAccount($address);
+        } catch (CommandException $ex) {
+            if ($ex->getCode() === CommandError::GET_USER_FAIL) {
+                throw new AccountNotFoundException(sprintf('Failed to get data for account %s', $address));
+            }
+
+            throw new TransactionCannotBeProceedException('Transaction cannot be proceed', 0, $ex);
+        }
 
         return $getAccountResponse->getAccount();
     }
