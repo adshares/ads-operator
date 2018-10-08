@@ -20,6 +20,7 @@
 
 namespace Adshares\AdsOperator\EventListener;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,12 +38,19 @@ class ApiExceptionListener
     private $environment;
 
     /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
      * ApiExceptionListener constructor.
      * @param string $environment
+     * @param LoggerInterface $logger
      */
-    public function __construct(string $environment)
+    public function __construct(string $environment, LoggerInterface $logger)
     {
         $this->environment = $environment;
+        $this->logger = $logger;
     }
 
     /**
@@ -62,6 +70,28 @@ class ApiExceptionListener
             if (in_array($this->environment, ['dev', 'test'])) {
                 $data['dev'] = $this->getDevBlock($exception);
             }
+
+            $previousData = [];
+            $previousException = $exception->getPrevious();
+
+            if ($previousException) {
+                $previousData = [
+                    'message' => $previousException->getMessage(),
+                    'code' => $previousException->getCode(),
+                    'line' => $previousException->getLine(),
+                    'file' => $previousException->getFile(),
+                ];
+            }
+
+            $this->logger->error(
+                $exception->getMessage(),
+                [
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'previous' => $previousData,
+                ]
+            );
 
             $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
         }

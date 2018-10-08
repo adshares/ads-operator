@@ -38,6 +38,7 @@ services:
     Adshares\AdsOperator\EventListener\ApiExceptionListener:
         arguments:
           $environment: '%env(APP_ENV)%'
+          $logger: '@logger'
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
@@ -114,6 +115,7 @@ services:
             $confirmChangeUserEmail: '@Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail'
             $changeUserPassword: '@Adshares\AdsOperator\UseCase\ChangeUserPassword'
             $changeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey'
+            $confirmChangeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey'
 
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
@@ -224,11 +226,16 @@ services:
         $transaction: '@Adshares\AdsOperator\UseCase\Transaction\RunTransaction'
         $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository'
 
+    Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey:
+      class: Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey
+      arguments:
+        $transaction: '@Adshares\AdsOperator\UseCase\Transaction\RunTransaction'
+        $transactionRepository: '@Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository'
+
     Adshares\AdsOperator\UseCase\Transaction\RunTransaction:
       class: Adshares\AdsOperator\UseCase\Transaction\RunTransaction
       arguments:
         $adsClient: '@Vendor\Adshares\Ads\AdsClient'
-
 
     Adshares\AdsOperator\Mail\MailerEngine:
       class: Adshares\AdsOperator\Mailer\SwiftMailer

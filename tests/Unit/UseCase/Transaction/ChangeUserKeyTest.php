@@ -26,6 +26,7 @@ use Adshares\AdsOperator\Repository\LocalTransactionRepositoryInterface;
 use Adshares\AdsOperator\Tests\Unit\StringHelper;
 use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
+use Adshares\AdsOperator\UseCase\Transaction\CommandResponse;
 use Adshares\AdsOperator\UseCase\Transaction\RunTransaction;
 use Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey;
 use PHPUnit\Framework\TestCase;
@@ -98,16 +99,20 @@ class ChangeUserKeyTest extends TestCase
 
     public function testWhenInputDataAreValidAndAddressBelongsToUser()
     {
-        $response = [
-            'hash' => 'F209A4FF8CD27DABB5FADFAE84BB37D62B2DB5260129E6B8E35CFE4448C9C370',
-            'fee' => 1000000,
-            'msid' => 7,
-            'data' => '0901000000000001000000CD76B45B01A9D37766EF74C17C12D5666220741494AB4D49AF3015CE7C3685CA6560CF3E',
-        ];
+        $response = new CommandResponse(
+            $this->address,
+            '0901000000000001000000CD76B45B01A9D37766EF74C17C12D5666220741494AB4D49AF3015CE7C3685CA6560CF3E',
+            1000000,
+            'F209A4FF8CD27DABB5FADFAE84BB37D62B2DB5260129E6B8E35CFE4448C9C370',
+            7
+        );
+
+        $response->setTime(new \DateTime());
+
         $runTransaction = $this->createRunTransaction();
         $runTransaction
             ->expects($this->once())
-            ->method('run')
+            ->method('dryRun')
             ->willReturn($response);
 
         $localTransactionRepository = $this->createLocalTransactionRepository();
@@ -115,23 +120,23 @@ class ChangeUserKeyTest extends TestCase
             ->expects($this->once())
             ->method('add');
 
-        $userChangeKey = new ChangeUserKey($runTransaction, $localTransactionRepository);
         $user = new User('user@adshares.net', sha1('test'));
         $user->setId(uniqid());
         $user->addAccount($this->address);
 
         $publicKey = StringHelper::randHex(64);
         $signature = StringHelper::randHex(128);
+
+        $userChangeKey = new ChangeUserKey($runTransaction, $localTransactionRepository);
         $transaction = $userChangeKey->change($user, $this->address, $publicKey, $signature);
 
         $this->assertInstanceOf(LocalTransaction::class, $transaction);
-
-        $this->assertEquals($response['hash'], $transaction->getHash());
-        $this->assertEquals($response['msid'], $transaction->getMsid());
-        $this->assertEquals($response['data'], $transaction->getData());
+        $this->assertEquals($response->hash, $transaction->getHash());
+        $this->assertEquals($response->msid, $transaction->getMsid());
+        $this->assertEquals($response->data, $transaction->getData());
     }
 
-    public function createRunTransaction()
+    private function createRunTransaction()
     {
         return $this->createMock(RunTransaction::class);
     }

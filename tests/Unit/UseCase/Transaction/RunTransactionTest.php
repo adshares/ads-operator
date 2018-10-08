@@ -27,6 +27,7 @@ use Adshares\Ads\Response\GetAccountResponse;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Tests\Unit\StringHelper;
 use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
+use Adshares\AdsOperator\UseCase\Transaction\CommandResponse;
 use Adshares\AdsOperator\UseCase\Transaction\RunTransaction;
 use PHPUnit\Framework\TestCase;
 
@@ -40,7 +41,7 @@ class RunTransactionTest extends TestCase
         $type = 'unsupportedType';
 
         $transaction = new RunTransaction($this->createAdsClient());
-        $transaction->run($type, $this->address, []);
+        $transaction->run($type, $this->address, StringHelper::randHex(128), new \DateTime(), []);
     }
 
     public function testWhenChangeAccountKeyTransaction()
@@ -65,7 +66,7 @@ class RunTransactionTest extends TestCase
         $response = $this->createMock(ChangeAccountKeyResponse::class);
 
         $response
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('getTx')
             ->willReturn(new class($data, $fee) extends Tx {
                 public function __construct(string $data, int $fee)
@@ -81,16 +82,18 @@ class RunTransactionTest extends TestCase
             ->method('changeAccountKey')
             ->willReturn($response);
 
-        $expected = [
-            'address' => $this->address,
-            'data' => $data,
-            'fee' => $fee,
-            'hash' => $hash,
-            'msid' => $msid,
-        ];
+        $expected = new CommandResponse(
+            $this->address,
+            $data,
+            $fee,
+            $hash,
+            $msid
+        );
 
         $transaction = new RunTransaction($client);
-        $this->assertEquals($expected, $transaction->run($type, $this->address, $params));
+        $result = $transaction->run($type, $this->address, StringHelper::randHex(128), new \DateTime(), $params);
+
+        $this->assertEquals($expected, $result);
     }
 
     private function createAdsClient()

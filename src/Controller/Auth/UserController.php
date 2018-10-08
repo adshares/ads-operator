@@ -23,19 +23,24 @@ namespace Adshares\AdsOperator\Controller\Auth;
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
+use Adshares\AdsOperator\Repository\Exception\LocalTransactionNotFoundException;
 use Adshares\AdsOperator\Repository\Exception\UserNotFoundException;
 use Adshares\AdsOperator\UseCase\ChangeUserEmail;
 use Adshares\AdsOperator\UseCase\ChangeUserPassword;
 use Adshares\AdsOperator\UseCase\ConfirmChangeUserEmail;
+use Adshares\AdsOperator\UseCase\Exception\AccountNotFoundException;
 use Adshares\AdsOperator\UseCase\Exception\AddressDoesNotBelongToUserException;
 use Adshares\AdsOperator\UseCase\Exception\BadPasswordException;
 use Adshares\AdsOperator\UseCase\Exception\BadTokenValueException;
 use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
+use Adshares\AdsOperator\UseCase\Exception\TooLowBalanceException;
 use Adshares\AdsOperator\UseCase\Exception\UserExistsException;
 use Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey;
+use Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Swagger\Annotations as SWG;
@@ -69,18 +74,22 @@ class UserController extends ApiController
      */
     private $changeUserKey;
 
+    private $confirmChangeUserKey;
+
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ChangeUserEmail $changeUserEmail,
         ConfirmChangeUserEmail $confirmChangeUserEmail,
         ChangeUserPassword $changeUserPassword,
-        ChangeUserKey $changeUserKey
+        ChangeUserKey $changeUserKey,
+        ConfirmChangeUserKey $confirmChangeUserKey
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->changeUserEmail = $changeUserEmail;
         $this->confirmChangeUserEmail = $confirmChangeUserEmail;
         $this->changeUserPassword = $changeUserPassword;
         $this->changeUserKey = $changeUserKey;
+        $this->confirmChangeUserKey = $confirmChangeUserKey;
     }
 
 
@@ -299,6 +308,36 @@ class UserController extends ApiController
             throw new BadRequestHttpException($ex->getMessage());
         } catch (InvalidValueException $ex) {
             throw new BadRequestHttpException($ex->getMessage());
+        } catch (AccountNotFoundException $ex) {
+            throw new NotFoundHttpException($ex->getMessage());
+        }
+
+        return $this->response($this->serializer->serialize($localTransaction, 'json'), Response::HTTP_OK);
+    }
+
+    public function confirmChangeKeyAction(Request $request): Response
+    {
+        $token = $this->tokenStorage->getToken();
+
+        if (!$token) {
+            throw new UnauthorizedHttpException('', 'Token does not exist.');
+        }
+
+        /** @var User $user */
+        $user = $token->getUser();
+
+        $content = (string) $request->getContent();
+        $contentDecoded = \GuzzleHttp\json_decode($content, true);
+
+        $signature = $contentDecoded['signature'] ?? '';
+        $id = $contentDecoded['id'] ?? '';
+
+        try {
+            $localTransaction = $this->confirmChangeUserKey->confirm($user, $signature, $id);
+        } catch (InvalidValueException | TooLowBalanceException $ex) {
+            throw new BadRequestHttpException($ex->getMessage());
+        } catch (LocalTransactionNotFoundException | AccountNotFoundException $ex) {
+            throw new NotFoundHttpException($ex->getMessage());
         }
 
         return $this->response($this->serializer->serialize($localTransaction, 'json'), Response::HTTP_OK);
