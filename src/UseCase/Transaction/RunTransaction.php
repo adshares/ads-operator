@@ -115,7 +115,11 @@ class RunTransaction
                 throw new TooLowBalanceException('Too low balance on account.');
             }
 
-            throw new TransactionCannotBeProceedException('Transaction cannot be proceed', 0, $ex);
+            throw new TransactionCannotBeProceedException(
+                sprintf('Transaction cannot be proceed for account %s', $address),
+                0,
+                $ex
+            );
         }
 
         /** @var Tx $tx */
