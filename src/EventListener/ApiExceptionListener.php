@@ -75,15 +75,22 @@ class ApiExceptionListener
             $previousException = $exception->getPrevious();
 
             if ($previousException) {
-                $previousData = array_merge(
-                    $this->getDataFromException($exception),
-                    ['message' => $previousException->getMessage()]
-                );
+                $previousData = [
+                    'message' => $previousException->getMessage(),
+                    'code' => $previousException->getCode(),
+                    'line' => $previousException->getLine(),
+                    'file' => $previousException->getFile(),
+                ];
             }
 
             $this->logger->error(
                 $exception->getMessage(),
-                array_merge($this->getDataFromException($exception), ['previous' => $previousData])
+                [
+                    'code' => $exception->getCode(),
+                    'file' => $exception->getFile(),
+                    'line' => $exception->getLine(),
+                    'previous' => $previousData,
+                ]
             );
 
             $response = new JsonResponse($data, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -114,15 +121,6 @@ class ApiExceptionListener
         return [
             'message' => $exception->getMessage(),
             'stack' => $exception->getTraceAsString(),
-        ];
-    }
-
-    private function getDataFromException(\Exception $exception)
-    {
-        return [
-            'code' => $exception->getCode(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
         ];
     }
 }
