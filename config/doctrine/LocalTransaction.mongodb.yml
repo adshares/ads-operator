@@ -9,12 +9,18 @@ Adshares\AdsOperator\Document\LocalTransaction:
       type: string
     userId:
       type: string
+    transactionId:
+      type: string
+    address:
+      type: string
     type:
       type: string
     hash:
       type: string
     msid:
-      type: string
+      type: int
+    time:
+      type: date
     data:
       type: string
     fee:
