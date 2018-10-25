@@ -50,9 +50,6 @@ final class ApiExceptionListenerTest extends TestCase
     public function testApiExceptionListenerWhenExceptionInternalErrorOccurs(): void
     {
         $exception = $this->createMock(\Exception::class);
-        $exception
-            ->expects($this->exactly(0))
-            ->method('getMessage');
 
         $event = $this->createMock(GetResponseForExceptionEvent::class);
         $event
