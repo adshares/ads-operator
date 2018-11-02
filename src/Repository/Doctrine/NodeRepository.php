@@ -38,6 +38,7 @@ class NodeRepository extends BaseRepository implements NodeRepositoryInterface
             'id',
             'msid',
             'balance',
+            'version',
         ];
     }
 
