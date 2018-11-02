@@ -189,6 +189,29 @@ final class ImporterTest extends TestCase
         $this->assertEquals(4, $importer->getResult()->nodes);
     }
 
+    public function testUpdateNodesVersion(): void
+    {
+        $version = '0.0.1';
+
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->exactly(4))
+            ->method('getNodeVersion')
+            ->willReturn($version);
+
+        $database
+            ->expects($this->exactly(4))
+            ->method('addOrUpdateNode')
+            ->with($this->callback(
+                function(Node $node) use ($version) {
+                    return $node->getVersion() === $version;
+                }
+            ));
+
+        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
+        $this->invokeMethod($importer, 'updateNodes');
+    }
+
     public function testUpdateAccountsWhenClientReturnsAccounts(): void
     {
         $database = $this->createMock(DatabaseMigrationInterface::class);

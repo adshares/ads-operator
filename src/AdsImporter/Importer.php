@@ -171,7 +171,8 @@ class Importer
                 continue;
             }
 
-            $node->setVersion($this->databaseMigration->getNodeVersion($node->getId()));
+            $version = $this->databaseMigration->getNodeVersion($node->getId()) ?? 'n/a';
+            $node->setVersion($version);
 
             $this->updateAccounts($node);
 

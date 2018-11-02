@@ -268,15 +268,11 @@ class MongoMigration implements DatabaseMigrationInterface
             'nodeId' => $nodeId,
         ])->sort(['_id' => -1])->limit(1);
 
-        $version = 'n/a';
         foreach ($cursor as $connection) {
-            if (isset($connection['version'])) {
-                $version = $connection['version'];
-            }
-            break;
+            return $connection['version'] ?? null;
         }
 
-        return $version;
+        return null;
     }
 
     /**
