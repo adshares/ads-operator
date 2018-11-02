@@ -203,7 +203,7 @@ final class ImporterTest extends TestCase
             ->expects($this->exactly(4))
             ->method('addOrUpdateNode')
             ->with($this->callback(
-                function(Node $node) use ($version) {
+                function (Node $node) use ($version) {
                     return $node->getVersion() === $version;
                 }
             ));
