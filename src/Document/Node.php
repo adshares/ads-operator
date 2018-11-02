@@ -31,7 +31,7 @@ class Node extends \Adshares\Ads\Entity\Node
     /**
      * @var string
      */
-    protected $version;
+    protected $version = 'n/a';
 
     /**
      * Node constructor.
