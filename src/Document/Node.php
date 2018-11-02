@@ -29,9 +29,9 @@ class Node extends \Adshares\Ads\Entity\Node
     const SPECIAL_NODE = '0000';
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected $version = 'n/a';
+    protected $version;
 
     /**
      * Node constructor.
@@ -45,17 +45,17 @@ class Node extends \Adshares\Ads\Entity\Node
     }
 
     /**
-     * @param string $version
+     * @param string|null $version
      */
-    public function setVersion(string $version): void
+    public function setVersion(?string $version): void
     {
         $this->version = $version;
     }
 
     /**
-     * @return string
+     * @return null|string
      */
-    public function getVersion(): string
+    public function getVersion(): ?string
     {
         return $this->version;
     }
