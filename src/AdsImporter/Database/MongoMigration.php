@@ -250,10 +250,33 @@ class MongoMigration implements DatabaseMigrationInterface
             'port' => $node->getPort(),
             'publicKey' => $node->getPublicKey(),
             'status' => $node->getStatus(),
+            'version' => $node->getVersion(),
 
         ];
 
         $this->nodeCollection->update(['_id' => $node->getId()], $document, $this->mongoUpdateOptions);
+    }
+
+    /**
+     * @param string $nodeId
+     * @return null|string
+     */
+    public function getNodeVersion(string $nodeId): ?string
+    {
+        $cursor = $this->transactionCollection->find([
+            'type' => 'connection',
+            'nodeId' => $nodeId,
+        ])->sort(['_id' => -1])->limit(1);
+
+        $version = 'n/a';
+        foreach ($cursor as $connection) {
+            if (isset($connection['version'])) {
+                $version = $connection['version'];
+            }
+            break;
+        }
+
+        return $version;
     }
 
     /**
