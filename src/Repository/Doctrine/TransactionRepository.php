@@ -23,6 +23,7 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 use Adshares\Ads\Entity\Transaction\AbstractTransaction;
 use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Doctrine\ODM\MongoDB\Query\Builder;
 
 class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
 {
@@ -64,20 +65,10 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     {
         $results = [];
 
+        $cursor = $this->createBuilderForList($sort, $order, $limit, $offset, $conditions);
+        $cursor->field('type')->notEqual('connection');
+
         try {
-            $cursor = $this
-                ->createQueryBuilder()
-                ->field('type')->notEqual('connection')
-                ->sort($sort, $order)
-                ->limit($limit)
-                ->skip($offset);
-
-            if ($conditions) {
-                foreach ($conditions as $columnName => $value) {
-                    $cursor->field($columnName)->equals($value);
-                }
-            }
-
             $data = $cursor
                 ->getQuery()
                 ->execute()
@@ -146,7 +137,24 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $limit,
         int $offset
     ): array {
-        return $this->fetchList($sort, $order, $limit, $offset, ['messageId' => $messageId]);
+        $results = [];
+
+        $cursor = $this->createBuilderForList($sort, $order, $limit, $offset, ['messageId' => $messageId]);
+
+        try {
+            $data = $cursor
+                ->getQuery()
+                ->execute()
+                ->toArray();
+
+            foreach ($data as $node) {
+                $results[] = $node;
+            }
+        } catch (MongoDBException $ex) {
+            return [];
+        }
+
+        return $results;
     }
 
     /**
@@ -183,5 +191,35 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $offset
     ): array {
         return $this->fetchList($sort, $order, $limit, $offset, ['blockId' => $blockId]);
+    }
+
+    /**
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @param array|null $conditions
+     * @return Builder
+     */
+    public function createBuilderForList(
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset,
+        ?array $conditions = []
+    ): Builder {
+        $cursor = $this
+            ->createQueryBuilder()
+            ->sort($sort, $order)
+            ->limit($limit)
+            ->skip($offset);
+
+        if ($conditions) {
+            foreach ($conditions as $columnName => $value) {
+                $cursor->field($columnName)->equals($value);
+            }
+        }
+
+        return $cursor;
     }
 }

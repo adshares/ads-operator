@@ -54,6 +54,12 @@ interface DatabaseMigrationInterface
     public function addOrUpdateNode(Node $node): void;
 
     /**
+     * @param string $nodeId
+     * @return null|string
+     */
+    public function getNodeVersion(string $nodeId): ?string;
+
+    /**
      * @param Account $account
      * @param Node $node
      */

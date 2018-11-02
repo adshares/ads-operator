@@ -18,39 +18,40 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\UseCase\Transaction;
 
-use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
-
-/**
- * Class NodeRepository
- * @package Adshares\AdsOperator\Repository\Doctrine
- */
-class NodeRepository extends BaseRepository implements NodeRepositoryInterface
+class CommandResponse
 {
-    /**
-     * @return array
-     */
-    public function availableSortingFields(): array
+    public $address;
+
+    public $data;
+
+    public $fee;
+
+    public $hash;
+
+    public $msid;
+
+    public $time;
+
+    public $transactionId;
+
+    public function __construct(string $address, string $data, ?int $fee, string $hash, int $msid)
     {
-        return [
-            'id',
-            'msid',
-            'balance',
-            'version',
-        ];
+        $this->address = $address;
+        $this->data = $data;
+        $this->fee = $fee;
+        $this->hash = $hash;
+        $this->msid = $msid;
     }
 
-    /**
-     * @param string $nodeId
-     * @return Node
-     */
-    public function getNode(string $nodeId):? Node
+    public function setTime(\DateTime $time): void
     {
-        /** @var Node $node */
-        $node = $this->findOneBy(['id' => $nodeId]);
+        $this->time = $time;
+    }
 
-        return $node;
+    public function setTransactionId(?string $transactionId): void
+    {
+        $this->transactionId = $transactionId;
     }
 }

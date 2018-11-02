@@ -20,6 +20,7 @@
 
 namespace Adshares\AdsOperator\Document;
 
+use Adshares\AdsOperator\Document\Exception\AccountAlreadyExistsException;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -32,6 +33,8 @@ class User implements UserInterface
     private $newEmail;
 
     private $token;
+
+    private $accounts = [];
 
     private $password;
 
@@ -72,9 +75,32 @@ class User implements UserInterface
         $this->token = null;
     }
 
+    public function isMyAccount(string $address): bool
+    {
+        return in_array($address, $this->accounts);
+    }
+
+    public function addAccount(string $address)
+    {
+        if (in_array($address, $this->accounts)) {
+            throw new AccountAlreadyExistsException(sprintf(
+                'Address %s exists and belongs to the user %s',
+                $address,
+                $this->id
+            ));
+        }
+
+        $this->accounts[] = $address;
+    }
+
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getAccounts(): array
+    {
+        return $this->accounts;
     }
 
     public function getCreatedAt()

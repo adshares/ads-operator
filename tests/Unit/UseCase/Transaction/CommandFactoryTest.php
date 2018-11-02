@@ -18,39 +18,26 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Tests\Unit\UseCase\Transaction;
 
-use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
+use Adshares\Ads\Command\ChangeAccountKeyCommand;
+use Adshares\AdsOperator\UseCase\Exception\UnsupportedTransactionException;
+use Adshares\AdsOperator\UseCase\Transaction\CommandFactory;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Class NodeRepository
- * @package Adshares\AdsOperator\Repository\Doctrine
- */
-class NodeRepository extends BaseRepository implements NodeRepositoryInterface
+class CommandFactoryTest extends TestCase
 {
-    /**
-     * @return array
-     */
-    public function availableSortingFields(): array
+    public function testCreateCommandWhenTypeIsUnsupported()
     {
-        return [
-            'id',
-            'msid',
-            'balance',
-            'version',
-        ];
+        $this->expectException(UnsupportedTransactionException::class);
+        $type = 'unsupportedType';
+
+        CommandFactory::create($type, []);
     }
 
-    /**
-     * @param string $nodeId
-     * @return Node
-     */
-    public function getNode(string $nodeId):? Node
+    public function testCreateWhenChangeAccountKeyType()
     {
-        /** @var Node $node */
-        $node = $this->findOneBy(['id' => $nodeId]);
-
-        return $node;
+        $type = 'changeAccountKey';
+        $this->assertInstanceOf(ChangeAccountKeyCommand::class, CommandFactory::create($type, []));
     }
 }

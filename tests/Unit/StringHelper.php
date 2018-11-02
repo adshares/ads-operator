@@ -18,39 +18,20 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository\Doctrine;
+namespace Adshares\AdsOperator\Tests\Unit;
 
-use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Repository\NodeRepositoryInterface;
-
-/**
- * Class NodeRepository
- * @package Adshares\AdsOperator\Repository\Doctrine
- */
-class NodeRepository extends BaseRepository implements NodeRepositoryInterface
+class StringHelper
 {
-    /**
-     * @return array
-     */
-    public function availableSortingFields(): array
+    public static function randHex($length)
     {
-        return [
-            'id',
-            'msid',
-            'balance',
-            'version',
-        ];
-    }
+        $characters = 'abcdefABCDEF0123456789';
+        $charactersLength = strlen($characters);
+        $randomString = '';
 
-    /**
-     * @param string $nodeId
-     * @return Node
-     */
-    public function getNode(string $nodeId):? Node
-    {
-        /** @var Node $node */
-        $node = $this->findOneBy(['id' => $nodeId]);
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
 
-        return $node;
+        return $randomString;
     }
 }

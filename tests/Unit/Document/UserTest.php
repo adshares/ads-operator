@@ -20,6 +20,7 @@
 
 namespace Adshares\AdsOperator\Tests\Unit\Document;
 
+use Adshares\AdsOperator\Document\Exception\AccountAlreadyExistsException;
 use Adshares\AdsOperator\Document\Exception\InvalidEmailException;
 use Adshares\AdsOperator\Document\User;
 use PHPUnit\Framework\TestCase;
@@ -64,5 +65,32 @@ class UserTest extends TestCase
         $this->assertEquals('test@example.com', $user->getEmail());
         $this->assertNull($user->getNewEmail());
         $this->assertNull($user->getToken());
+    }
+
+    public function testAddAccountWhenDoesNotExist()
+    {
+        $address = '0001-00000000-9B6F';
+
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+        $user->addAccount($address);
+
+        $this->assertEquals([$address], $user->getAccounts());
+    }
+
+    public function testAddAccountWhenExists()
+    {
+        $this->expectException(AccountAlreadyExistsException::class);
+
+        $address = '0001-00000000-9B6F';
+
+        $email = 'valid@example.com';
+        $password = sha1('test');
+        $user = new User($email, $password);
+        $user->addAccount($address);
+        $user->addAccount($address);
+
+        $this->assertEquals([$address], $user->getAccounts());
     }
 }
