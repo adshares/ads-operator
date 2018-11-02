@@ -1,3 +1,6 @@
 Adshares\AdsOperator\Document\Node:
     exclusion_policy: ALL
     properties:
+        version:
+            expose: true
+            type: string
