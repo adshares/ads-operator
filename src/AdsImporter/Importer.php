@@ -104,8 +104,6 @@ class Importer
         $endTime = (int)$getMeResponse->getPreviousBlockTime()->format('U');
         $blockId = NumericalTransformation::decToHex($startTime);
 
-        $this->updateNodes();
-
         do {
             try {
                 $blockResponse = $this->client->getBlock($blockId);
@@ -130,6 +128,8 @@ class Importer
             $startTime += $this->blockSeqTime;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
+
+        $this->updateNodes();
 
         return $this->importerResult;
     }
@@ -171,11 +171,15 @@ class Importer
                 continue;
             }
 
+            $node->setVersion($this->databaseMigration->getNodeVersion($node->getId()));
+
             $this->updateAccounts($node);
 
             $this->databaseMigration->addOrUpdateNode($node);
             ++$this->importerResult->nodes;
         }
+
+        return;
     }
 
     /**

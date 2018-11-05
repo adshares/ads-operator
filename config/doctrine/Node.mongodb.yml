@@ -27,4 +27,6 @@ Adshares\AdsOperator\Document\Node:
             type: string
         status:
             type: int
+        version:
+            type: string
 
