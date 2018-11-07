@@ -11,6 +11,8 @@ Adshares\AdsOperator\Document\Account:
             type: string
         balance:
             type: int
+        messageCount:
+            type: int
         hash:
             type: string
         localChange:

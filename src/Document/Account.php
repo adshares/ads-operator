@@ -30,9 +30,31 @@ class Account extends \Adshares\Ads\Entity\Account
 
     protected $nodeId;
 
+    /**
+     * @var int
+     */
+    protected $messageCount;
+
     public function getId(): string
     {
         return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMessageCount(): int
+    {
+        return $this->messageCount;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+        $this->messageCount = $this->msid;
     }
 
     /**

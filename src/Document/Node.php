@@ -34,6 +34,11 @@ class Node extends \Adshares\Ads\Entity\Node
     protected $version;
 
     /**
+     * @var int
+     */
+    protected $messageCount;
+
+    /**
      * Node constructor.
      * @param string|null $id
      */
@@ -61,11 +66,28 @@ class Node extends \Adshares\Ads\Entity\Node
     }
 
     /**
+     * @return int
+     */
+    public function getMessageCount(): int
+    {
+        return $this->messageCount;
+    }
+
+    /**
      * @return bool
      */
     public function isSpecial(): bool
     {
         return $this->getId() === self::SPECIAL_NODE;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+        $this->messageCount = $this->msid;
     }
 
     /**

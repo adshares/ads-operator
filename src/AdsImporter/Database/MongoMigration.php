@@ -242,6 +242,7 @@ class MongoMigration implements DatabaseMigrationInterface
         $document = [
             '_id' => $node->getId(),
             'accountCount' => $node->getAccountCount(),
+            'messageCount' => $node->getMessageCount(),
             'balance' => $node->getBalance(),
             'hash' => $node->getHash(),
             'messageHash' => $node->getMessageHash(),
@@ -288,6 +289,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'pairedNode' => $account->getPairedNodeId(),
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
+            'messageCount' => $account->getMessageCount(),
             'hash' => $account->getHash(),
             'localChange' => $this->createMongoDate($account->getLocalChange()),
             'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
