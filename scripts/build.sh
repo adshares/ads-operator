@@ -21,7 +21,7 @@ fi
 
 envsubst < .env.dist | tee .env
 
-composer install --${APP_ENV}
+composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
 
 pecl install mongodb
 echo 'extension=mongodb.so' > /etc/php/7.2/mods-available/mongodb.ini
