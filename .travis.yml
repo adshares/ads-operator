@@ -11,9 +11,9 @@ env:
     - DRIVER_VERSION=1.5.0
     - SYMFONY_VERSION="4.0.*"
     - DOCKER_IMAGE=awlodarkiewicz/devops:build-latest
-    - HOST_PATH=/home/travis/build/adshares/adserver
-    - BUILD_PATH=/build/adserver
-    - BUILD_NAME=adserver_build
+    - HOST_PATH=/home/travis/build/adshares/ads-operator
+    - BUILD_PATH=/build/ads-operator
+    - BUILD_NAME=ads_operator_build
 
 # Cache composer packages so "composer install" is faster
 cache:
@@ -31,7 +31,7 @@ stages:
 
 jobs:
   include:
-    - state: test
+    - stage: test
       script:
         - |
           INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
@@ -79,7 +79,7 @@ jobs:
         - ./vendor/bin/behat
         # SonarQube
         - sonar-scanner
-    - state: build and install
+    - stage: build and install
       script:
         # Enable aliases for non-interactive shells
         - shopt -s expand_aliases
