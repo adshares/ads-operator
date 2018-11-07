@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 ${INSTALLATION_PATH}/bin/console doctrine:mongodb:schema:create
 
 TEMP_CRON_FILE=`mktemp`

@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 apt-get -qq -y install php7.2-fpm php-pear
 
 pecl install mongodb
