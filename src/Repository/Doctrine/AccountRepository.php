@@ -33,6 +33,9 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     {
         return [
             'id',
+            'nodeId',
+            'msid',
+            'balance',
             'time',
         ];
     }

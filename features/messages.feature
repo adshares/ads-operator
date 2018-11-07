@@ -332,7 +332,7 @@ Feature: Messages
     """
         {
           "code":400,
-          "message":"Sort value `test` is invalid. Only id, blockId values are supported."
+          "message":"Sort value `test` is invalid. Only id, blockId, nodeId, transactionCount, length, time values are supported."
         }
     """
 

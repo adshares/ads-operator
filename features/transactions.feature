@@ -603,7 +603,7 @@ Feature: Transactions
     """
         {
           "code":400,
-          "message":"Sort value `test` is invalid. Only id, blockId, type values are supported."
+          "message":"Sort value `test` is invalid. Only id, nodeId, blockId, messageId, type, size, amount, senderAddress, targetAddress, time values are supported."
         }
     """
 
