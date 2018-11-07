@@ -16,6 +16,6 @@ Adshares\Ads\Entity\Message:
         length:
             expose: true
             type: int
-        transactionCount:
+        time:
             expose: true
-            type: int
+            type: DateTime

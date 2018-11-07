@@ -139,6 +139,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'transactionCount' => $message->getTransactionCount(),
             'hash' => $message->getHash(),
             'length' => $message->getLength(),
+            'time' => $this->createMongoDate($message->getTime()),
         ];
 
         $this->messageCollection->update(['_id' => $message->getId()], $document, $this->mongoUpdateOptions);
