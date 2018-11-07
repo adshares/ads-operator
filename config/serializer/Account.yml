@@ -10,4 +10,7 @@ Adshares\AdsOperator\Document\Account:
         messageCount:
             expose: true
             type: int
+        transactionCount:
+            expose: true
+            type: int
 

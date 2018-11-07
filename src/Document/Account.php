@@ -35,6 +35,23 @@ class Account extends \Adshares\Ads\Entity\Account
      */
     protected $messageCount;
 
+    /**
+     * @var int
+     */
+    protected $transactionCount;
+
+    /**
+     * Account constructor.
+     * @param string|null $address
+     */
+    public function __construct(string $address = null)
+    {
+        if (null !== $address) {
+            $this->id = $address;
+            $this->address = $address;
+        }
+    }
+
     public function getId(): string
     {
         return $this->id;
@@ -46,6 +63,22 @@ class Account extends \Adshares\Ads\Entity\Account
     public function getMessageCount(): int
     {
         return $this->messageCount;
+    }
+
+    /**
+     * @param int $transactionCount
+     */
+    public function setTransactionCount(int $transactionCount)
+    {
+        $this->transactionCount = $transactionCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransactionCount(): int
+    {
+        return $this->transactionCount;
     }
 
     /**

@@ -243,6 +243,7 @@ class MongoMigration implements DatabaseMigrationInterface
             '_id' => $node->getId(),
             'accountCount' => $node->getAccountCount(),
             'messageCount' => $node->getMessageCount(),
+            'transactionCount' => $node->getTransactionCount(),
             'balance' => $node->getBalance(),
             'hash' => $node->getHash(),
             'messageHash' => $node->getMessageHash(),
@@ -278,6 +279,19 @@ class MongoMigration implements DatabaseMigrationInterface
     }
 
     /**
+     * @param string $nodeId
+     * @return int
+     */
+    public function getNodeTransactionCount(string $nodeId): int
+    {
+        $cursor = $this->transactionCollection->find([
+            'nodeId' => $nodeId,
+        ]);
+
+        return $cursor->count();
+    }
+
+    /**
      * @param Account $account
      * @param Node $node
      */
@@ -290,6 +304,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
             'messageCount' => $account->getMessageCount(),
+            'transactionCount' => $account->getTransactionCount(),
             'hash' => $account->getHash(),
             'localChange' => $this->createMongoDate($account->getLocalChange()),
             'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
@@ -301,6 +316,19 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         $this->accountCollection->update(['_id' => $account->getAddress()], $document, $this->mongoUpdateOptions);
+    }
+
+    /**
+     * @param string $accountId
+     * @return int
+     */
+    public function getAccountTransactionCount(string $accountId): int
+    {
+        $cursor = $this->accountTransactionCollection->find([
+            'accountId' => $accountId,
+        ]);
+
+        return $cursor->count();
     }
 
     /**

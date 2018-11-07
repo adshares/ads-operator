@@ -34,6 +34,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             'id',
             'nodeId',
             'messageCount',
+            'transactionCount',
             'balance',
             'time',
         ];

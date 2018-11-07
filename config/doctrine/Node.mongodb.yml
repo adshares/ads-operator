@@ -11,6 +11,8 @@ Adshares\AdsOperator\Document\Node:
             type: int
         messageCount:
             type: int
+        transactionCount:
+            type: int
         balance:
             type: int
         hash:

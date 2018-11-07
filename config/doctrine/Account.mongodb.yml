@@ -13,6 +13,8 @@ Adshares\AdsOperator\Document\Account:
             type: int
         messageCount:
             type: int
+        transactionCount:
+            type: int
         hash:
             type: string
         localChange:

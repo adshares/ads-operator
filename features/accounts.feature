@@ -439,7 +439,7 @@ Feature: Accounts
     """
         {
           "code": 400,
-          "message":"Sort value `test` is invalid. Only id, nodeId, messageCount, balance, time values are supported."
+          "message":"Sort value `test` is invalid. Only id, nodeId, messageCount, transactionCount, balance, time values are supported."
         }
     """
 
