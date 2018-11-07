@@ -1,6 +1,6 @@
 # Project language
 language: php
-sudo: false
+sudo: required
 
 # PHP version
 php:
@@ -10,6 +10,10 @@ env:
   global:
     - DRIVER_VERSION=1.5.0
     - SYMFONY_VERSION="4.0.*"
+    - DOCKER_IMAGE=awlodarkiewicz/devops:build-latest
+    - HOST_PATH=/home/travis/build/adshares/adserver
+    - BUILD_PATH=/build/adserver
+    - BUILD_NAME=adserver_build
 
 # Cache composer packages so "composer install" is faster
 cache:
@@ -19,66 +23,88 @@ cache:
 
 services:
   - mongodb
+  - docker
 
-addons:
-  sonarcloud:
-    organization: "adshares-github"
-    token:
-      secure: "Dk2MQCW5SDUS6QWwoNc+4cmIgbWiHamavBWbgn/jaCHlBhOs62Zq+Ru+3CztK0B44E8lweLWWj3Ugc6kBq6m2rC3ib+o/4wiN4kego+99EuOV9BxJFkyMhP4QCWCXw4qbylIsS7wlrRxTQ1wUtmHW5V2R3NhJhV7rQJWaPXN4/H0lazyPP6xKGOGRpB8WSwb02zN92G0lm/VOIvzn0HGBBS34TE6GVPr1Jap5cZ2nPuwS446rPdOmf5Uu+VLS0z0JC3tPUr6kzOW3R81TlP8x9DFJY4ijbfirrjnoyuNn+D1HvELgnQd8uSrb1MwSota8qRwOTD8L8frZ+tKCPQOhV6VyxyQeEwQggALNnHQPLbuGua6KMgl9qgbjYVaTijPOrRt5PlgiUFHDFPMBFa3J/DYwsGOaB4WOvsPjC76etugwNACgnteyCe3L2Vg4xU7Pd1CCzXQ4FXC593CcBf4R+CP1QWdej1Q/MP6n5KFGpvIJwAmcNWnBpqvH2HUEl2PDlg4JDEBOQVLRpO/zbzRJCnb1CFl4xFTZZ4s89liZNz2a+Nw9nRPlvRLGyof0HlTzcnOvykRw1i6sJUGaP1HbcaK6FPbE1K+X9ri1kL8H5cKzPNZ68PNdLaQG3Z3BJ/QiAEkbT8JHr/R2Qyh/YZyT6y1XvKkjA/40AXnx7A8JaI="
-    github_token:
-      secure: "WZwVh8X2UzQa/n0riLibSjgpAegEZsNbfIwv/BFJF/OAS+yuAzN9H9vekSFwC2KHvsDz9V2aJ0wBwamznNOgTa696qTvHGOWqzkPDDO4DnN+hEq20nXWGNwzXZ3YdONEjyN8cKIIvBCTijH9RN8AgFPundclib0KX66iOIkaj3KyijHgL+KBnI5OEAYzWVygoEF/zNJ2WrtinyrC3E8VXM2osFXXpTyDpS3/LA3x/zVQ4RaSnJjVdXbvfMM2C7PNs9UjZ+UKW4PeOOsH7M35p7XNmWxbR4mZ3FMdtswgOyQm/tL9n6qyBMwMi11rMSBCumHsa9XlNtUgIfAnau8fFH/dC7vrt8Z2TRAxtWQf6omHsyrjr+YrP71HFKAEcE1joSBT7EGUFtRH/KxglDVkulNywPCa9Pae2UjUIW/IJKGq4XJ4bw15kzVszACS9PRjf4G7dTdQA25ICWq0L3bbmX+2FcVgsBZPo6Bs8KTrXPbDaBJdjYW5ch5tzLJU+YCOAiFBper7mG2ebIjqSKdUumguiYjQMIOf3fEEPPT3lzxuTtSbE2liSingKUwef12CB2ot00sB5MpBqa522wmdd3XvvQGxa2yeEb/cJrenjpLvTD/vszT1LkVSAxUPRqRXXDg94Gs95A/6qHRx/ve7/+7FxmcXI4+DJRfaP+UF7c8="
+stages:
+  - test
+  - build and install
 
-before_script:
-  - echo 'date.timezone = "Europe/Warsaw"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-  - cp .env.travis .env
-  - sleep 10
+jobs:
+  include:
+    - state: test
+      script:
+        - |
+          INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+          # tpecl is a helper to compile and cache php extensions
+            tpecl () {
+                local ext_name=$1
+                local ext_so=$2
+                local ext_dir=$(php -r "echo ini_get('extension_dir');")
+                local ext_cache=~/php-ext/$(basename $ext_dir)/$ext_name
+                if [[ -e $ext_cache/$ext_so ]]; then
+                    echo extension = $ext_cache/$ext_so >> $INI
+                else
+                    mkdir -p $ext_cache
+                    echo yes | pecl install -f $ext_name &&
+                    cp $ext_dir/$ext_so $ext_cache
+                fi
+            }
+            export -f tpecl
+        - tpecl mongodb-${DRIVER_VERSION} mongodb.so
 
-before_install:
-  - |
-    INI=~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-    # tpecl is a helper to compile and cache php extensions
-      tpecl () {
-          local ext_name=$1
-          local ext_so=$2
-          local ext_dir=$(php -r "echo ini_get('extension_dir');")
-          local ext_cache=~/php-ext/$(basename $ext_dir)/$ext_name
-          if [[ -e $ext_cache/$ext_so ]]; then
-              echo extension = $ext_cache/$ext_so >> $INI
-          else
-              mkdir -p $ext_cache
-              echo yes | pecl install -f $ext_name &&
-              cp $ext_dir/$ext_so $ext_cache
-          fi
-      }
-      export -f tpecl
-  - tpecl mongodb-${DRIVER_VERSION} mongodb.so
+        - composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
+        - composer run-script install-codestandards
 
-# Install composer dependencies
-install:
-  - composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
-  - composer run-script install-codestandards
+        - echo 'date.timezone = "Europe/Warsaw"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+        - cp .env.travis .env
+        - sleep 10
 
-script:
-  # run server
-  - ./bin/console server:start
-  # SensioLabs Security Checker: checks security issues
-  - ./vendor/bin/security-checker security:check
-  # PHP Lint: check syntax errors in all PHP files
-  - ./vendor/bin/parallel-lint --no-colors --blame --exclude vendor .
-  # PHP_CodeSniffer: check PHP compatibility
-  - ./vendor/bin/phpcs -s --standard=PHPCompatibility src tests
-  # PHP_CodeSniffer: check PSR2 standard
-  - ./vendor/bin/phpcs -s --standard=PSR2 src tests
-  # PHP Static Analysis Tool
-  - ./vendor/bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src tests
-  # PHP unit tests
-  - alias php='php -dzend_extension=xdebug.so'
-  - alias phpunit='php ./vendor/bin/phpunit'
-  - phpunit --testsuit Unit
-  # Behat tests
-  - ./vendor/bin/behat
-  # SonarQube
-  - sonar-scanner
+        # run server
+        - ./bin/console server:start
+        # SensioLabs Security Checker: checks security issues
+        - ./vendor/bin/security-checker security:check
+        # PHP Lint: check syntax errors in all PHP files
+        - ./vendor/bin/parallel-lint --no-colors --blame --exclude vendor .
+        # PHP_CodeSniffer: check PHP compatibility
+        - ./vendor/bin/phpcs -s --standard=PHPCompatibility src tests
+        # PHP_CodeSniffer: check PSR2 standard
+        - ./vendor/bin/phpcs -s --standard=PSR2 src tests
+        # PHP Static Analysis Tool
+        - ./vendor/bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src tests
+        # PHP unit tests
+        - alias php='php -dzend_extension=xdebug.so'
+        - alias phpunit='php ./vendor/bin/phpunit'
+        - phpunit --testsuit Unit
+        # Behat tests
+        - ./vendor/bin/behat
+        # SonarQube
+        - sonar-scanner
+    - state: build and install
+      script:
+        # Enable aliases for non-interactive shells
+        - shopt -s expand_aliases
+        # Set alias - please note the missing quote you need to append.
+        - alias in_docker='docker exec $BUILD_NAME /bin/bash -c "cd $BUILD_PATH && '
+        ## Setup test environment
+        # Run docker container
+        - docker network create -d bridge test-network
+        - docker pull $DOCKER_IMAGE
+        - >
+          docker run -d
+          --mount type=bind,src=$HOST_PATH,dst=$BUILD_PATH
+          --network=test-network
+          -e TRAVIS=true
+          -e APP_ENV=test
+          -e APP_DEBUG=1
+          -e INSTALLATION_PATH=/var/www/ads-operator
+          --env-file=$HOST_PATH/.env.travis
+          --name $BUILD_NAME
+          $DOCKER_IMAGE
+          sleep infinity
+        # Run pre-build
+        - in_docker /bin/bash scripts/pre-build.sh"
+        # Run build script
+        - in_docker /bin/bash scripts/build.sh"
 
 # After a build, send email notification with the build results
 notifications:
@@ -88,3 +114,11 @@ notifications:
       secure: "IaQb1b75JgGP9GICERECLKNrWOrekKcJdkjXBC8fFXXt71Wn1dBanj3zFovC4uhCcULP1zbBVjaahcubT0wPJ+DefGVXpFHnoM+m26oBnbR3BGBW/bd6AtXIF8vYohsbJPhkz7lXqkDW07qz6eCgdZpmyRp96HE5hKE0jQY3se3Vlo/wx3QcF+TBnkmiUKn+JcJ/9dbi8ZaIq+h/xCS72RMV7hAADCDKQyD+mEFoZgEqdq+AkkWTNbN/vG7f06PlvQMKorDr1ySVZJ6UgmCbSYYOIOPwKmkEgS/uDqo7bM16gwOJ4WHCd24+Ecl5Ai+5Wi56+Zk3kQm7R3g0IahWWQLhr9OS2zm1Ju+h3dv/vlEDqJcC0feXsqLuxwdxf0UMBS/gH5LpgO2jJyCwNJ4sSV+YVaON+tNZ6YadwOZzK0iu4Er1hkC/Ek5K4enVwnQReJq2/DwPxGjoyHhcwMGeMl1pkzLAEuVrb7P+AVcPBMJos/ehwiqOntlzvfeetClklG4sJ6jOZxhB319bDoJNJvpzJblCgIvH3en9VKUqfKPRgWHgYGpzSZM6kdY9VrCFXYOLBZd3PexISSj67Fi2P+NWimszusrKC+RpqJMNLffsXnWoQnH7EqhqCEU5YPkCsxREYfYk0gqy9axDXn0k86/mspQJ5f16aWgeDDGuMNQ="
     on_success: change
     on_failure: always
+
+addons:
+  sonarcloud:
+    organization: "adshares-github"
+    token:
+      secure: "Dk2MQCW5SDUS6QWwoNc+4cmIgbWiHamavBWbgn/jaCHlBhOs62Zq+Ru+3CztK0B44E8lweLWWj3Ugc6kBq6m2rC3ib+o/4wiN4kego+99EuOV9BxJFkyMhP4QCWCXw4qbylIsS7wlrRxTQ1wUtmHW5V2R3NhJhV7rQJWaPXN4/H0lazyPP6xKGOGRpB8WSwb02zN92G0lm/VOIvzn0HGBBS34TE6GVPr1Jap5cZ2nPuwS446rPdOmf5Uu+VLS0z0JC3tPUr6kzOW3R81TlP8x9DFJY4ijbfirrjnoyuNn+D1HvELgnQd8uSrb1MwSota8qRwOTD8L8frZ+tKCPQOhV6VyxyQeEwQggALNnHQPLbuGua6KMgl9qgbjYVaTijPOrRt5PlgiUFHDFPMBFa3J/DYwsGOaB4WOvsPjC76etugwNACgnteyCe3L2Vg4xU7Pd1CCzXQ4FXC593CcBf4R+CP1QWdej1Q/MP6n5KFGpvIJwAmcNWnBpqvH2HUEl2PDlg4JDEBOQVLRpO/zbzRJCnb1CFl4xFTZZ4s89liZNz2a+Nw9nRPlvRLGyof0HlTzcnOvykRw1i6sJUGaP1HbcaK6FPbE1K+X9ri1kL8H5cKzPNZ68PNdLaQG3Z3BJ/QiAEkbT8JHr/R2Qyh/YZyT6y1XvKkjA/40AXnx7A8JaI="
+    github_token:
+      secure: "WZwVh8X2UzQa/n0riLibSjgpAegEZsNbfIwv/BFJF/OAS+yuAzN9H9vekSFwC2KHvsDz9V2aJ0wBwamznNOgTa696qTvHGOWqzkPDDO4DnN+hEq20nXWGNwzXZ3YdONEjyN8cKIIvBCTijH9RN8AgFPundclib0KX66iOIkaj3KyijHgL+KBnI5OEAYzWVygoEF/zNJ2WrtinyrC3E8VXM2osFXXpTyDpS3/LA3x/zVQ4RaSnJjVdXbvfMM2C7PNs9UjZ+UKW4PeOOsH7M35p7XNmWxbR4mZ3FMdtswgOyQm/tL9n6qyBMwMi11rMSBCumHsa9XlNtUgIfAnau8fFH/dC7vrt8Z2TRAxtWQf6omHsyrjr+YrP71HFKAEcE1joSBT7EGUFtRH/KxglDVkulNywPCa9Pae2UjUIW/IJKGq4XJ4bw15kzVszACS9PRjf4G7dTdQA25ICWq0L3bbmX+2FcVgsBZPo6Bs8KTrXPbDaBJdjYW5ch5tzLJU+YCOAiFBper7mG2ebIjqSKdUumguiYjQMIOf3fEEPPT3lzxuTtSbE2liSingKUwef12CB2ot00sB5MpBqa522wmdd3XvvQGxa2yeEb/cJrenjpLvTD/vszT1LkVSAxUPRqRXXDg94Gs95A/6qHRx/ve7/+7FxmcXI4+DJRfaP+UF7c8="
