@@ -17,6 +17,8 @@ Adshares\AdsOperator\Document\Message:
             type: string
         transactionCount:
             type: int
+        time:
+            type: date
 
 
 

@@ -34,8 +34,15 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     {
         return [
             'id',
+            'nodeId',
             'blockId',
+            'messageId',
             'type',
+            'size',
+            'amount',
+            'senderAddress',
+            'targetAddress',
+            'time',
         ];
     }
 

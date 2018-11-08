@@ -172,6 +172,7 @@ class Importer
             }
 
             $node->setVersion($this->databaseMigration->getNodeVersion($node->getId()));
+            $node->setTransactionCount($this->databaseMigration->getNodeTransactionCount($node->getId()));
 
             $this->updateAccounts($node);
 
@@ -192,6 +193,7 @@ class Importer
 
         /** @var Account $account */
         foreach ($accounts as $account) {
+            $account->setTransactionCount($this->databaseMigration->getAccountTransactionCount($account->getAddress()));
             $this->databaseMigration->addOrUpdateAccount($account, $node);
             ++$this->importerResult->accounts;
         }
