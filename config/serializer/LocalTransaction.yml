@@ -1,0 +1,24 @@
+Adshares\AdsOperator\Document\LocalTransaction:
+  exclusion_policy: ALL
+  properties:
+    id:
+      expose: true
+      type: string
+    transactionId:
+      expose: true
+      type: string
+    type:
+      expose: true
+      type: string
+    hash:
+      expose: true
+      type: string
+    msid:
+      expose: true
+      type: string
+    data:
+      expose: true
+      type: string
+    fee:
+      expose: true
+      type: int

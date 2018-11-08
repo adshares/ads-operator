@@ -20,3 +20,5 @@ Adshares\AdsOperator\Document\Transaction\ConnectionTransaction:
             type: string
         port:
             type: int
+        version:
+            type: string

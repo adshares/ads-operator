@@ -36,8 +36,11 @@ class NodeRepository extends BaseRepository implements NodeRepositoryInterface
     {
         return [
             'id',
-            'msid',
+            'accountCount',
+            'messageCount',
+            'transactionCount',
             'balance',
+            'version',
         ];
     }
 

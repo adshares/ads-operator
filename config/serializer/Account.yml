@@ -7,4 +7,10 @@ Adshares\AdsOperator\Document\Account:
         nodeId:
             expose: true
             type: string
+        messageCount:
+            expose: true
+            type: int
+        transactionCount:
+            expose: true
+            type: int
 

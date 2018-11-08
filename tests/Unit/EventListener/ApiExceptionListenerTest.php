@@ -23,6 +23,7 @@ namespace Adshares\AdsOperator\Tests\Unit\EventListener;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\EventListener\ApiExceptionListener;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\NullLogger;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -42,16 +43,13 @@ final class ApiExceptionListenerTest extends TestCase
             ->method('getException')
             ->willReturn($exception);
 
-        $listener = new ApiExceptionListener('prod');
+        $listener = new ApiExceptionListener('prod', new NullLogger());
         $listener->onKernelException($event);
     }
 
     public function testApiExceptionListenerWhenExceptionInternalErrorOccurs(): void
     {
         $exception = $this->createMock(\Exception::class);
-        $exception
-            ->expects($this->exactly(0))
-            ->method('getMessage');
 
         $event = $this->createMock(GetResponseForExceptionEvent::class);
         $event
@@ -59,7 +57,7 @@ final class ApiExceptionListenerTest extends TestCase
             ->method('getException')
             ->willReturn($exception);
 
-        $listener = new ApiExceptionListener('prod');
+        $listener = new ApiExceptionListener('prod', new NullLogger());
         $listener->onKernelException($event);
     }
 
@@ -73,7 +71,7 @@ final class ApiExceptionListenerTest extends TestCase
             ->method('getException')
             ->willReturn($exception);
 
-        $listener = new ApiExceptionListener('dev');
+        $listener = new ApiExceptionListener('dev', new NullLogger());
         $listener->onKernelException($event);
     }
 }

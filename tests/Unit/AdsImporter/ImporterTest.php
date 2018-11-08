@@ -63,7 +63,7 @@ final class ImporterTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        $accounts = [new Account(), new Account(), new Account()];
+        $accounts = [new Account('01'), new Account('02'), new Account('03')];
         $block = new Block('1', [new Node('1'), new Node('2'), new Node('3'), new Node('4'), new Node('0000')], 4);
 
         $accountsResponse = $this->createMock(GetAccountsResponse::class);
@@ -189,6 +189,52 @@ final class ImporterTest extends TestCase
         $this->assertEquals(4, $importer->getResult()->nodes);
     }
 
+    public function testUpdateNodesVersion(): void
+    {
+        $version = '0.0.1';
+
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->exactly(4))
+            ->method('getNodeVersion')
+            ->willReturn($version);
+
+        $database
+            ->expects($this->exactly(4))
+            ->method('addOrUpdateNode')
+            ->with($this->callback(
+                function (Node $node) use ($version) {
+                    return $node->getVersion() === $version;
+                }
+            ));
+
+        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
+        $this->invokeMethod($importer, 'updateNodes');
+    }
+
+    public function testUpdateNodesTransactionCount(): void
+    {
+        $count = 123;
+
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->exactly(4))
+            ->method('getNodeTransactionCount')
+            ->willReturn($count);
+
+        $database
+            ->expects($this->exactly(4))
+            ->method('addOrUpdateNode')
+            ->with($this->callback(
+                function (Node $node) use ($count) {
+                    return $node->getTransactionCount() === $count;
+                }
+            ));
+
+        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
+        $this->invokeMethod($importer, 'updateNodes');
+    }
+
     public function testUpdateAccountsWhenClientReturnsAccounts(): void
     {
         $database = $this->createMock(DatabaseMigrationInterface::class);
@@ -207,6 +253,35 @@ final class ImporterTest extends TestCase
 
         $this->invokeMethod($importer, 'updateAccounts', [$node]);
         $this->assertEquals(3, $importer->getResult()->accounts);
+    }
+
+    public function testUpdateAccountTransactionCount(): void
+    {
+        $count = 123;
+
+        $database = $this->createMock(DatabaseMigrationInterface::class);
+        $database
+            ->expects($this->exactly(3))
+            ->method('getAccountTransactionCount')
+            ->willReturn($count);
+
+        $database
+            ->expects($this->exactly(3))
+            ->method('addOrUpdateAccount')
+            ->with($this->callback(
+                function (Account $account) use ($count) {
+                    return $account->getTransactionCount() === $count;
+                }
+            ));
+
+        $node = $this->createMock(Node::class);
+        $node
+            ->expects($this->once())
+            ->method('getId')
+            ->willReturn(12);
+
+        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_SEQ_TIME);
+        $this->invokeMethod($importer, 'updateAccounts', [$node]);
     }
 
     public function testAddMessagesForBlockWhenTwoMessagesAndSixTransactionsExist()

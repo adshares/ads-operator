@@ -139,6 +139,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'transactionCount' => $message->getTransactionCount(),
             'hash' => $message->getHash(),
             'length' => $message->getLength(),
+            'time' => $this->createMongoDate($message->getTime()),
         ];
 
         $this->messageCollection->update(['_id' => $message->getId()], $document, $this->mongoUpdateOptions);
@@ -241,6 +242,8 @@ class MongoMigration implements DatabaseMigrationInterface
         $document = [
             '_id' => $node->getId(),
             'accountCount' => $node->getAccountCount(),
+            'messageCount' => $node->getMessageCount(),
+            'transactionCount' => $node->getTransactionCount(),
             'balance' => $node->getBalance(),
             'hash' => $node->getHash(),
             'messageHash' => $node->getMessageHash(),
@@ -250,10 +253,42 @@ class MongoMigration implements DatabaseMigrationInterface
             'port' => $node->getPort(),
             'publicKey' => $node->getPublicKey(),
             'status' => $node->getStatus(),
+            'version' => $node->getVersion(),
 
         ];
 
         $this->nodeCollection->update(['_id' => $node->getId()], $document, $this->mongoUpdateOptions);
+    }
+
+    /**
+     * @param string $nodeId
+     * @return null|string
+     */
+    public function getNodeVersion(string $nodeId): ?string
+    {
+        $cursor = $this->transactionCollection->find([
+            'type' => 'connection',
+            'nodeId' => $nodeId,
+        ])->sort(['_id' => -1])->limit(1);
+
+        foreach ($cursor as $connection) {
+            return $connection['version'] ?? null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $nodeId
+     * @return int
+     */
+    public function getNodeTransactionCount(string $nodeId): int
+    {
+        $cursor = $this->transactionCollection->find([
+            'nodeId' => $nodeId,
+        ]);
+
+        return $cursor->count();
     }
 
     /**
@@ -268,6 +303,8 @@ class MongoMigration implements DatabaseMigrationInterface
             'pairedNode' => $account->getPairedNodeId(),
             'address' => $account->getAddress(),
             'balance' => $account->getBalance(),
+            'messageCount' => $account->getMessageCount(),
+            'transactionCount' => $account->getTransactionCount(),
             'hash' => $account->getHash(),
             'localChange' => $this->createMongoDate($account->getLocalChange()),
             'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
@@ -279,6 +316,19 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         $this->accountCollection->update(['_id' => $account->getAddress()], $document, $this->mongoUpdateOptions);
+    }
+
+    /**
+     * @param string $accountId
+     * @return int
+     */
+    public function getAccountTransactionCount(string $accountId): int
+    {
+        $cursor = $this->accountTransactionCollection->find([
+            'accountId' => $accountId,
+        ]);
+
+        return $cursor->count();
     }
 
     /**

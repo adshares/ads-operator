@@ -43,6 +43,7 @@ class ConnectionTransaction extends BaseConnectionTransaction implements Arrayab
             'messageId' => $this->messageId,
             'ipAddress' => $this->ipAddress,
             'port' => $this->port,
+            'version' => $this->version,
         ];
     }
 }

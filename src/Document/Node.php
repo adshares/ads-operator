@@ -29,6 +29,21 @@ class Node extends \Adshares\Ads\Entity\Node
     const SPECIAL_NODE = '0000';
 
     /**
+     * @var string|null
+     */
+    protected $version;
+
+    /**
+     * @var int
+     */
+    protected $messageCount;
+
+    /**
+     * @var int
+     */
+    protected $transactionCount;
+
+    /**
      * Node constructor.
      * @param string|null $id
      */
@@ -40,11 +55,60 @@ class Node extends \Adshares\Ads\Entity\Node
     }
 
     /**
+     * @param string|null $version
+     */
+    public function setVersion(?string $version): void
+    {
+        $this->version = $version;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getVersion(): ?string
+    {
+        return $this->version;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMessageCount(): int
+    {
+        return $this->messageCount;
+    }
+
+    /**
+     * @param int $transactionCount
+     */
+    public function setTransactionCount(int $transactionCount)
+    {
+        $this->transactionCount = $transactionCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransactionCount(): int
+    {
+        return $this->transactionCount;
+    }
+
+    /**
      * @return bool
      */
     public function isSpecial(): bool
     {
         return $this->getId() === self::SPECIAL_NODE;
+    }
+
+    /**
+     * @param array $data
+     */
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+        $this->messageCount = $this->msid;
     }
 
     /**
