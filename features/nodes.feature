@@ -64,9 +64,9 @@ Feature: Nodes
           "port":80,
           "public_key":"6B541CA4AA9B7117AC4D2DB61E487C4CBB52D59554C5E20CCB19767C1DCA5212",
           "status":4,
+          "version":"0.0.4",
           "message_count":4,
-          "transaction_count":14,
-          "version":"0.0.4"
+          "transaction_count":14
         },
         {
           "account_count":3,
