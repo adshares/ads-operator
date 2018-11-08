@@ -787,8 +787,8 @@ Feature: Accounts
         "time":"2018-07-31T08:49:36+02:00",
         "id":"0001-00000001-8B4E",
         "node_id":"0001",
-        "message_count":8,
-        "transaction_count":18
+        "message_count":6,
+        "transaction_count":16
        }
      ]
    """

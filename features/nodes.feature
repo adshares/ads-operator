@@ -80,9 +80,9 @@ Feature: Nodes
           "port":80,
           "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
           "status":3,
+          "version":"0.0.3",
           "message_count":3,
-          "transaction_count":13,
-          "version":"0.0.3"
+          "transaction_count":13
         },
         {
           "account_count":2,
@@ -96,9 +96,9 @@ Feature: Nodes
           "port":80,
           "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
           "status":2,
+          "version":"0.0.2",
           "message_count":2,
-          "transaction_count":12,
-          "version":"0.0.2"
+          "transaction_count":12
         },
         {
           "account_count":1,
@@ -112,9 +112,9 @@ Feature: Nodes
           "port":80,
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "status":1,
+          "version":"0.0.1",
           "message_count":1,
-          "transaction_count":11,
-          "version":"0.0.1"
+          "transaction_count":11
         }
       ]
     """
@@ -183,9 +183,9 @@ Feature: Nodes
           "port":80,
           "public_key":"6B541CA4AA9B7117AC4D2DB61E487C4CBB52D59554C5E20CCB19767C1DCA5212",
           "status":4,
+          "version":"0.0.4",
           "message_count":4,
-          "transaction_count":14,
-          "version":"0.0.4"
+          "transaction_count":14
         },
         {
           "account_count":5,
@@ -226,9 +226,9 @@ Feature: Nodes
           "port":80,
           "public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
           "status":1,
+          "version":"0.0.1",
           "message_count":1,
-          "transaction_count":11,
-          "version":"0.0.1"
+          "transaction_count":11
         },
         {
           "account_count":2,
@@ -242,9 +242,9 @@ Feature: Nodes
           "port":80,
           "public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
           "status":2,
+          "version":"0.0.2",
           "message_count":2,
-          "transaction_count":12,
-          "version":"0.0.2"
+          "transaction_count":12
         }
       ]
     """
