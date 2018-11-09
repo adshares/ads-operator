@@ -4,3 +4,9 @@ Adshares\AdsOperator\Document\Node:
         version:
             expose: true
             type: string
+        messageCount:
+            expose: true
+            type: int
+        transactionCount:
+            expose: true
+            type: int
