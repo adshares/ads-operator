@@ -103,6 +103,8 @@ jobs:
           --name $BUILD_NAME
           $DOCKER_IMAGE
           sleep infinity
+
+        - in_docker apt-get -qq update"
         # Run pre-build
         - in_docker /bin/bash scripts/pre-build.sh"
         # Run build script
