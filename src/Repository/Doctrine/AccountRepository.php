@@ -22,7 +22,6 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Repository\AccountRepositoryInterface;
-use Doctrine\ODM\MongoDB\MongoDBException;
 
 class AccountRepository extends BaseRepository implements AccountRepositoryInterface
 {
@@ -33,6 +32,10 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
     {
         return [
             'id',
+            'nodeId',
+            'messageCount',
+            'transactionCount',
+            'balance',
             'time',
         ];
     }

@@ -9,6 +9,10 @@ Adshares\AdsOperator\Document\Node:
             type: string
         accountCount:
             type: int
+        messageCount:
+            type: int
+        transactionCount:
+            type: int
         balance:
             type: int
         hash:

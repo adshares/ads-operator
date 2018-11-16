@@ -33,6 +33,10 @@ class MessageRepository extends BaseRepository implements MessageRepositoryInter
         return [
             'id',
             'blockId',
+            'nodeId',
+            'transactionCount',
+            'length',
+            'time'
         ];
     }
 

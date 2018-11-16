@@ -34,6 +34,3 @@ Adshares\Ads\Entity\Node:
         status:
             expose: true
             type: int
-        version:
-            expose: true
-            type: string
