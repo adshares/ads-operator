@@ -37,6 +37,8 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
             'transactionCount',
             'balance',
             'time',
+            'localChange',
+            'remoteChange',
         ];
     }
 
