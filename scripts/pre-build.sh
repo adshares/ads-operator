@@ -5,7 +5,8 @@ set -e
 # Ubuntu 18.04 only
 
 # Install dependencies for composer operations
-apt-get -qq -y install php7.2-cli php7.2-curl php7.2-zip php7.2-xdebug php7.2-gd unzip php-pear
+apt-get -qq -y --no-install-recommends install \
+    php7.2-cli php7.2-curl php7.2-zip php7.2-xdebug php7.2-gd unzip php-pear php7.2-dev
 
 # Get composer
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
