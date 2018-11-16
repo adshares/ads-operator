@@ -2,6 +2,12 @@
 
 set -e
 
+# Install mongo
+
+mv mongodb.so /usr/lib/php/20170718/mongodb.so
+echo 'extension=mongodb.so' > /etc/php/7.2/mods-available/mongodb.ini
+phpenmod mongodb
+
 ${INSTALLATION_PATH}/bin/console doctrine:mongodb:schema:create
 
 TEMP_CRON_FILE=`mktemp`

@@ -13,7 +13,7 @@ if [ ! -v TRAVIS ]; then
   git clone \
     --depth=1 \
     https://github.com/adshares/ads-operator.git \
-    --branch ${ADS_OPERATOR_BRANCH} \
+    --branch ${BUILD_BRANCH} \
     ${BUILD_PATH}/build
 
   cd ${BUILD_PATH}/build
@@ -26,3 +26,5 @@ echo 'extension=mongodb.so' > /etc/php/7.2/mods-available/mongodb.ini
 phpenmod mongodb
 
 composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
+
+cp /usr/lib/php/*/mongodb.so .
