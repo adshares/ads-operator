@@ -147,10 +147,19 @@ class MongoMigration implements DatabaseMigrationInterface
 
     /**
      * @param Block $block
-     * @return void
+     * @param int $blockSeqTime
      */
-    public function addBlock(Block $block): void
+    public function addBlock(Block $block, int $blockSeqTime): void
     {
+        try {
+            $endTime = clone $block->getTime();
+            $endTime->add(
+                new \DateInterval(sprintf('PT%dS', $blockSeqTime))
+            );
+        } catch (\Exception $e) {
+            $endTime = null;
+        }
+
         $document = [
             '_id' => $block->getId(),
             'dividendBalance' => $block->getDividendBalance(),
@@ -163,6 +172,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'vipHash' => $block->getVipHash(),
             'nodeCount' => $block->getNodeCount(),
             'time' => $this->createMongoDate($block->getTime()),
+            'endTime' => $this->createMongoDate($endTime),
             'voteYes' => $block->getVoteYes(),
             'voteNo' => $block->getVoteNo(),
             'voteTotal' => $block->getVoteTotal(),
@@ -356,6 +366,6 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private function createMongoDate(\DateTime $date): UTCDateTime
     {
-        return new UTCDateTime((int)$date->format('U')*1000);
+        return new UTCDateTime((int)$date->format('U') * 1000);
     }
 }

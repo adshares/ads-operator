@@ -117,7 +117,7 @@ class Importer
                     $block->setTransactionCount($blockTransactions);
                 }
 
-                $this->databaseMigration->addBlock($block);
+                $this->databaseMigration->addBlock($block, $this->blockSeqTime);
                 ++$this->importerResult->blocks;
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
