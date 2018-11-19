@@ -535,7 +535,7 @@ Feature: Blocks
     """
         {
           "code":400,
-          "message":"Sort value `test` is invalid. Only id, time, messageCount, nodeCount, transactionCount values are supported."
+          "message":"Sort value `test` is invalid. Only id, time, endTime, messageCount, nodeCount, transactionCount values are supported."
         }
     """
 
