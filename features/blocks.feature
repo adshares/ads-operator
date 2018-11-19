@@ -5,7 +5,7 @@ Feature: Blocks
 
   Background:
     Given "blocks" exist in application:
-      | id       | dividendBalance | dividendPay | messageCount | nodhash                                                          | minhash                                                          | msghash                                                          | nowhash                                                          | oldhash                                                          | viphash                                                          | nodeCount | time                          | endTime | voteYes | voteNo | voteTotal | transactionCount |
+      | id       | dividendBalance | dividendPay | messageCount | nodhash                                                          | minhash                                                          | msghash                                                          | nowhash                                                          | oldhash                                                          | viphash                                                          | nodeCount | time                          | endTime                       | voteYes | voteNo | voteTotal | transactionCount |
       | 1B6180E0 | 1               | true        | 2            | 6C2CD43316AAA1E3A8577182A1F06BB85F5EBB9388A584F788151CF08AF204E7 | 6C2CD43316AAA1E3A8577182A1F06BB85F5EBB9388A584F788151CF08AF204E7 | 211B6D3AFBB6B9B452498BB489FBCFC958374C0586A2898E2D76901D87AC6638 | DCBFF04691248935A3E3AE2E8C68DB07CCE6F357157491C2A8C3A01B215D42CA | 9EF5CBE09BA6D0A0D2C43856DCCB03A94DB0A05A740C11E6744A033005D39703 | 2A4831F1459C42E2CCF5C4E202C3301F94C381B6FB253DFED21DD015180D9507 | 3         | 2018-08-01T11:44:00.000+02:00 | 2018-08-01T11:52:32.000+02:00 | 4       | 5      | 6         | 7                |
       | 2B6180E0 | 2               | true        | 3            | 73A5C92FA5142599B1C9863B43E026AFEFA6B57AEE8D189241C7F50C90BA5122 | 73A5C92FA5142599B1C9863B43E026AFEFA6B57AEE8D189241C7F50C90BA5122 | D2AC1F590F52BF409111E2D7EAF46E2514D8A03ABBEFF0D1CD21DBDF0C25FFE3 | BFACA42C051F87BD312D1DDF044D5C18DAAEDF47563214D3C107E688FD5BF29A | 442F8958E2066CB218398D68439ABBB438B6EBC28747D818D7088EFB91ED0020 | AB925153616AC066E5FD6D549CC610AD7DDC6844A8C3DFC5293ED234FA166D05 | 4         | 2018-08-01T11:44:00.000+02:00 | 2018-08-01T11:52:32.000+02:00 | 5       | 6      | 7         | 8                |
       | 3B6180E0 | 3               | true        | 4            | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363 | B72283ECE416404D412A7BD175B94973C51E2CA6613ADCB3486D1C1B114D1D90 | 35657662CE38CDE131BD18F1538C1B1D8FC710A108FBFC9D5A00AB88EB9EB041 | F8605F33263967A55BB95926943492925B31B1E932604D2DD7EECC9C9CD66FFF | AA40B94D9AF14B331221DCBE7B5CA4F7D20B6055747FA06A65E7522684C9C8FA | 5         | 2018-08-01T11:44:00.000+02:00 | 2018-08-01T11:52:32.000+02:00 | 6       | 7      | 8         | 9                |
@@ -37,7 +37,7 @@ Feature: Blocks
           "vote_total":11,
           "vote_yes":9,
           "transaction_count":12,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"500000000000",
@@ -56,7 +56,7 @@ Feature: Blocks
           "vote_total":10,
           "vote_yes":8,
           "transaction_count":11,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"400000000000",
@@ -75,7 +75,7 @@ Feature: Blocks
           "vote_total":9,
           "vote_yes":7,
           "transaction_count":10,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"300000000000",
@@ -94,7 +94,7 @@ Feature: Blocks
           "vote_total":8,
           "vote_yes":6,
           "transaction_count":9,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"200000000000",
@@ -113,7 +113,7 @@ Feature: Blocks
           "vote_total":7,
           "vote_yes":5,
           "transaction_count":8,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"100000000000",
@@ -132,7 +132,7 @@ Feature: Blocks
           "vote_total":6,
           "vote_yes":4,
           "transaction_count":7,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         }
       ]
     """
@@ -162,7 +162,7 @@ Feature: Blocks
           "vote_total":11,
           "vote_yes":9,
           "transaction_count":12,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"500000000000",
@@ -181,7 +181,7 @@ Feature: Blocks
           "vote_total":10,
           "vote_yes":8,
           "transaction_count":11,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"400000000000",
@@ -200,7 +200,7 @@ Feature: Blocks
           "vote_total":9,
           "vote_yes":7,
           "transaction_count":10,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         }
       ]
     """
@@ -231,7 +231,7 @@ Feature: Blocks
             "vote_total":6,
             "vote_yes":4,
             "transaction_count":7,
-            "endTime":"2018-08-01T11:52:32+02:00"
+            "end_time":"2018-08-01T11:52:32+02:00"
            },
            {
             "dividend_balance":"200000000000",
@@ -250,7 +250,7 @@ Feature: Blocks
             "vote_total":7,
             "vote_yes":5,
             "transaction_count":8,
-            "endTime":"2018-08-01T11:52:32+02:00"
+            "end_time":"2018-08-01T11:52:32+02:00"
            },
            {
             "dividend_balance":"300000000000",
@@ -269,7 +269,7 @@ Feature: Blocks
             "vote_total":8,
             "vote_yes":6,
             "transaction_count":9,
-            "endTime":"2018-08-01T11:52:32+02:00"
+            "end_time":"2018-08-01T11:52:32+02:00"
            }
       ]
     """
@@ -299,7 +299,7 @@ Feature: Blocks
           "vote_total":11,
           "vote_yes":9,
           "transaction_count":12,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          },
          {
           "dividend_balance":"500000000000",
@@ -318,7 +318,7 @@ Feature: Blocks
           "vote_total":10,
           "vote_yes":8,
           "transaction_count":11,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          }
       ]
     """
@@ -349,7 +349,7 @@ Feature: Blocks
           "vote_total":11,
           "vote_yes":9,
           "transaction_count":12,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          },
          {
           "dividend_balance":"500000000000",
@@ -368,7 +368,7 @@ Feature: Blocks
           "vote_total":10,
           "vote_yes":8,
           "transaction_count":11,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          }
       ]
     """
@@ -399,7 +399,7 @@ Feature: Blocks
           "vote_total":6,
           "vote_yes":4,
           "transaction_count":7,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          },
          {
           "dividend_balance":"200000000000",
@@ -418,7 +418,7 @@ Feature: Blocks
           "vote_total":7,
           "vote_yes":5,
           "transaction_count":8,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
          }
       ]
     """
@@ -450,7 +450,7 @@ Feature: Blocks
           "vote_total":10,
           "vote_yes":8,
           "transaction_count":11,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"600000000000",
@@ -469,7 +469,7 @@ Feature: Blocks
           "vote_total":11,
           "vote_yes":9,
           "transaction_count":12,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         }
       ]
     """
@@ -502,7 +502,7 @@ Feature: Blocks
           "vote_total":8,
           "vote_yes":6,
           "transaction_count":9,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         },
         {
           "dividend_balance":"400000000000",
@@ -521,7 +521,7 @@ Feature: Blocks
           "vote_total":9,
           "vote_yes":7,
           "transaction_count":10,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         }
       ]
     """
@@ -601,7 +601,7 @@ Feature: Blocks
           "vote_total":6,
           "vote_yes":4,
           "transaction_count":7,
-          "endTime":"2018-08-01T11:52:32+02:00"
+          "end_time":"2018-08-01T11:52:32+02:00"
         }
     """
 
