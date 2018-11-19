@@ -156,6 +156,7 @@ class MongoMigration implements DatabaseMigrationInterface
             $endTime->add(
                 new \DateInterval(sprintf('PT%dS', $blockSeqTime))
             );
+            $endTime = $this->createMongoDate($endTime);
         } catch (\Exception $e) {
             $endTime = null;
         }
@@ -172,7 +173,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'vipHash' => $block->getVipHash(),
             'nodeCount' => $block->getNodeCount(),
             'time' => $this->createMongoDate($block->getTime()),
-            'endTime' => $this->createMongoDate($endTime),
+            'endTime' => $endTime,
             'voteYes' => $block->getVoteYes(),
             'voteNo' => $block->getVoteNo(),
             'voteTotal' => $block->getVoteTotal(),
