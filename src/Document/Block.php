@@ -32,6 +32,13 @@ class Block extends \Adshares\Ads\Entity\Block
     protected $transactionCount = 0;
 
     /**
+     * Block end time
+     *
+     * @var \DateTime
+     */
+    protected $endTime;
+
+    /**
      * Block constructor.
      * @param string|null $id
      * @param array $nodes
@@ -66,6 +73,14 @@ class Block extends \Adshares\Ads\Entity\Block
     public function getTransactionCount(): int
     {
         return $this->transactionCount;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getEndTime(): \DateTime
+    {
+        return $this->endTime;
     }
 
     /**
