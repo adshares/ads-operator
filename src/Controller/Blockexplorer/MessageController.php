@@ -169,6 +169,18 @@ class MessageController extends ApiController
      *              @SWG\Items(ref=@Model(type=Transaction::class))
      *          )
      *      ),
+     *      @SWG\Parameter(
+     *          name="messageId",
+     *          in="path",
+     *          type="string",
+     *          description="Message Id (hexadecimal number, e.g. 0001:00000001)"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="hideConnections",
+     *          in="query",
+     *          type="bool",
+     *          description="The field used to hide connect transactions"
+     *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
@@ -192,12 +204,6 @@ class MessageController extends ApiController
      *          in="query",
      *          type="integer",
      *          description="The field used to specify transactions offset"
-     *      ),
-     *      @SWG\Parameter(
-     *          name="accountId",
-     *          in="path",
-     *          type="string",
-     *          description="Message Id (hexadecimal number, e.g. 0001:00000001)"
      *      )
      * )
      *
@@ -217,9 +223,11 @@ class MessageController extends ApiController
         $order = $this->getOrder($request);
         $limit = $this->getLimit($request);
         $offset = $this->getOffset($request);
+        $hideConnections = (bool)$request->get('hideConnections', false);
 
         $transactions = $this->transactionRepository->getTransactionsByMessageId(
             $messageId,
+            $hideConnections,
             $sort,
             $order,
             $limit,

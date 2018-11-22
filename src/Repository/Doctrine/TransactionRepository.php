@@ -47,6 +47,18 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     }
 
     /**
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @param array $conditions
+     * @return array
+     */
+    public function fetchList(string $sort, string $order, int $limit, int $offset, array $conditions = []): array {
+        return $this->getTransactions($conditions, true, $sort, $order, $limit, $offset);
+    }
+
+    /**
      * @param string $transactionId
      * @return AbstractTransaction|null
      * @throws \Doctrine\ODM\MongoDB\LockException
@@ -61,19 +73,28 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     }
 
     /**
+     * @param array $conditions
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
      * @param int $offset
-     * @param array $conditions
      * @return array
      */
-    public function fetchList(string $sort, string $order, int $limit, int $offset, ?array $conditions = []): array
-    {
+    public function getTransactions(
+        array $conditions,
+        bool $hideConnections,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array {
         $results = [];
 
         $cursor = $this->createBuilderForList($sort, $order, $limit, $offset, $conditions);
-        $cursor->field('type')->notEqual('connection');
+        if ($hideConnections) {
+            $cursor->field('type')->notEqual('connection');
+        }
 
         try {
             $data = $cursor
@@ -81,8 +102,8 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
                 ->execute()
                 ->toArray();
 
-            foreach ($data as $node) {
-                $results[] = $node;
+            foreach ($data as $transaction) {
+                $results[] = $transaction;
             }
         } catch (MongoDBException $ex) {
             return [];
@@ -92,7 +113,12 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $accountId
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
      */
     public function getTransactionsByAccountId(
         string $accountId,
@@ -131,6 +157,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
 
     /**
      * @param string $messageId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -139,33 +166,18 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      */
     public function getTransactionsByMessageId(
         string $messageId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,
         int $offset
     ): array {
-        $results = [];
-
-        $cursor = $this->createBuilderForList($sort, $order, $limit, $offset, ['messageId' => $messageId]);
-
-        try {
-            $data = $cursor
-                ->getQuery()
-                ->execute()
-                ->toArray();
-
-            foreach ($data as $node) {
-                $results[] = $node;
-            }
-        } catch (MongoDBException $ex) {
-            return [];
-        }
-
-        return $results;
+        return $this->getTransactions(['messageId' => $messageId], $hideConnections, $sort, $order, $limit, $offset);
     }
 
     /**
      * @param string $nodeId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -174,16 +186,18 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      */
     public function getTransactionsByNodeId(
         string $nodeId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,
         int $offset
     ): array {
-        return $this->fetchList($sort, $order, $limit, $offset, ['nodeId' => $nodeId]);
+        return $this->getTransactions(['nodeId' => $nodeId], $hideConnections, $sort, $order, $limit, $offset);
     }
 
     /**
      * @param string $blockId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -192,12 +206,13 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      */
     public function getTransactionsByBlockId(
         string $blockId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,
         int $offset
     ): array {
-        return $this->fetchList($sort, $order, $limit, $offset, ['blockId' => $blockId]);
+        return $this->getTransactions(['blockId' => $blockId], $hideConnections, $sort, $order, $limit, $offset);
     }
 
     /**
