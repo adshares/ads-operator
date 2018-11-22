@@ -11,7 +11,7 @@ Feature: Transactions
       | 0003:00000021:0000 | 1C7F0400 | 0001:00000001 | 0003   | broadcast       | 21   | 0000000000000000000000000000000000000000000000000000000000000021 | 0000000000000000000000000000000000000000000000000000000000000021 | 0003:00000021  | 0003 | 0021      | 2018-07-31T08:49:36.000+02:00 | 0021 |
     Given "connectionTransaction" exist in application:
       | id                 | blockId  | messageId     | nodeId | type            | size | ipAddress    | port |
-      | 0001:00000002:0000 | 2A7F0400 | 0001:00000002 | 0001   | connection      | 02   | 192.168.1.2  | 80   |
+      | 0001:00000002:0000 | 7C7F0400 | 0001:00000002 | 0001   | connection      | 02   | 192.168.1.2  | 80   |
       | 0002:00000012:0000 | 2B7F0400 | 0002:00000012 | 0002   | connection      | 12   | 192.168.1.12 | 80   |
       | 0003:00000022:0000 | 2C7F0400 | 0003:00000022 | 0003   | connection      | 22   | 192.168.1.22 | 80   |
     Given "emptyTransaction" exist in application:
@@ -86,12 +86,68 @@ Feature: Transactions
           "user":27,
           "wire_count":0,
           "wires":[]
+        },
+        {
+          "block_id":"7C7F0400",
+          "id":"0001:00000002:0000",
+          "message_id":"0001:00000002",
+          "node_id":"0001",
+          "type":"connection",
+          "size":2,
+          "ip_address":"192.168.1.2",
+          "port":80
+        }
+     ]
+   """
+
+  Scenario: List transactions by block id without connections
+    Given I want to get the list of "blockexplorer/blocks/7C7F0400/transactions"
+    And I want to hide connections
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+     [
+        {
+          "block_id":"7C7F0400",
+          "id":"0004:00000037:0000",
+          "message_id":"0004:00000037",
+          "node_id":"0004",
+          "type":"send_many",
+          "size":37,
+          "msg_id":"4",
+          "node":4,
+          "sender_address":"0004-00000037-0000",
+          "sender_fee":9223372036854775807,
+          "signature":"0037",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":37,
+          "wire_count":0,
+          "wires":[]
+        },
+        {
+          "block_id":"7C7F0400",
+          "id":"0003:00000027:0000",
+          "message_id":"0003:00000027",
+          "node_id":"0003",
+          "type":"send_many",
+          "size":27,
+          "msg_id":"3",
+          "node":3,
+          "sender_address":"0003-00000027-0000",
+          "sender_fee":9223372036854775807,
+          "signature":"0027",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":27,
+          "wire_count":0,
+          "wires":[]
         }
      ]
    """
 
   Scenario: List transactions by block id
     Given I want to get the list of "blockexplorer/blocks/7C7F0400/transactions"
+    And I want to hide connections
     And I want to limit to 1
     And I want to offset to 1
     When I request resource
@@ -121,6 +177,7 @@ Feature: Transactions
 
   Scenario: List transactions by block id
     Given I want to get the list of "blockexplorer/blocks/7C7F0400/transactions"
+    And I want to hide connections
     And I want to sort by "id"
     And I want to order by "asc"
     When I request resource
