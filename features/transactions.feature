@@ -48,6 +48,7 @@ Feature: Transactions
 
   Scenario: List all available transaction without sort and pagination
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     When I request resource
     Then the response status code should be 200
     And the response should contain:
@@ -399,6 +400,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 4
     And I want to order by "asc"
     When I request resource
@@ -466,6 +468,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by id
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 2
     And I want to sort by "id"
     When I request resource
@@ -511,6 +514,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by id
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 2
     And I want to sort by "block_id"
     When I request resource
@@ -555,6 +559,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with limit, offset and sort by id asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 2
     And I want to offset to 1
     And I want to sort by "id"
@@ -700,6 +705,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 0
     And I want to sort by "type"
@@ -771,6 +777,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 3
     And I want to sort by "type"
@@ -830,6 +837,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 6
     And I want to sort by "type"
@@ -866,8 +874,55 @@ Feature: Transactions
       ]
     """
 
+  Scenario: List all available transactions with sort by asc and with connections
+    Given I want to get the list of "blockexplorer/transactions"
+    And I want to limit to 3
+    And I want to offset to 6
+    And I want to sort by "type"
+    And I want to order by "asc"
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+
+    Given "connectionTransaction" exist in application:
+        """
+      [
+        {
+          "block_id":"2A7F0400",
+          "id":"0001:00000002:0000",
+          "message_id":"0001:00000002",
+          "node_id":"0001",
+          "type":"connection",
+          "size":2,
+          "ip_address":"192.168.1.2",
+          "port":80
+        },
+        {
+          "block_id":"2B7F0400",
+          "id":"0001:00000012:0000",
+          "message_id":"0001:00000012",
+          "node_id":"0002",
+          "type":"connection",
+          "size":12,
+          "ip_address":"192.168.1.12",
+          "port":80
+        },
+        {
+          "block_id":"2C7F0400",
+          "id":"0001:00000022:0000",
+          "message_id":"0001:00000022",
+          "node_id":"0003",
+          "type":"connection",
+          "size":22,
+          "ip_address":"192.168.1.22",
+          "port":80
+        }
+      ]
+    """
+
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 9
     And I want to sort by "type"
@@ -921,6 +976,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 4
     And I want to offset to 12
     And I want to sort by "type"
@@ -1003,6 +1059,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 16
     And I want to sort by "type"
@@ -1076,6 +1133,7 @@ Feature: Transactions
 
   Scenario: List all available transactions with sort by asc
     Given I want to get the list of "blockexplorer/transactions"
+    And I want to hide connections
     And I want to limit to 3
     And I want to offset to 19
     And I want to sort by "type"
