@@ -883,8 +883,6 @@ Feature: Transactions
     When I request resource
     Then the response status code should be 200
     And the response should contain:
-
-    Given "connectionTransaction" exist in application:
         """
       [
         {
