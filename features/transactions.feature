@@ -898,7 +898,7 @@ Feature: Transactions
         {
           "block_id":"2B7F0400",
           "id":"0002:00000012:0000",
-          "message_id":"0001:00000012",
+          "message_id":"0002:00000012",
           "node_id":"0002",
           "type":"connection",
           "size":12,
@@ -908,7 +908,7 @@ Feature: Transactions
         {
           "block_id":"2C7F0400",
           "id":"0003:00000022:0000",
-          "message_id":"0001:00000022",
+          "message_id":"0003:00000022",
           "node_id":"0003",
           "type":"connection",
           "size":22,
