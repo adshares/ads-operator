@@ -54,7 +54,13 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @param array $conditions
      * @return array
      */
-    public function fetchList(string $sort, string $order, int $limit, int $offset, array $conditions = []): array {
+    public function fetchList(
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset,
+        array $conditions = []
+    ): array {
         return $this->getTransactions($conditions, true, $sort, $order, $limit, $offset);
     }
 
