@@ -260,6 +260,18 @@ class BlockController extends ApiController
      *              @SWG\Items(ref=@Model(type=Transaction::class))
      *          )
      *      ),
+     *      @SWG\Parameter(
+     *          name="blockId",
+     *          in="path",
+     *          type="string",
+     *          description="Block Id (hexadecimal number, e.g. 5B758BC0)"
+     *      ),
+     *      @SWG\Parameter(
+     *          name="hideConnections",
+     *          in="query",
+     *          type="bool",
+     *          description="The field used to hide connect transactions"
+     *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
@@ -283,12 +295,6 @@ class BlockController extends ApiController
      *          in="query",
      *          type="integer",
      *          description="The field used to specify transactions offset"
-     *      ),
-     *      @SWG\Parameter(
-     *          name="blockId",
-     *          in="path",
-     *          type="string",
-     *          description="Block Id (hexadecimal number, e.g. 5B758BC0)"
      *      )
      * )
      *
@@ -308,9 +314,11 @@ class BlockController extends ApiController
         $order = $this->getOrder($request);
         $limit = $this->getLimit($request);
         $offset = $this->getOffset($request);
+        $hideConnections = (bool)$request->get('hideConnections', false);
 
         $transactions = $this->transactionRepository->getTransactionsByBlockId(
             $blockId,
+            $hideConnections,
             $sort,
             $order,
             $limit,

@@ -59,6 +59,12 @@ class TransactionController extends ApiController
      *              @SWG\Items(ref=@Model(type=Transaction::class))
      *          )
      *      ),
+     *      @SWG\Parameter(
+     *          name="hideConnections",
+     *          in="query",
+     *          type="bool",
+     *          description="The field used to hide connect transactions"
+     *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
@@ -90,7 +96,24 @@ class TransactionController extends ApiController
      */
     public function listAction(Request $request): Response
     {
-        return $this->response($this->serializer->serialize($this->getList($request), 'json'), Response::HTTP_OK);
+        $this->validateRequest($request, $this->repository->availableSortingFields());
+
+        $sort = $this->getSort($request);
+        $order = $this->getOrder($request);
+        $limit = $this->getLimit($request);
+        $offset = $this->getOffset($request);
+        $hideConnections = (bool)$request->get('hideConnections', true);
+
+        $transactions = $this->repository->getTransactions(
+            [],
+            $hideConnections,
+            $sort,
+            $order,
+            $limit,
+            $offset
+        );
+
+        return $this->response($this->serializer->serialize($transactions, 'json'), Response::HTTP_OK);
     }
 
 
