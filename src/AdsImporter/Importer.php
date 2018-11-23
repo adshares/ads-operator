@@ -26,6 +26,7 @@ use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
 use Adshares\Ads\Response\GetMessageResponse;
@@ -228,7 +229,7 @@ class Importer
                 ++$this->importerResult->messages;
 
                 if ($transactions) {
-                    $this->addTransactionsFromMessage($transactions);
+                    $this->addTransactionsFromMessage($message, $transactions);
                     $blockTransactionsCount += $transactionsCount;
                 }
             }
@@ -256,14 +257,17 @@ class Importer
     }
 
     /**
+     * @param Message $message
      * @param array $transactions
      */
-    private function addTransactionsFromMessage(array $transactions): void
+    private function addTransactionsFromMessage(Message $message, array $transactions): void
     {
         /** @var ArrayableInterface $transaction */
         foreach ($transactions as $transaction) {
+            if ($transaction instanceof ConnectionTransaction) {
+                $transaction->setTime($message->getTime());
+            }
             $this->databaseMigration->addTransaction($transaction);
-
             ++$this->importerResult->transactions;
         }
     }
