@@ -488,6 +488,8 @@ final class ImporterTest extends TestCase
             self::BLOCK_SEQ_TIME
         );
 
+        $message = new Message(0);
+
         $transactions = [
             $this->createMock(ArrayableInterface::class),
             $this->createMock(ArrayableInterface::class),
@@ -495,7 +497,7 @@ final class ImporterTest extends TestCase
             $this->createMock(ArrayableInterface::class),
         ];
 
-        $result = $this->invokeMethod($importer, 'addTransactionsFromMessage', [$transactions]);
+        $result = $this->invokeMethod($importer, 'addTransactionsFromMessage', [$message, $transactions]);
         $this->assertNull($result);
     }
 
