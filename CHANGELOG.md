@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Sorting nodes and accounts by last active time
 - Block end time
+- Hiding connect transactions
 
 ## [0.3.0] - 2018-11-08
 ### Added
