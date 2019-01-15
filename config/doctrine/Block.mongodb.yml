@@ -31,6 +31,8 @@ Adshares\AdsOperator\Document\Block:
             type: string
         time:
             type: date
+        endTime:
+            type: date
         voteNo:
             type: int
         voteYes:

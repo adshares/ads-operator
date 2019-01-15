@@ -37,6 +37,7 @@ class BlockRepository extends BaseRepository implements BlockRepositoryInterface
         return [
             'id',
             'time',
+            'endTime',
             'messageCount',
             'nodeCount',
             'transactionCount',

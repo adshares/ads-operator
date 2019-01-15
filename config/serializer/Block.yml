@@ -4,3 +4,6 @@ Adshares\AdsOperator\Document\Block:
         transactionCount:
             expose: true
             type: int
+        endTime:
+            expose: true
+            type: DateTime

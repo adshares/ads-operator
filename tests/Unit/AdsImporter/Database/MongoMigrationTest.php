@@ -102,7 +102,7 @@ class MongoMigrationTest extends TestCase
         $block = $this->createMock(Block::class);
 
         $mongoMigration = $this->createMongoMigrationInstance($this->connection);
-        $mongoMigration->addBlock($block);
+        $mongoMigration->addBlock($block, 32);
     }
 
 
