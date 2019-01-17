@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Block end time
 - Hiding connect transactions
 - Add time to connect transactions
+- Update Symfony/Security library
+- Add bcmath module (PHP)
 
 ## [0.3.0] - 2018-11-08
 ### Added

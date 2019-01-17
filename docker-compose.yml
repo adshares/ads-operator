@@ -30,4 +30,3 @@ services:
         container_name: ads-manager-mongo
         image: mongo:latest
         restart: always
-        restart: always
