@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add time to connect transactions
 - Update Symfony/Security library
 - Add bcmath module (PHP)
+- Coin info endpoint
 
 ## [0.3.0] - 2018-11-08
 ### Added

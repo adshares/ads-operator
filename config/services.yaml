@@ -46,6 +46,12 @@ services:
         calls:
             - [setSerializer, ['@jms_serializer']]
 
+    Adshares\AdsOperator\Controller\Blockexplorer\InfoController:
+        parent: Adshares\AdsOperator\Controller\ApiController
+        public: true
+        autowire: false
+        autoconfigure: false
+
     Adshares\AdsOperator\Controller\Blockexplorer\NodeController:
         parent: Adshares\AdsOperator\Controller\ApiController
         public: true

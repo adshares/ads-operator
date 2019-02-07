@@ -1,0 +1,6 @@
+Adshares\AdsOperator\Document\Info:
+    exclusion_policy: ALL
+    properties:
+        totalSupply:
+            expose: true
+            type: int
