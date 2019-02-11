@@ -51,6 +51,9 @@ services:
         public: true
         autowire: false
         autoconfigure: false
+        arguments:
+            $repository: '@Adshares\AdsOperator\Repository\Doctrine\InfoRepository'
+            $genesisTime: '%env(GENESIS_TIME)%'
 
     Adshares\AdsOperator\Controller\Blockexplorer\NodeController:
         parent: Adshares\AdsOperator\Controller\ApiController
@@ -154,6 +157,11 @@ services:
             $databaseName: '%env(MONGODB_DB)%'
             $logger: '@logger'
 
+    Adshares\AdsOperator\Repository\Doctrine\InfoRepository:
+        class: Doctrine\ODM\DocumentRepository
+        factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+        arguments: ['Adshares\AdsOperator\Document\Info']
+
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
         class: Doctrine\ODM\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
@@ -196,8 +204,10 @@ services:
             $databaseMigration: '@Adshares\AdsOperator\AdsImporter\Database\MongoMigration'
             $logger: '@logger'
             $totalSupply: '%env(TOTAL_SUPPLY)%'
+            $amountPrecision: '%env(AMOUNT_PRECISION)%'
             $genesisTime: '%env(GENESIS_TIME)%'
             $blockLength: '%env(BLOCK_LENGTH)%'
+            $nonCirculatingAccounts: '%env(NON_CIRCULATING_ACCOUNTS)%'
 
     Adshares\AdsOperator\Queue\QueueEngine:
       class: Adshares\AdsOperator\Queue\RabbitMQ

@@ -29,13 +29,143 @@ class Info
     /**
      * @var int
      */
-    protected $totalSupply = 38758206;
+    protected $genesisTime;
+
+    /**
+     * @var int
+     */
+    protected $blockLength;
+
+    /**
+     * @var string
+     */
+    protected $lastBlockId;
+
+    /**
+     * @var float
+     */
+    protected $totalSupply;
+
+    /**
+     * @var float
+     */
+    protected $circulatingSupply;
+
+    /**
+     * @var float
+     */
+    protected $unpaidDividend;
+
+    /**
+     * Info constructor.
+     * @param int|null $genesisTime
+     * @param int|null $blockLength
+     */
+    public function __construct(int $genesisTime = null, int $blockLength = null)
+    {
+        if (null !== $genesisTime) {
+            $this->genesisTime = $genesisTime;
+        }
+        if (null !== $blockLength) {
+            $this->blockLength = $blockLength;
+        }
+    }
 
     /**
      * @return int
      */
-    public function getTotalSupply(): int
+    public function getGenesisTime(): int
+    {
+        return $this->genesisTime;
+    }
+
+    /**
+     * @param int $genesisTime
+     */
+    public function setGenesisTime(int $genesisTime): void
+    {
+        $this->genesisTime = $genesisTime;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBlockLength(): int
+    {
+        return $this->blockLength;
+    }
+
+    /**
+     * @param int $blockLength
+     */
+    public function setBlockLength(int $blockLength): void
+    {
+        $this->blockLength = $blockLength;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastBlockId(): string
+    {
+        return $this->lastBlockId;
+    }
+
+    /**
+     * @param string $lastBlockId
+     */
+    public function setLastBlockId(string $lastBlockId): void
+    {
+        $this->lastBlockId = $lastBlockId;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalSupply(): float
     {
         return $this->totalSupply;
     }
+
+    /**
+     * @param float $totalSupply
+     */
+    public function setTotalSupply(float $totalSupply): void
+    {
+        $this->totalSupply = $totalSupply;
+    }
+
+    /**
+     * @return float
+     */
+    public function getCirculatingSupply(): float
+    {
+        return $this->circulatingSupply;
+    }
+
+    /**
+     * @param float $circulatingSupply
+     */
+    public function setCirculatingSupply(float $circulatingSupply): void
+    {
+        $this->circulatingSupply = $circulatingSupply;
+    }
+
+    /**
+     * @return float
+     */
+    public function getUnpaidDividend(): float
+    {
+        return $this->unpaidDividend;
+    }
+
+    /**
+     * @param float $unpaidDividend
+     */
+    public function setUnpaidDividend(float $unpaidDividend): void
+    {
+        $this->unpaidDividend = $unpaidDividend;
+    }
+
+
 }

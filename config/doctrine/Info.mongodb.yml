@@ -1,21 +1,20 @@
 Adshares\AdsOperator\Document\Info:
-    exclusion_policy: ALL
-    properties:
+    type: document
+    collection: info
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\InfoRepository
+    fields:
         genesisTime:
-            expose: true
+            id: true
+            strategy: NONE
             type: int
         blockLength:
-            expose: true
             type: int
         lastBlockId:
-            expose: true
             type: string
         totalSupply:
-            expose: true
             type: float
         circulatingSupply:
-            expose: true
             type: float
         unpaidDividend:
-            expose: true
             type: float
+

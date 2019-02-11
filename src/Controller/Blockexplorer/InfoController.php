@@ -22,14 +22,29 @@ namespace Adshares\AdsOperator\Controller\Blockexplorer;
 
 use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Document\Info;
+use Adshares\AdsOperator\Repository\InfoRepositoryInterface;
 use Swagger\Annotations as SWG;
 use Nelmio\ApiDocBundle\Annotation\Operation;
 use Nelmio\ApiDocBundle\Annotation\Model;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class InfoController extends ApiController
 {
+    /**
+     * @var int
+     */
+    protected $genesisTime;
+
+    /**
+     * NodeController constructor.
+     * @param InfoRepositoryInterface $repository
+     * @param int $genesisTime
+     */
+    public function __construct(InfoRepositoryInterface $repository, int $genesisTime) {
+        $this->repository = $repository;
+        $this->genesisTime = $genesisTime;
+    }
 
     /**
      * @Operation(
@@ -50,12 +65,15 @@ class InfoController extends ApiController
      *      ),
      * )
      *
-     * @param Request $request
      * @return Response
      */
-    public function showAction(Request $request): Response
+    public function showAction(): Response
     {
-        $info = new Info();
+        $info = $this->repository->getInfo($this->genesisTime);
+
+        if (!$info) {
+            throw new NotFoundHttpException(sprintf('The requested resource was not found'));
+        }
 
         return $this->response($this->serializer->serialize($info, 'json'), Response::HTTP_OK);
     }

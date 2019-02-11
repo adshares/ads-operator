@@ -21,6 +21,7 @@
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
 use Adshares\AdsOperator\Document\ArrayableInterface;
+use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
@@ -33,6 +34,12 @@ use Adshares\AdsOperator\Document\Message;
  */
 interface DatabaseMigrationInterface
 {
+
+    /**
+     * @param Info $info
+     */
+    public function addOrUpdateInfo(Info $info): void;
+
     /**
      * @param Message $message
      */
