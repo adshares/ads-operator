@@ -3,6 +3,11 @@ info:
     controller: Adshares\AdsOperator\Controller\Blockexplorer\InfoController::showAction
     methods: [GET]
 
+info_field:
+        path: /info/{field}
+        controller: Adshares\AdsOperator\Controller\Blockexplorer\InfoController::showFieldAction
+        methods: [GET]
+
 node_list:
     path: /nodes
     controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::listAction
