@@ -317,7 +317,6 @@ class Importer
         }
 
         $circulatingSupply = $supply;
-        var_dump($this->nonCirculatingAccounts);
         foreach ($this->nonCirculatingAccounts as $address) {
             /** @var Account $account */
             $account = $this->client->getAccount($address)->getAccount();
