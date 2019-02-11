@@ -60,12 +60,17 @@ class Importer
     /**
      * @var int
      */
+    private $totalSupply;
+
+    /**
+     * @var int
+     */
     private $genesisTime;
 
     /**
      * @var int
      */
-    private $blockSeqTime = 32;
+    private $blockLength = 32;
 
     /**
      * @var ImporterResult
@@ -77,21 +82,24 @@ class Importer
      * @param AdsClient $client
      * @param DatabaseMigrationInterface $databaseMigration
      * @param LoggerInterface $logger
+     * @param int $totalSupply
      * @param int $genesisTime
-     * @param int $blockSeqTime
+     * @param int $blockLength
      */
     public function __construct(
         AdsClient $client,
         DatabaseMigrationInterface $databaseMigration,
         LoggerInterface $logger,
+        int $totalSupply,
         int $genesisTime,
-        int $blockSeqTime
+        int $blockLength
     ) {
         $this->client = $client;
         $this->databaseMigration = $databaseMigration;
         $this->logger = $logger;
+        $this->totalSupply = $totalSupply;
         $this->genesisTime = $genesisTime;
-        $this->blockSeqTime = $blockSeqTime;
+        $this->blockLength = $blockLength;
         $this->importerResult = new ImporterResult();
     }
 
@@ -118,7 +126,7 @@ class Importer
                     $block->setTransactionCount($blockTransactions);
                 }
 
-                $this->databaseMigration->addBlock($block, $this->blockSeqTime);
+                $this->databaseMigration->addBlock($block, $this->blockLength);
                 ++$this->importerResult->blocks;
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
@@ -126,7 +134,7 @@ class Importer
                 }
             }
 
-            $startTime += $this->blockSeqTime;
+            $startTime += $this->blockLength;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
 

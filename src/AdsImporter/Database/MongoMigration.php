@@ -147,14 +147,14 @@ class MongoMigration implements DatabaseMigrationInterface
 
     /**
      * @param Block $block
-     * @param int $blockSeqTime
+     * @param int $blockLength
      */
-    public function addBlock(Block $block, int $blockSeqTime): void
+    public function addBlock(Block $block, int $blockLength): void
     {
         try {
             $endTime = clone $block->getTime();
             $endTime->add(
-                new \DateInterval(sprintf('PT%dS', $blockSeqTime))
+                new \DateInterval(sprintf('PT%dS', $blockLength))
             );
             $endTime = $this->createMongoDate($endTime);
         } catch (\Exception $e) {

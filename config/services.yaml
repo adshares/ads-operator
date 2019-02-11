@@ -195,8 +195,9 @@ services:
             $client: '@Vendor\Adshares\Ads\AdsClient'
             $databaseMigration: '@Adshares\AdsOperator\AdsImporter\Database\MongoMigration'
             $logger: '@logger'
+            $totalSupply: '%env(TOTAL_SUPPLY)%'
             $genesisTime: '%env(GENESIS_TIME)%'
-            $blockSeqTime: '%env(BLOCK_SEQ_TIME)%'
+            $blockLength: '%env(BLOCK_LENGTH)%'
 
     Adshares\AdsOperator\Queue\QueueEngine:
       class: Adshares\AdsOperator\Queue\RabbitMQ

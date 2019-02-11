@@ -40,9 +40,9 @@ interface DatabaseMigrationInterface
 
     /**
      * @param Block $block
-     * @param int $blockSeqTime
+     * @param int $blockLength
      */
-    public function addBlock(Block $block, int $blockSeqTime): void;
+    public function addBlock(Block $block, int $blockLength): void;
 
     /**
      * @param ArrayableInterface $transaction
