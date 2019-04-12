@@ -74,6 +74,8 @@ script:
   # PHP unit tests
   - alias php='php -dzend_extension=xdebug.so'
   - alias phpunit='php ./vendor/bin/phpunit'
+  - echo "COMPOSER "
+  - echo $COMPOSER_BIN_DIR
   - phpunit --version
   - phpunit --testsuit Unit
   # Behat tests
