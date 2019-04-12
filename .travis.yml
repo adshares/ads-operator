@@ -74,6 +74,7 @@ script:
   # PHP unit tests
   - alias php='php -dzend_extension=xdebug.so'
   - alias phpunit='php ./vendor/bin/phpunit'
+  - phpunit --version
   - phpunit --testsuit Unit
   # Behat tests
   - ./vendor/bin/behat
