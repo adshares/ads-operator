@@ -4,7 +4,7 @@ sudo: false
 
 # PHP version
 php:
-  - 7.1
+  - 7.2
 
 env:
   global:
@@ -75,8 +75,8 @@ script:
   # PHP unit tests
   - alias php='php -dzend_extension=xdebug.so'
   - alias phpunit='php ./vendor/bin/phpunit'
-  - echo "COMPOSER "
-  - echo $COMPOSER_BIN_DIR
+  - env
+  - ls -al ./vendor/bin
   - phpunit --version
   - phpunit --testsuit Unit
   # Behat tests
