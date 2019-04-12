@@ -49,9 +49,9 @@ final class ImporterTest extends TestCase
 {
     use PrivateMethodTrait;
 
-    const BLOCK_LENGTH = 32;
-    const GENESIS_TIME = 1531733300;
-    const PREVIOUS_BLOCK = 1531733396;
+    private const BLOCK_LENGTH = 32;
+    private const GENESIS_TIME = 1531733300;
+    private const PREVIOUS_BLOCK = 1531733396;
     /**
      *
      * `getBlock`: block with 4 nodes
@@ -60,7 +60,7 @@ final class ImporterTest extends TestCase
      */
     private $adsClient;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
     }
@@ -212,8 +212,11 @@ final class ImporterTest extends TestCase
             $this->adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $this->invokeMethod($importer, 'updateNodes');
@@ -223,7 +226,16 @@ final class ImporterTest extends TestCase
     {
         $database = $this->createMock(DatabaseMigrationInterface::class);
 
-        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_LENGTH);
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            0,
+            0,
+            time(),
+            self::BLOCK_LENGTH,
+            ''
+        );
 
         $this->invokeMethod($importer, 'updateNodes');
         $this->assertEquals(4, $importer->getResult()->nodes);
@@ -248,7 +260,16 @@ final class ImporterTest extends TestCase
                 }
             ));
 
-        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_LENGTH);
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            0,
+            0,
+            time(),
+            self::BLOCK_LENGTH,
+            ''
+        );
         $this->invokeMethod($importer, 'updateNodes');
     }
 
@@ -271,7 +292,16 @@ final class ImporterTest extends TestCase
                 }
             ));
 
-        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_LENGTH);
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            0,
+            0,
+            time(),
+            self::BLOCK_LENGTH,
+            ''
+        );
         $this->invokeMethod($importer, 'updateNodes');
     }
 
@@ -289,7 +319,15 @@ final class ImporterTest extends TestCase
             ->method('getId')
             ->willReturn(12);
 
-        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_LENGTH);
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            0,
+            0,
+            time(), self::BLOCK_LENGTH,
+            ''
+        );
 
         $this->invokeMethod($importer, 'updateAccounts', [$node]);
         $this->assertEquals(3, $importer->getResult()->accounts);
@@ -320,7 +358,17 @@ final class ImporterTest extends TestCase
             ->method('getId')
             ->willReturn(12);
 
-        $importer = new Importer($this->adsClient, $database, new NullLogger(), time(), self::BLOCK_LENGTH);
+        $importer = new Importer(
+            $this->adsClient,
+            $database,
+            new NullLogger(),
+            0,
+            0,
+            time(),
+            self::BLOCK_LENGTH,
+            ''
+        );
+
         $this->invokeMethod($importer, 'updateAccounts', [$node]);
     }
 
@@ -357,8 +405,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
@@ -396,8 +447,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
@@ -426,8 +480,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
@@ -451,8 +508,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             $logger,
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $result = $this->invokeMethod($importer, 'addMessagesFromBlock', [new Block('1')]);
@@ -479,8 +539,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $result = $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
@@ -505,8 +568,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             $logger,
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $this->invokeMethod($importer, 'getMessageResponse', [$messageId, new Block('1')]);
@@ -524,8 +590,11 @@ final class ImporterTest extends TestCase
             $this->adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             time(),
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $message = new Message(0);
@@ -578,8 +647,11 @@ final class ImporterTest extends TestCase
             $adsClient,
             $database,
             new NullLogger(),
+            0,
+            0,
             self::GENESIS_TIME,
-            self::BLOCK_LENGTH
+            self::BLOCK_LENGTH,
+            ''
         );
 
         $importer->import();
