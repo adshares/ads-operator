@@ -14,7 +14,7 @@ env:
 # Cache composer packages so "composer install" is faster
 cache:
   directories:
-    - ${HOME}/.composer2/cache/files
+    - ${HOME}/.composer/cache/files
     - ${HOME}/php-ext
 
 services:
@@ -55,6 +55,7 @@ before_install:
 
 # Install composer dependencies
 install:
+  - composer clearcache
   - composer install
   - composer run-script install-codestandards
 
