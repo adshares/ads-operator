@@ -78,7 +78,7 @@ script:
   # Behat tests
   - ./vendor/bin/behat
   # SonarQube
-  - sonar-scanner
+  - sonar-scanner -X
 
 # After a build, send email notification with the build results
 notifications:
