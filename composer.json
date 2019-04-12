@@ -54,14 +54,13 @@
         "jakub-onderka/php-parallel-lint": "^1.0",
         "wimg/php-compatibility": "^8.1",
         "phpstan/phpstan": "^0.10",
-        "sensiolabs/security-checker": "^4.1",
+        "sensiolabs/security-checker": "dev-master",
         "symfony/dotenv": "^4.1",
         "phpstan/phpstan-phpunit": "^0.10.0",
         "phpstan/phpstan-doctrine": "^0.10.0",
         "behat/behat": "^3.4",
         "behat/symfony2-extension": "^2.1",
-        "symfony/web-server-bundle": "^4.1",
-        "roave/security-advisories": "dev-master"
+        "symfony/web-server-bundle": "^4.1"
     },
     "config": {
         "preferred-install": {
