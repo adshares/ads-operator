@@ -69,7 +69,8 @@
         "optimize-autoloader": true,
         "platform": {
             "ext-mongo": "1.6.16"
-        }
+        },
+        "bin-dir": "vendor/bin"
     },
     "autoload": {
         "psr-4": {
