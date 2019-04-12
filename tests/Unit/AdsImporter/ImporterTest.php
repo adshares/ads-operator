@@ -64,7 +64,7 @@ final class ImporterTest extends TestCase
     {
         parent::setUp();
 
-        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+//        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
     }
 
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
@@ -162,6 +162,8 @@ final class ImporterTest extends TestCase
 
     public function testUpdateNodesWhenGetBlockCannotBeProceed(): void
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
         $this->expectException(AdsClientException::class);
 
         $adsClient = $this->adsClient;
@@ -190,6 +192,9 @@ final class ImporterTest extends TestCase
 
     public function testUpdateNodesWhenGetBlockCannotBeProceedAndBlockIsUnavailable()
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
+
         $adsClient = $this->adsClient;
         $adsClient
             ->expects($this->once())
@@ -226,6 +231,8 @@ final class ImporterTest extends TestCase
 
     public function testUpdateNodesWhereBlockReturnsNodes(): void
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
         $database = $this->createMock(DatabaseMigrationInterface::class);
 
         $importer = new Importer(
@@ -245,6 +252,8 @@ final class ImporterTest extends TestCase
 
     public function testUpdateNodesVersion(): void
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
         $version = '0.0.1';
 
         $database = $this->createMock(DatabaseMigrationInterface::class);
@@ -277,6 +286,8 @@ final class ImporterTest extends TestCase
 
     public function testUpdateNodesTransactionCount(): void
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
         $count = 123;
 
         $database = $this->createMock(DatabaseMigrationInterface::class);
@@ -615,6 +626,8 @@ final class ImporterTest extends TestCase
 
     public function testImport(): void
     {
+        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
+
         $adsClient = $this->adsClient;
         $database = $this->createMock(DatabaseMigrationInterface::class);
         $messageIdsResponse = $this->createMock(GetMessageIdsResponse::class);

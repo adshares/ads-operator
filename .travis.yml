@@ -55,7 +55,6 @@ before_install:
 
 # Install composer dependencies
 install:
-  - composer clearcache
   - composer install
   - composer run-script install-codestandards
 
