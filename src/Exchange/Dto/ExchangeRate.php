@@ -20,12 +20,39 @@
 
 declare(strict_types=1);
 
-namespace Adshares\AdsOperator\Exchange\Provider\Client;
 
-use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
+namespace Adshares\AdsOperator\Exchange\Dto;
+
 use DateTime;
 
-interface ClientInterface
+class ExchangeRate
 {
-    public function fetchExchangeRate(DateTime $date): ExchangeRate;
+    /** @var DateTime */
+    private $date;
+    /** @var float */
+    private $rate;
+    /** @var string */
+    private $currency;
+
+    public function __construct(DateTime $date, float $rate, string $currency)
+    {
+        $this->date = $date;
+        $this->rate = $rate;
+        $this->currency = $currency;
+    }
+
+    public function getDate(): DateTime
+    {
+        return $this->date;
+    }
+
+    public function getRate(): float
+    {
+        return $this->rate;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
 }

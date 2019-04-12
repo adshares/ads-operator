@@ -23,10 +23,41 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Exchange\Provider;
 
+use Adshares\AdsOperator\Exchange\Provider\Client\ClientInterface;
+use Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko;
+use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
+use function array_key_exists;
+
 class Provider
 {
-    public static function create(string $providerName): ClientInterface
-    {
+    private const PROVIDER_LIST = [
+        'coin_gecko' => CoinGecko::class,
+    ];
 
+    private $providers;
+
+    public function __construct(iterable $providers)
+    {
+        $this->providers = $providers;
+    }
+
+    public function get(string $providerName): ClientInterface
+    {
+        if (array_key_exists($providerName, self::PROVIDER_LIST)) {
+            return $this->getProvider($providerName);
+        }
+
+        throw new ProviderRuntimeException(sprintf('Provider %s is not supported.', $providerName));
+    }
+
+    private function getProvider(string $providerName): ClientInterface
+    {
+        foreach ($this->providers as $provider) {
+            if (get_class($provider) === self::PROVIDER_LIST[$providerName]) {
+                return $provider;
+            }
+        }
+
+        throw new ProviderRuntimeException(sprintf('Provider %s is not configured.', $providerName));
     }
 }

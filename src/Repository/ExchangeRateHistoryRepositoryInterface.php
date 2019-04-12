@@ -20,12 +20,14 @@
 
 declare(strict_types=1);
 
-namespace Adshares\AdsOperator\Exchange\Provider\Client;
 
-use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
-use DateTime;
+namespace Adshares\AdsOperator\Repository;
 
-interface ClientInterface
+use Adshares\AdsOperator\Document\ExchangeRateHistory;
+
+interface ExchangeRateHistoryRepositoryInterface
 {
-    public function fetchExchangeRate(DateTime $date): ExchangeRate;
+    public function fetchNewest(): ExchangeRateHistory;
+
+    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
 }

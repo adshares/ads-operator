@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Command;
 
+use Adshares\AdsOperator\UseCase\Exchange\UpdateExchangeRate;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,6 +36,15 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
     private const SUPPORTED_PROVIDERS = [
         self::COIN_GECKO
     ];
+    /** @var UpdateExchangeRate */
+    private $useCase;
+
+    public function __construct(UpdateExchangeRate $useCase)
+    {
+        $this->useCase = $useCase;
+
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -48,19 +59,19 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
                 'Which provider do you want to use',
                 self::COIN_GECKO
             )
-            ->setName('exchange:import')
+            ->setName('ops:exchange:import')
             ->setDescription('Importing exchange rate from provider');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
-        $provider = $input->getOption('provider');
+        $providerName = $input->getOption('provider');
 
-        if (!in_array($provider, self::SUPPORTED_PROVIDERS, true)) {
-            $output->writeln(sprintf('Provider `%s` is not supported.', $provider));
+        if (!in_array($providerName, self::SUPPORTED_PROVIDERS, true)) {
+            $output->writeln(sprintf('Provider `%s` is not supported.', $providerName));
         }
 
-        var_dump($provider);die();
+        $this->useCase->update(new DateTime(), $providerName);
     }
 }
 

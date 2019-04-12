@@ -20,12 +20,18 @@
 
 declare(strict_types=1);
 
-namespace Adshares\AdsOperator\Exchange\Provider\Client;
 
-use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
-use DateTime;
+namespace Adshares\AdsOperator\Tests\Unit\Exchange;
 
-interface ClientInterface
+use Adshares\AdsOperator\Exchange\Currency;
+use PHPUnit\Framework\TestCase;
+
+final class CurrencyTest extends TestCase
 {
-    public function fetchExchangeRate(DateTime $date): ExchangeRate;
+    public function testToString(): void
+    {
+        $currency = new Currency('PLN');
+
+        $this->assertEquals('PLN', $currency->toString());
+    }
 }

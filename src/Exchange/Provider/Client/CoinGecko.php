@@ -24,13 +24,82 @@ declare(strict_types=1);
 namespace Adshares\AdsOperator\Exchange\Provider\Client;
 
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
-use Adshares\AdsOperator\Exchange\Provider\ClientInterface;
 use DateTime;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
+use RuntimeException;
+use Symfony\Component\HttpFoundation\Response;
+use function json_decode;
 
 class CoinGecko implements ClientInterface
 {
+    /** @var string */
+    private $serviceUrl;
+    /** @var int */
+    private $timeout;
+    /** @var string */
+    private $id;
+    /** @var string */
+    private $currency;
+
+    public function __construct(string $serviceUrl, string $id, string $currency, int $timeout)
+    {
+        $this->serviceUrl = $serviceUrl;
+        $this->timeout = $timeout;
+        $this->id = $id;
+        $this->currency = $currency;
+    }
+
     public function fetchExchangeRate(DateTime $date): ExchangeRate
     {
-        // TODO: Implement fetchExchangeRate() method.
+        $client = new Client($this->requestParameters());
+
+        try {
+            $uri = sprintf('%s/simple/price?ids=%s&vs_currencies=%s', $this->serviceUrl, $this->id, $this->currency);
+            $response = $client->get($uri);
+        } catch (RequestException $exception) {
+            throw new RuntimeException(
+                sprintf('Could not connect to %s (%s).', $this->serviceUrl, $exception->getMessage()),
+                $exception->getCode(),
+                $exception
+            );
+        }
+
+        $statusCode = $response->getStatusCode();
+        $body = (string)$response->getBody();
+
+        $this->validateResponse($statusCode, $body);
+
+        $decoded = json_decode($body, true);
+
+        return new ExchangeRate($date, $decoded['adshares']['usd'], $this->currency);
+    }
+
+    private function requestParameters(?string $baseUrl = null): array
+    {
+        $params = [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Cache-Control' => 'no-cache',
+            ],
+            'timeout' => $this->timeout,
+        ];
+
+        if ($baseUrl) {
+            $params['base_uri'] = $baseUrl;
+        }
+
+        return $params;
+    }
+
+    private function validateResponse(int $statusCode, string $body): void
+    {
+        if ($statusCode !== Response::HTTP_OK) {
+            throw new RuntimeException(sprintf('Unexpected response code `%s`.', $statusCode));
+        }
+
+        if (empty($body)) {
+            throw new RuntimeException('Empty list');
+        }
     }
 }

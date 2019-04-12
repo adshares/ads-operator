@@ -1,0 +1,17 @@
+Adshares\AdsOperator\Document\ExchangeRateHistory:
+  type: document
+  collection: exchangeRateHistory
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\ExchangeRateHistoryRepository
+  fields:
+    id:
+      id: true
+      strategy: AUTO
+      type: string
+    date:
+      type: date
+    rate:
+      type: float
+    provider:
+      type: string
+    currency:
+      type: string

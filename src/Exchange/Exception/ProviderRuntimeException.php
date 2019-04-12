@@ -20,12 +20,10 @@
 
 declare(strict_types=1);
 
-namespace Adshares\AdsOperator\Exchange\Provider\Client;
+namespace Adshares\AdsOperator\Exchange\Exception;
 
-use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
-use DateTime;
+use RuntimeException;
 
-interface ClientInterface
+class ProviderRuntimeException extends RuntimeException
 {
-    public function fetchExchangeRate(DateTime $date): ExchangeRate;
 }
