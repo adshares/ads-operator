@@ -74,4 +74,3 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
         $this->useCase->update(new DateTime(), $providerName);
     }
 }
-

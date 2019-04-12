@@ -60,7 +60,8 @@ final class ImporterTest extends TestCase
      */
     private $adsClient;
 
-    public function setUp() {
+    protected function setUp()
+    {
         $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
     }
 
@@ -211,7 +212,10 @@ final class ImporterTest extends TestCase
             $this->adsClient,
             $database,
             new NullLogger(),
-            time(), self::BLOCK_LENGTH);
+            time(),
+            self::BLOCK_LENGTH
+        );
+
         $this->invokeMethod($importer, 'updateNodes');
     }
 
