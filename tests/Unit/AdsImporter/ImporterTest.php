@@ -62,6 +62,8 @@ final class ImporterTest extends TestCase
 
     protected function setUp(): void
     {
+        parent::setUp();
+
         $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
     }
 
@@ -325,7 +327,8 @@ final class ImporterTest extends TestCase
             new NullLogger(),
             0,
             0,
-            time(), self::BLOCK_LENGTH,
+            time(),
+            self::BLOCK_LENGTH,
             ''
         );
 

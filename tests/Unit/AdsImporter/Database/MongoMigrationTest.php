@@ -47,7 +47,7 @@ use Psr\Log\LoggerInterface;
 
 class MongoMigrationTest extends TestCase
 {
-    const DATABASE_NAME = 'db_test';
+    private const DATABASE_NAME = 'db_test';
 
     private $connection;
 
@@ -66,7 +66,7 @@ class MongoMigrationTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
