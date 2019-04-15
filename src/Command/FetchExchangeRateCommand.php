@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Command;
 
+use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
+use Adshares\AdsOperator\Exchange\Provider\Provider;
 use Adshares\AdsOperator\UseCase\Exchange\UpdateExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -33,9 +35,8 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
 {
     private const COIN_GECKO = 'coin_gecko';
 
-    private const SUPPORTED_PROVIDERS = [
-        self::COIN_GECKO
-    ];
+    private const SUPPORTED_PROVIDERS = Provider::PROVIDER_LIST;
+
     /** @var UpdateExchangeRate */
     private $useCase;
 
@@ -65,12 +66,19 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        $output->writeln('Starting importing an exchange rate.');
         $providerName = $input->getOption('provider');
 
-        if (!in_array($providerName, self::SUPPORTED_PROVIDERS, true)) {
+        if (!array_key_exists($providerName, self::SUPPORTED_PROVIDERS)) {
             $output->writeln(sprintf('Provider `%s` is not supported.', $providerName));
         }
 
-        $this->useCase->update(new DateTime(), $providerName);
+        try {
+            $this->useCase->update(new DateTime(), $providerName);
+        } catch (ProviderRuntimeException $exception) {
+            $output->writeln(sprintf('[Error] %s', $exception->getMessage()));
+        }
+
+        $output->writeln('Finished importing an exchange rate.');
     }
 }

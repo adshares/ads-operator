@@ -30,11 +30,11 @@ use function array_key_exists;
 
 class Provider
 {
-    private const PROVIDER_LIST = [
+    private $providers;
+
+    public const PROVIDER_LIST = [
         'coin_gecko' => CoinGecko::class,
     ];
-
-    private $providers;
 
     public function __construct(iterable $providers)
     {

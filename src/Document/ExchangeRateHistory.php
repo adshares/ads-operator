@@ -27,8 +27,9 @@ use DateTime;
 
 class ExchangeRateHistory
 {
+    /** @var string  */
     private $id;
-    
+    /** @var DateTime */
     private $date;
     /** @var float */
     private $rate;
@@ -54,9 +55,4 @@ class ExchangeRateHistory
     {
         return $this->rate;
     }
-
-//    public function setId(string $id): void
-//    {
-//        $this->id = $id;
-//    }
 }

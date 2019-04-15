@@ -28,7 +28,9 @@ use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use RuntimeException;
+use function strtolower;
 use Symfony\Component\HttpFoundation\Response;
+use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
 use function json_decode;
 
 class CoinGecko implements ClientInterface
@@ -58,7 +60,7 @@ class CoinGecko implements ClientInterface
             $uri = sprintf('%s/simple/price?ids=%s&vs_currencies=%s', $this->serviceUrl, $this->id, $this->currency);
             $response = $client->get($uri);
         } catch (RequestException $exception) {
-            throw new RuntimeException(
+            throw new ProviderRuntimeException(
                 sprintf('Could not connect to %s (%s).', $this->serviceUrl, $exception->getMessage()),
                 $exception->getCode(),
                 $exception
@@ -69,13 +71,12 @@ class CoinGecko implements ClientInterface
         $body = (string)$response->getBody();
 
         $this->validateResponse($statusCode, $body);
-
         $decoded = json_decode($body, true);
 
         return new ExchangeRate($date, $decoded['adshares']['usd'], $this->currency);
     }
 
-    private function requestParameters(?string $baseUrl = null): array
+    private function requestParameters(): array
     {
         $params = [
             'headers' => [
@@ -85,21 +86,23 @@ class CoinGecko implements ClientInterface
             'timeout' => $this->timeout,
         ];
 
-        if ($baseUrl) {
-            $params['base_uri'] = $baseUrl;
-        }
-
         return $params;
     }
 
     private function validateResponse(int $statusCode, string $body): void
     {
         if ($statusCode !== Response::HTTP_OK) {
-            throw new RuntimeException(sprintf('Unexpected response code `%s`.', $statusCode));
+            throw new ProviderRuntimeException(sprintf('Unexpected response code `%s`.', $statusCode));
         }
 
         if (empty($body)) {
-            throw new RuntimeException('Empty list');
+            throw new ProviderRuntimeException('Empty list');
+        }
+
+        $decoded = json_decode($body, true);
+
+        if (!isset($decoded['adshares'][strtolower($this->currency)])) {
+            throw new ProviderRuntimeException(sprintf('Unsupported response format (%s)', $body));
         }
     }
 }

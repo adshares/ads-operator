@@ -53,7 +53,7 @@ before_install:
 
 # Install composer dependencies
 install:
-  - composer install
+  - composer install --no-ansi --no-scripts --no-interaction --no-progress --no-suggest
   - composer run-script install-codestandards
 
 script:
@@ -76,7 +76,7 @@ script:
   # Behat tests
   - ./vendor/bin/behat
   # SonarQube
-  - sonar-scanner -X
+  - sonar-scanner
 
 # After a build, send email notification with the build results
 notifications:

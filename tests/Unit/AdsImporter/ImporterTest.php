@@ -60,13 +60,6 @@ final class ImporterTest extends TestCase
      */
     private $adsClient;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-//        $this->markTestSkipped('Unfortunately someone forgot to maintain tests. Must be changed later.');
-    }
-
     public function __construct(?string $name = null, array $data = [], string $dataName = '')
     {
         parent::__construct($name, $data, $dataName);

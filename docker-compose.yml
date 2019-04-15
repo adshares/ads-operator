@@ -7,17 +7,9 @@ services:
             context: docker/php
             args:
                 TIMEZONE: ${TIMEZONE}
-#        env_file:
-#            - .env
         volumes:
             - ./:/ads-manager
             - ./logs/ads-manager:/ads-manager/var/log
-#        environment:
-#            APP_ENV: ${APP_ENV}
-#            APP_DEBUG: ${APP_DEBUG}
-#            APP_SECRET: ${APP_SECRET}
-#            MONGODB_URL: ${MONGODB_URL}
-#            MONGODB_DB: ${MONGODB_DB}
     nginx:
         container_name: ads-manager-nginx
         build:
