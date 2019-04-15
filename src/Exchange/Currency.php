@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Exchange;
 
+use function strtolower;
+
 class Currency
 {
     /** @var string */
@@ -35,6 +37,6 @@ class Currency
 
     public function toString(): string
     {
-        return $this->currency;
+        return strtolower($this->currency);
     }
 }

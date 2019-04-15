@@ -55,4 +55,9 @@ class ExchangeRateHistory
     {
         return $this->rate;
     }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
 }

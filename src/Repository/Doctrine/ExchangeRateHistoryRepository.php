@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
+use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\Repository\ExchangeRateHistoryRepositoryInterface;
+use DateTime;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 
 class ExchangeRateHistoryRepository extends DocumentRepository implements ExchangeRateHistoryRepositoryInterface
@@ -46,5 +48,23 @@ class ExchangeRateHistoryRepository extends DocumentRepository implements Exchan
     {
         $this->getDocumentManager()->persist($exchangeRateHistory);
         $this->getDocumentManager()->flush();
+    }
+
+    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array
+    {
+        $queryBuilder = $this->createQueryBuilder();
+
+        $queryBuilder
+            ->field('currency', $currency->toString())
+            ->field('date')->gte($start)
+            ->field('date')->lte($end)
+        ;
+
+        $result = $queryBuilder
+            ->getQuery()
+            ->execute()
+            ->toArray();
+
+        return $result;
     }
 }

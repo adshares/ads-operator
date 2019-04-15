@@ -24,10 +24,14 @@ declare(strict_types=1);
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
+use Adshares\AdsOperator\Exchange\Currency;
+use DateTime;
 
 interface ExchangeRateHistoryRepositoryInterface
 {
     public function fetchNewest(): ExchangeRateHistory;
 
     public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
+
+    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
 }
