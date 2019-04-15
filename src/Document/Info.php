@@ -166,6 +166,4 @@ class Info
     {
         $this->unpaidDividend = $unpaidDividend;
     }
-
-
 }

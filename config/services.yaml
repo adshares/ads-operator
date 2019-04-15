@@ -197,6 +197,11 @@ services:
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\LocalTransaction']
 
+    Adshares\AdsOperator\Repository\Doctrine\ExchangeRateHistoryRepository:
+      class: Doctrine\ODM\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\ExchangeRateHistory']
+
 
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:
@@ -264,6 +269,21 @@ services:
       arguments:
         $template: '@twig'
 
+    Adshares\AdsOperator\Exchange\Currency:
+      arguments:
+        $currency: '%env(EXCHANGE_CURRENCY)%'
+
+    Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko:
+      class: Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko
+      arguments:
+        $serviceUrl: '%env(EXCHANGE_PROVIDER_COINGECKO_SERVICE_URL)%'
+        $id: '%env(EXCHANGE_PROVIDER_COINGECKO_ID)%'
+        $currency: '%env(EXCHANGE_CURRENCY)%'
+        $timeout: '%env(EXCHANGE_PROVIDER_TIMEOUT)%'
+      tags: ['adshares.adsoperator.exchange']
+
+    Adshares\AdsOperator\Exchange\Provider\Provider:
+      arguments: [!tagged adshares.adsoperator.exchange]
 
     Vendor\PhpAmqpLib\Connection\AMQPStreamConnection:
         class: PhpAmqpLib\Connection\AMQPStreamConnection

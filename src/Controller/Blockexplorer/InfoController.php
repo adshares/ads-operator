@@ -42,7 +42,8 @@ class InfoController extends ApiController
      * @param InfoRepositoryInterface $repository
      * @param int $genesisTime
      */
-    public function __construct(InfoRepositoryInterface $repository, int $genesisTime) {
+    public function __construct(InfoRepositoryInterface $repository, int $genesisTime)
+    {
         $this->repository = $repository;
         $this->genesisTime = $genesisTime;
     }
