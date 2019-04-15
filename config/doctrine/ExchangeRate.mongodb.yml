@@ -1,0 +1,15 @@
+Adshares\AdsOperator\Document\ExchangeRate:
+  type: document
+  collection: exchangeRate
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\ExchangeRateRepository
+  fields:
+    id:
+      id: true
+      strategy: AUTO
+      type: string
+    date:
+      type: date
+    rate:
+      type: float
+    currency:
+      type: string
