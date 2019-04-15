@@ -70,8 +70,6 @@ script:
   # PHP Static Analysis Tool
   - ./vendor/bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src tests
   # PHP unit tests
-  - alias php='php -dzend_extension=xdebug.so'
-  - ./vendor/bin/phpunit --version
   - ./vendor/bin/phpunit --testsuit Unit
   # Behat tests
   - ./vendor/bin/behat

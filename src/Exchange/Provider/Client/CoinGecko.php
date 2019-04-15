@@ -27,11 +27,10 @@ use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use RuntimeException;
-use function strtolower;
 use Symfony\Component\HttpFoundation\Response;
 use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
 use function json_decode;
+use function strtolower;
 
 class CoinGecko implements ClientInterface
 {
@@ -49,7 +48,7 @@ class CoinGecko implements ClientInterface
         $this->serviceUrl = $serviceUrl;
         $this->timeout = $timeout;
         $this->id = $id;
-        $this->currency = $currency;
+        $this->currency = strtolower($currency);
     }
 
     public function fetchExchangeRate(DateTime $date): ExchangeRate
@@ -73,7 +72,7 @@ class CoinGecko implements ClientInterface
         $this->validateResponse($statusCode, $body);
         $decoded = json_decode($body, true);
 
-        return new ExchangeRate($date, $decoded['adshares']['usd'], $this->currency);
+        return new ExchangeRate($date, $decoded['adshares'][$this->currency], $this->currency);
     }
 
     private function requestParameters(): array
@@ -101,7 +100,7 @@ class CoinGecko implements ClientInterface
 
         $decoded = json_decode($body, true);
 
-        if (!isset($decoded['adshares'][strtolower($this->currency)])) {
+        if (!isset($decoded['adshares'][$this->currency])) {
             throw new ProviderRuntimeException(sprintf('Unsupported response format (%s)', $body));
         }
     }
