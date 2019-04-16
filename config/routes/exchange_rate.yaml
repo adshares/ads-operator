@@ -1,0 +1,4 @@
+fetch:
+  path: /{date}/{currency}
+  controller: Adshares\AdsOperator\Controller\ExchangeRate\ExchangeRateController::showAction
+  methods: [GET]

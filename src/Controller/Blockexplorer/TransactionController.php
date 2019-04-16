@@ -62,7 +62,7 @@ class TransactionController extends ApiController
      *      @SWG\Parameter(
      *          name="hideConnections",
      *          in="query",
-     *          type="bool",
+     *          type="boolean",
      *          description="The field used to hide connect transactions"
      *      ),
      *     @SWG\Parameter(

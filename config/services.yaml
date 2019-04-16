@@ -126,6 +126,13 @@ services:
             $changeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ChangeUserKey'
             $confirmChangeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey'
 
+    Adshares\AdsOperator\Controller\ExchangeRate\ExchangeRateController:
+      public: true
+      autowire: false
+      autoconfigure: false
+      arguments:
+        $repository: '@Adshares\AdsOperator\Repository\Doctrine\ExchangeRateRepository'
+
     Adshares\AdsOperator\UseCase\UserRegistration:
       class: Adshares\AdsOperator\UseCase\UserRegistration
       arguments:

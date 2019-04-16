@@ -24,8 +24,11 @@ declare(strict_types=1);
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\ExchangeRate;
+use DateTime;
 
 interface ExchangeRateRepositoryInterface
 {
     public function addExchangeRate(ExchangeRate $exchangeRate): void;
+
+    public function fetch(DateTime $date, string $currency): ExchangeRate;
 }
