@@ -71,7 +71,6 @@ class ExchangeRateController
      *      )
      * )
      */
-
     public function showAction(string $date, string $currency): JsonResponse
     {
         $currency = strtolower($currency);
