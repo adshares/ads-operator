@@ -202,6 +202,10 @@ services:
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\ExchangeRateHistory']
 
+    Adshares\AdsOperator\Repository\Doctrine\ExchangeRateRepository:
+      class: Doctrine\ODM\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\ExchangeRate']
 
     Adshares\AdsOperator\AdsImporter\Importer:
         arguments:

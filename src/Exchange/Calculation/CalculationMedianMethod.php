@@ -21,17 +21,33 @@
 declare(strict_types=1);
 
 
-namespace Adshares\AdsOperator\Tests\Unit\Exchange;
+namespace Adshares\AdsOperator\Exchange\Calculation;
 
-use Adshares\AdsOperator\Exchange\Currency;
-use PHPUnit\Framework\TestCase;
+use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
+use Adshares\AdsOperator\Exchange\Dto\ExchangeRateCollection;
+use Adshares\AdsOperator\Exchange\Exception\CalculationMethodRuntimeException;
 
-final class CurrencyTest extends TestCase
+class CalculationMedianMethod implements CalculationMethodInterface
 {
-    public function testToString(): void
-    {
-        $currency = new Currency('PLN');
 
-        $this->assertEquals('pln', $currency->toString());
+    public function calculate(ExchangeRateCollection $collection): float
+    {
+        $data = [];
+
+        /** @var ExchangeRate $item */
+        foreach ($collection as $item) {
+            $data[] = $item->getRate();
+        }
+
+        $count = count($data);
+
+        if ($count === 0) {
+            throw new CalculationMethodRuntimeException('No data to processed.');
+        }
+
+        sort($data);
+        $index = floor(($count - 1) / 2);
+
+        return $data[$index];
     }
 }

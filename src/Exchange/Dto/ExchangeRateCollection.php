@@ -21,17 +21,14 @@
 declare(strict_types=1);
 
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Exchange\Dto;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
-use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 
-interface ExchangeRateHistoryRepositoryInterface
+class ExchangeRateCollection extends ArrayCollection
 {
-    public function fetchNewest(): ExchangeRateHistory;
-
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
-
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
+    public function __construct(array $exchangeRates = [])
+    {
+        parent::__construct($exchangeRates);
+    }
 }

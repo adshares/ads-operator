@@ -20,18 +20,11 @@
 
 declare(strict_types=1);
 
+namespace Adshares\AdsOperator\Repository\Exception;
 
-namespace Adshares\AdsOperator\Repository;
+use RuntimeException;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
-use DateTime;
-
-interface ExchangeRateHistoryRepositoryInterface
+class ExchangeRateAlreadyExistsException extends RuntimeException
 {
-    public function fetchNewest(): ExchangeRateHistory;
 
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
-
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
 }

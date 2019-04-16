@@ -23,15 +23,9 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Repository;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
-use DateTime;
+use Adshares\AdsOperator\Document\ExchangeRate;
 
-interface ExchangeRateHistoryRepositoryInterface
+interface ExchangeRateRepositoryInterface
 {
-    public function fetchNewest(): ExchangeRateHistory;
-
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
-
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
+    public function addExchangeRate(ExchangeRate $exchangeRate): void;
 }

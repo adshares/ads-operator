@@ -21,17 +21,40 @@
 declare(strict_types=1);
 
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Document;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
 use DateTime;
 
-interface ExchangeRateHistoryRepositoryInterface
+class ExchangeRate
 {
-    public function fetchNewest(): ExchangeRateHistory;
+    /** @var string  */
+    private $id;
+    /** @var DateTime */
+    private $date;
+    /** @var float */
+    private $rate;
+    /** @var string */
+    private $currency;
 
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
+    public function __construct(DateTime $date, float $rate, string $currency = 'USD')
+    {
+        $this->date = $date;
+        $this->rate = $rate;
+        $this->currency = $currency;
+    }
 
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
+    public function getDate(): DateTime
+    {
+        return $this->date;
+    }
+
+    public function getRate(): float
+    {
+        return $this->rate;
+    }
+
+    public function getCurrency(): string
+    {
+        return $this->currency;
+    }
 }

@@ -27,11 +27,10 @@ use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
 use DateTime;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
-use RuntimeException;
-use function strtolower;
 use Symfony\Component\HttpFoundation\Response;
 use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
 use function json_decode;
+use function strtolower;
 
 class CoinGecko implements ClientInterface
 {

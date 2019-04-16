@@ -21,17 +21,11 @@
 declare(strict_types=1);
 
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Exchange\Calculation;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
-use DateTime;
+use Adshares\AdsOperator\Exchange\Dto\ExchangeRateCollection;
 
-interface ExchangeRateHistoryRepositoryInterface
+interface CalculationMethodInterface
 {
-    public function fetchNewest(): ExchangeRateHistory;
-
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
-
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
+    public function calculate(ExchangeRateCollection $collection): float;
 }

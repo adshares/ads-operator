@@ -21,17 +21,11 @@
 declare(strict_types=1);
 
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Exchange\Exception;
 
-use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
-use DateTime;
+use RuntimeException;
 
-interface ExchangeRateHistoryRepositoryInterface
+class CalculationMethodRuntimeException extends RuntimeException
 {
-    public function fetchNewest(): ExchangeRateHistory;
 
-    public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
-
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
 }
