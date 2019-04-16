@@ -34,12 +34,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 {
-    private const CALCULATION_HOUR_PERIOD = 1;
+    private const CALCULATION_HOUR_PERIOD = 1; // 1 hour
 
     /** @var CalculateInternalExchangeRate */
     private $useCase;
     /** @var Currency */
-    private $currency; // 1 hour
+    private $currency;
 
     public function __construct(CalculateInternalExchangeRate $useCase, Currency $currency)
     {
