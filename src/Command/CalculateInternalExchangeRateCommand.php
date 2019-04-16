@@ -24,6 +24,7 @@ namespace Adshares\AdsOperator\Command;
 
 use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Exception\CalculationMethodRuntimeException;
+use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\UseCase\Exchange\CalculateInternalExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -71,6 +72,13 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $startDate = DateTime::createFromFormat(DateTime::ATOM, $input->getOption('date'));
+
+        if (!$startDate) {
+            $output->writeln(sprintf('Start Date (%s) is not valid.', $input->getOption('date')));
+            exit();
+        }
+
+        $startDate->setTime((int)$startDate->format('H'), 0);
         $endDate = (clone $startDate)->modify(sprintf('+%d hour', self::CALCULATION_HOUR_PERIOD));
 
         $output->writeln(sprintf(
@@ -81,8 +89,8 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 
         try {
             $this->useCase->calculate($startDate, $endDate, $this->currency);
-        } catch (CalculationMethodRuntimeException $exception) {
-            $output->writeln(sprintf('[Error] %s', $exception->getMessage()));
+        } catch (CalculationMethodRuntimeException|ExchangeRateNotFoundException $exception) {
+            $output->writeln(sprintf($exception->getMessage()));
             exit();
         }
 

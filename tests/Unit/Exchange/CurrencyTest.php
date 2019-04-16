@@ -32,6 +32,6 @@ final class CurrencyTest extends TestCase
     {
         $currency = new Currency('PLN');
 
-        $this->assertEquals('PLN', $currency->toString());
+        $this->assertEquals('pln', $currency->toString());
     }
 }

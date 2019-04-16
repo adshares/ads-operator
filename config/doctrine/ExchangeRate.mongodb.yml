@@ -13,3 +13,10 @@ Adshares\AdsOperator\Document\ExchangeRate:
       type: float
     currency:
       type: string
+  indexes:
+    datecurrency:
+      options:
+        unique: true
+      keys:
+        date: desc
+        currency: desc

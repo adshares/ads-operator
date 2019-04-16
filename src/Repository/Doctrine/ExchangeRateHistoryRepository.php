@@ -55,7 +55,7 @@ class ExchangeRateHistoryRepository extends DocumentRepository implements Exchan
         $queryBuilder = $this->createQueryBuilder();
 
         $queryBuilder
-            ->field('currency', $currency->toString())
+            ->field('currency')->equals($currency->toString())
             ->field('date')->gte($start)
             ->field('date')->lte($end)
         ;

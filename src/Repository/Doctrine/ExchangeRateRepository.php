@@ -24,14 +24,25 @@ declare(strict_types=1);
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\ExchangeRate;
+use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\Repository\ExchangeRateRepositoryInterface;
 use Doctrine\ODM\MongoDB\DocumentRepository;
+use Exception;
+use MongoDuplicateKeyException;
 
 class ExchangeRateRepository extends DocumentRepository implements ExchangeRateRepositoryInterface
 {
     public function addExchangeRate(ExchangeRate $exchangeRate): void
     {
-        $this->getDocumentManager()->persist($exchangeRate);
-        $this->getDocumentManager()->flush();
+        try {
+            $this->getDocumentManager()->persist($exchangeRate);
+            $this->getDocumentManager()->flush();
+        } catch (Exception $exception) {
+            throw new ExchangeRateNotFoundException(sprintf(
+                'Duplicate entry for date `%s` and currency `%s`',
+                $exchangeRate->getDate()->format('Y-m-d H:i'),
+                $exchangeRate->getCurrency()
+            ));
+        }
     }
 }

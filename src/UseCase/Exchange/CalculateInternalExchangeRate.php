@@ -47,10 +47,10 @@ class CalculateInternalExchangeRate
     public function __construct(
         ExchangeRateHistoryRepositoryInterface $exchangeRateHistoryRepository,
         ExchangeRateRepositoryInterface $exchangeRateRepository,
-        CalculationMethodInterface $calculationMe
+        CalculationMethodInterface $calculationMethod
     ) {
         $this->exchangeRateHis = $exchangeRateHistoryRepository;
-        $this->calculationMethod = $calculationMe;
+        $this->calculationMethod = $calculationMethod;
         $this->exchangeRateRepository = $exchangeRateRepository;
     }
 
@@ -68,8 +68,6 @@ class CalculateInternalExchangeRate
         $rate = $this->calculationMethod->calculate($collection);
 
         $this->exchangeRateRepository->addExchangeRate(new exchangeRateDocument($start, $rate, $currency->toString()));
-
-        // clear history
 
         $this->rate = $rate;
     }

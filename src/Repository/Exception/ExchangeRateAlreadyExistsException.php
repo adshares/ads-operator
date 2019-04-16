@@ -20,15 +20,11 @@
 
 declare(strict_types=1);
 
+namespace Adshares\AdsOperator\Repository\Exception;
 
-namespace Adshares\AdsOperator\Exchange\Dto;
+use RuntimeException;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
-class ExchangeRateCollection extends ArrayCollection
+class ExchangeRateAlreadyExistsException extends RuntimeException
 {
-    public function __construct(array $exchangeRates = [])
-    {
-        parent::__construct($exchangeRates);
-    }
+
 }

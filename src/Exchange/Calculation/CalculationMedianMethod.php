@@ -45,7 +45,8 @@ class CalculationMedianMethod implements CalculationMethodInterface
             throw new CalculationMethodRuntimeException('No data to processed.');
         }
 
-        $index = floor($count - 1 / 2);
+        sort($data);
+        $index = floor(($count - 1) / 2);
 
         return $data[$index];
     }
