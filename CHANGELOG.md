@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Update Symfony/Security library
 - Add bcmath module (PHP)
 - Coin info endpoint
+- Exchange rate endpoint
 
 ## [0.3.0] - 2018-11-08
 ### Added

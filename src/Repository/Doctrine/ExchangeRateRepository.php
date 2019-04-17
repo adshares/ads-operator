@@ -26,6 +26,7 @@ namespace Adshares\AdsOperator\Repository\Doctrine;
 use Adshares\AdsOperator\Document\ExchangeRate;
 use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\Repository\ExchangeRateRepositoryInterface;
+use DateTime;
 use Doctrine\ODM\MongoDB\DocumentRepository;
 use MongoDuplicateKeyException;
 
@@ -43,5 +44,20 @@ class ExchangeRateRepository extends DocumentRepository implements ExchangeRateR
                 $exchangeRate->getCurrency()
             ));
         }
+    }
+
+    public function fetch(DateTime $date, string $currency): ExchangeRate
+    {
+        $exchangeRate = $this->findBy(['date' => $date, 'currency' => $currency]);
+
+        if (!$exchangeRate || !isset($exchangeRate[0])) {
+            throw new ExchangeRateNotFoundException(sprintf(
+                'Exchange rate not found for given date (%s) and currency (%s)',
+                $date->format('Y-m-d H:i'),
+                $currency
+            ));
+        }
+
+        return $exchangeRate[0];
     }
 }

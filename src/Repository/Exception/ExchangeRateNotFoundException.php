@@ -20,12 +20,10 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Repository\Exception;
 
 use RuntimeException;
 
 class ExchangeRateNotFoundException extends RuntimeException
 {
-
 }
