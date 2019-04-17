@@ -20,7 +20,7 @@ services:
             - php
         volumes:
             - ./logs/nginx/:/var/log/nginx
-            - ./:/ads-manager
+            - ./public:/ads-manager/public
     mongo:
         container_name: ads-manager-mongo
         image: mongo:latest

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Controller\ExchangeRate;
 
+use Adshares\AdsOperator\Controller\ApiController;
 use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\Repository\ExchangeRateRepositoryInterface;
 use DateTime;
@@ -34,10 +35,10 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use function sprintf;
 
-class ExchangeRateController
+class ExchangeRateController extends ApiController
 {
     /** @var ExchangeRateRepositoryInterface */
-    private $repository;
+    protected $repository;
 
     public function __construct(ExchangeRateRepositoryInterface $repository)
     {
@@ -71,7 +72,7 @@ class ExchangeRateController
      *      )
      * )
      */
-    public function showAction(string $date, string $currency): JsonResponse
+    public function showAction(string $date, string $currency): Response
     {
         $currency = strtolower($currency);
         $hourlyDate = DateTime::createFromFormat(DateTime::ATOM, $date);
@@ -92,6 +93,6 @@ class ExchangeRateController
             throw new NotFoundHttpException($exception->getMessage());
         }
 
-        return new JsonResponse(['rate' => $exchangeRate->getRate()], Response::HTTP_OK);
+        return $this->response($this->serializer->serialize($exchangeRate, 'json'));
     }
 }

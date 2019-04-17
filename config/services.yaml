@@ -127,6 +127,7 @@ services:
             $confirmChangeUserKey: '@Adshares\AdsOperator\UseCase\Transaction\ConfirmChangeUserKey'
 
     Adshares\AdsOperator\Controller\ExchangeRate\ExchangeRateController:
+      parent: Adshares\AdsOperator\Controller\ApiController
       public: true
       autowire: false
       autoconfigure: false
