@@ -20,12 +20,15 @@
 
 namespace Adshares\AdsOperator\AdsImporter;
 
+use Adshares\Ads\Response\GetBlockResponse;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Block;
+use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
 use Adshares\Ads\AdsClient;
 use Adshares\Ads\Driver\CommandError;
 use Adshares\Ads\Response\GetMessageResponse;
@@ -59,12 +62,27 @@ class Importer
     /**
      * @var int
      */
+    private $amountPrecision;
+
+    /**
+     * @var int
+     */
+    private $totalSupply;
+
+    /**
+     * @var int
+     */
     private $genesisTime;
 
     /**
      * @var int
      */
-    private $blockSeqTime = 32;
+    private $blockLength;
+
+    /**
+     * @var array
+     */
+    private $nonCirculatingAccounts;
 
     /**
      * @var ImporterResult
@@ -76,21 +94,30 @@ class Importer
      * @param AdsClient $client
      * @param DatabaseMigrationInterface $databaseMigration
      * @param LoggerInterface $logger
+     * @param int $totalSupply
+     * @param int $amountPrecision
      * @param int $genesisTime
-     * @param int $blockSeqTime
+     * @param int $blockLength
+     * @param string $nonCirculatingAccounts
      */
     public function __construct(
         AdsClient $client,
         DatabaseMigrationInterface $databaseMigration,
         LoggerInterface $logger,
+        int $totalSupply,
+        int $amountPrecision,
         int $genesisTime,
-        int $blockSeqTime
+        int $blockLength,
+        string $nonCirculatingAccounts
     ) {
         $this->client = $client;
         $this->databaseMigration = $databaseMigration;
         $this->logger = $logger;
+        $this->totalSupply = $totalSupply;
+        $this->amountPrecision = $amountPrecision;
         $this->genesisTime = $genesisTime;
-        $this->blockSeqTime = $blockSeqTime;
+        $this->blockLength = $blockLength;
+        $this->nonCirculatingAccounts = array_filter(explode(',', $nonCirculatingAccounts));
         $this->importerResult = new ImporterResult();
     }
 
@@ -117,7 +144,7 @@ class Importer
                     $block->setTransactionCount($blockTransactions);
                 }
 
-                $this->databaseMigration->addBlock($block);
+                $this->databaseMigration->addBlock($block, $this->blockLength);
                 ++$this->importerResult->blocks;
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
@@ -125,11 +152,20 @@ class Importer
                 }
             }
 
-            $startTime += $this->blockSeqTime;
+            $startTime += $this->blockLength;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
 
-        $this->updateNodes();
+
+        try {
+            $blockResponse = $this->client->getBlock();
+            $this->updateNodes($blockResponse);
+            $this->updateInfo($blockResponse);
+        } catch (CommandException $ex) {
+            if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
+                throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
+            }
+        }
 
         return $this->importerResult;
     }
@@ -149,20 +185,10 @@ class Importer
     }
 
     /**
-     * @return void
+     * @param GetBlockResponse $blockResponse
      */
-    private function updateNodes(): void
+    private function updateNodes(GetBlockResponse $blockResponse): void
     {
-        try {
-            $blockResponse = $this->client->getBlock();
-        } catch (CommandException $ex) {
-            if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
-                throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
-            }
-
-            return;
-        }
-
         $nodes = $blockResponse->getBlock()->getNodes();
 
         /** @var Node $node */
@@ -228,7 +254,7 @@ class Importer
                 ++$this->importerResult->messages;
 
                 if ($transactions) {
-                    $this->addTransactionsFromMessage($transactions);
+                    $this->addTransactionsFromMessage($message, $transactions);
                     $blockTransactionsCount += $transactionsCount;
                 }
             }
@@ -256,16 +282,53 @@ class Importer
     }
 
     /**
+     * @param Message $message
      * @param array $transactions
      */
-    private function addTransactionsFromMessage(array $transactions): void
+    private function addTransactionsFromMessage(Message $message, array $transactions): void
     {
         /** @var ArrayableInterface $transaction */
         foreach ($transactions as $transaction) {
+            if ($transaction instanceof ConnectionTransaction) {
+                $transaction->setTime($message->getTime());
+            }
             $this->databaseMigration->addTransaction($transaction);
-
             ++$this->importerResult->transactions;
         }
+    }
+
+    /**
+     * @param GetBlockResponse $blockResponse
+     */
+    private function updateInfo(GetBlockResponse $blockResponse): void
+    {
+        $info = new Info($this->genesisTime, $this->blockLength);
+
+        $info->setLastBlockId($blockResponse->getBlock()->getId());
+        $info->setTotalSupply($this->totalSupply / 10 ** $this->amountPrecision);
+
+        $supply = 0;
+        /** @var Node $node */
+        foreach ($blockResponse->getBlock()->getNodes() as $node) {
+            if ($node->isSpecial()) {
+                continue;
+            }
+            $supply += $node->getBalance();
+        }
+
+        $circulatingSupply = $supply;
+        foreach ($this->nonCirculatingAccounts as $address) {
+            /** @var Account $account */
+            $account = $this->client->getAccount($address)->getAccount();
+            if ($account !== null) {
+                $circulatingSupply -= $account->getBalance();
+            }
+        }
+
+        $info->setCirculatingSupply($circulatingSupply / 10 ** $this->amountPrecision);
+        $info->setUnpaidDividend(($this->totalSupply - $supply) / 10 ** $this->amountPrecision);
+
+        $this->databaseMigration->addOrUpdateInfo($info);
     }
 
     /**

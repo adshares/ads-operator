@@ -13,8 +13,8 @@ RUN printf '[PHP]\ndate.timezone = "%s"\n', ${TIMEZONE} > /usr/local/etc/php/con
 RUN "date"
 
 # Type docker-php-ext-install to see available extensions
-RUN docker-php-ext-install zip \
- && docker-php-ext-enable mongodb
+RUN docker-php-ext-install zip bcmath \
+ && docker-php-ext-enable mongodb bcmath
 
 RUN mkdir -p /ads-manager/var/cache
 RUN mkdir -p /ads-manager/var/log

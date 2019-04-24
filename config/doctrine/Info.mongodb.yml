@@ -1,0 +1,20 @@
+Adshares\AdsOperator\Document\Info:
+    type: document
+    collection: info
+    repositoryClass: Adshares\AdsOperator\Repository\Doctrine\InfoRepository
+    fields:
+        genesisTime:
+            id: true
+            strategy: NONE
+            type: int
+        blockLength:
+            type: int
+        lastBlockId:
+            type: string
+        totalSupply:
+            type: float
+        circulatingSupply:
+            type: float
+        unpaidDividend:
+            type: float
+

@@ -29,6 +29,28 @@ use Adshares\Ads\Entity\Transaction\ConnectionTransaction as BaseConnectionTrans
  */
 class ConnectionTransaction extends BaseConnectionTransaction implements ArrayableInterface
 {
+
+    /**
+     * @var \DateTime
+     */
+    protected $time;
+
+    /**
+     * @return \DateTime
+     */
+    public function getTime(): \DateTime
+    {
+        return $this->time;
+    }
+
+    /**
+     * @param \DateTime $time
+     */
+    public function setTime(\DateTime $time): void
+    {
+        $this->time = $time;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -44,6 +66,7 @@ class ConnectionTransaction extends BaseConnectionTransaction implements Arrayab
             'ipAddress' => $this->ipAddress,
             'port' => $this->port,
             'version' => $this->version,
+            'time' => $this->time,
         ];
     }
 }

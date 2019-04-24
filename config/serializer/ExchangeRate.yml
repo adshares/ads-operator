@@ -1,0 +1,6 @@
+Adshares\AdsOperator\Document\ExchangeRate:
+  exclusion_policy: ALL
+  properties:
+    rate:
+      expose: true
+      type: float

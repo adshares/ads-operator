@@ -147,6 +147,135 @@ Feature: Transactions
           "size":3
         },
         {
+          "block_id":"2A7F0400",
+          "id":"0001:00000002:0000",
+          "message_id":"0001:00000002",
+          "node_id":"0001",
+          "type":"connection",
+          "size":2,
+          "ip_address":"192.168.1.2",
+          "port":80
+        },
+        {
+          "block_id":"1A7F0400",
+          "id":"0001:00000001:0000",
+          "message_id":"0001:00000001",
+          "node_id":"0001",
+          "type":"broadcast",
+          "size":1,
+          "message":"0000000000000000000000000000000000000000000000000000000000000001",
+          "message_length":1,
+          "msg_id":"1",
+          "node":1,
+          "signature":"0001",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":1
+        }
+   ]
+   """
+
+  Scenario: List transactions by node id without connections
+    Given I want to get the list of "blockexplorer/nodes/0001/transactions"
+    And I want to hide connections
+    When I request resource
+    Then the response status code should be 200
+    And the response should contain:
+    """
+     [
+        {
+          "block_id":"8A7F0400",
+          "id":"0001:00000008:0000",
+          "message_id":"0001:00000008",
+          "node_id":"0001",
+          "type":"set_node_status",
+          "size":8,
+          "msg_id":"1",
+          "node":1,
+          "signature":"0008",
+          "status":0,
+          "target_node":8,
+          "target_user":8,
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":8
+        },
+        {
+          "block_id":"7A7F0400",
+          "id":"0001:00000007:0000",
+          "message_id":"0001:00000007",
+          "node_id":"0001",
+          "type":"send_many",
+          "size":7,
+          "msg_id":"1",
+          "node":1,
+          "sender_address":"0001-00000007-0000",
+          "sender_fee":7000000000000000000,
+          "signature":"0007",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":7,
+          "wire_count":0,
+          "wires":[]
+        },
+        {
+          "block_id":"6A7F0400",
+          "id":"0001:00000006:0000",
+          "message_id":"0001:00000006",
+          "node_id":"0001",
+          "type":"send_one",
+          "size":6,
+          "amount":"9223372036854775807",
+          "message":"0000000000000000000000000000000000000000000000000000000000000006",
+          "msg_id":"1",
+          "node":1,
+          "sender_address":"0001-00000006-0000",
+          "sender_fee":6000000000000000000,
+          "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+          "target_address":"0002-00000016-0000",
+          "target_node":1,
+          "target_user":1,
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":6
+        },
+        {
+          "block_id":"5A7F0400",
+          "id":"0001:00000005:0000",
+          "message_id":"0001:00000115",
+          "node_id":"0001",
+          "type":"log_account",
+          "size":5,
+          "msg_id":"1",
+          "node":1,
+          "signature":"0005",
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":5
+        },
+        {
+          "block_id":"4A7F0400",
+          "id":"0001:00000004:0000",
+          "message_id":"0001:00000004",
+          "node_id":"0001",
+          "type":"account_created",
+          "size":4,
+          "msg_id":"1",
+          "new_public_key":"A9C0D972D8AAB73805EC4A28291E052E3B5FAFE0ADC9D724917054E5E2690363",
+          "node":1,
+          "old_public_key":"3A9F69FEDCB0694123899C1EA7E14256CAD7B4A2C86311FC6B5ED4027404A282",
+          "public_key":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+          "public_key_signature":"9D46567A482F8F6AA567804EF2274F6ACEB370D8F7461C3A0DF4CE2C0DF432EB",
+          "signature":"EE54B7563E8BF13BA244725F723EEA55CC90FA5FCFAF69A0FA26EF7175E67D8BAA678F6E31FF428002C047486A56B12273914B3B1E570882613B0B6C42C67104",
+          "target_node":1,
+          "target_user":4,
+          "time":"2018-07-31T08:49:36+02:00",
+          "user":4
+        },
+        {
+          "block_id":"3A7F0400",
+          "id":"0001:00000003:0000",
+          "message_id":"0001:00000003",
+          "node_id":"0001",
+          "type":"empty",
+          "size":3
+        },
+        {
           "block_id":"1A7F0400",
           "id":"0001:00000001:0000",
           "message_id":"0001:00000001",
@@ -166,6 +295,7 @@ Feature: Transactions
 
   Scenario: List all available nodes with limit, offset and sort by id asc
     Given I want to get the list of "blockexplorer/nodes/0001/transactions"
+    And I want to hide connections
     And I want to limit to 2
     And I want to offset to 1
     And I want to sort by "block_id"

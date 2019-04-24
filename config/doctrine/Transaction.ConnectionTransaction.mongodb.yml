@@ -22,3 +22,5 @@ Adshares\AdsOperator\Document\Transaction\ConnectionTransaction:
             type: int
         version:
             type: string
+        time:
+            type: date

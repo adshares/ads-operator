@@ -40,6 +40,7 @@ class NodeRepository extends BaseRepository implements NodeRepositoryInterface
             'messageCount',
             'transactionCount',
             'balance',
+            'mtim',
             'version',
         ];
     }

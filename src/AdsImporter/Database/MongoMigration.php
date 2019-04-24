@@ -22,6 +22,7 @@ namespace Adshares\AdsOperator\AdsImporter\Database;
 
 use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
 use Adshares\AdsOperator\Document\ArrayableInterface;
+use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
@@ -41,6 +42,7 @@ use Psr\Log\LoggerInterface;
  */
 class MongoMigration implements DatabaseMigrationInterface
 {
+    const INFO_COLLECTION = 'info';
     const BLOCK_COLLECTION = 'block';
     const MESSAGE_COLLECTION = 'message';
     const TRANSACTION_COLLECTION = 'transaction';
@@ -57,6 +59,11 @@ class MongoMigration implements DatabaseMigrationInterface
      * @var \Doctrine\MongoDB\Database
      */
     private $db;
+
+    /**
+     * @var Collection
+     */
+    private $infoCollection;
 
     /**
      * @var Collection
@@ -118,12 +125,30 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private function selectCollections(): void
     {
+        $this->infoCollection = $this->db->selectCollection(self::INFO_COLLECTION);
         $this->blockCollection = $this->db->selectCollection(self::BLOCK_COLLECTION);
         $this->messageCollection = $this->db->selectCollection(self::MESSAGE_COLLECTION);
         $this->transactionCollection = $this->db->selectCollection(self::TRANSACTION_COLLECTION);
         $this->nodeCollection = $this->db->selectCollection(self::NODE_COLLECTION);
         $this->accountCollection = $this->db->selectCollection(self::ACCOUNT_COLLECTION);
         $this->accountTransactionCollection = $this->db->selectCollection(self::ACCOUNT_TRANSACTION_COLLECTION);
+    }
+
+    /**
+     * @param Info $info
+     */
+    public function addOrUpdateInfo(Info $info): void
+    {
+        $document = [
+            '_id' => $info->getGenesisTime(),
+            'blockLength' => $info->getBlockLength(),
+            'lastBlockId' => $info->getLastBlockId(),
+            'totalSupply' => $info->getTotalSupply(),
+            'circulatingSupply' => $info->getCirculatingSupply(),
+            'unpaidDividend' => $info->getUnpaidDividend(),
+        ];
+
+        $this->infoCollection->update(['_id' => $info->getGenesisTime()], $document, $this->mongoUpdateOptions);
     }
 
     /**
@@ -147,10 +172,20 @@ class MongoMigration implements DatabaseMigrationInterface
 
     /**
      * @param Block $block
-     * @return void
+     * @param int $blockLength
      */
-    public function addBlock(Block $block): void
+    public function addBlock(Block $block, int $blockLength): void
     {
+        try {
+            $endTime = clone $block->getTime();
+            $endTime->add(
+                new \DateInterval(sprintf('PT%dS', $blockLength))
+            );
+            $endTime = $this->createMongoDate($endTime);
+        } catch (\Exception $e) {
+            $endTime = null;
+        }
+
         $document = [
             '_id' => $block->getId(),
             'dividendBalance' => $block->getDividendBalance(),
@@ -163,6 +198,7 @@ class MongoMigration implements DatabaseMigrationInterface
             'vipHash' => $block->getVipHash(),
             'nodeCount' => $block->getNodeCount(),
             'time' => $this->createMongoDate($block->getTime()),
+            'endTime' => $endTime,
             'voteYes' => $block->getVoteYes(),
             'voteNo' => $block->getVoteNo(),
             'voteTotal' => $block->getVoteTotal(),
@@ -356,6 +392,6 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     private function createMongoDate(\DateTime $date): UTCDateTime
     {
-        return new UTCDateTime((int)$date->format('U')*1000);
+        return new UTCDateTime((int)$date->format('U') * 1000);
     }
 }

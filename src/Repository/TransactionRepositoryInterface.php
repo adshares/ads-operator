@@ -35,6 +35,24 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
     public function getTransaction(string $transactionId):? AbstractTransaction;
 
     /**
+     * @param array $conditions
+     * @param bool $hideConnections
+     * @param string $sort
+     * @param string $order
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTransactions(
+        array $conditions,
+        bool $hideConnections,
+        string $sort,
+        string $order,
+        int $limit,
+        int $offset
+    ): array;
+
+    /**
      * @param string $accountId
      * @param string $sort
      * @param string $order
@@ -52,6 +70,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
 
     /**
      * @param string $messageId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -60,6 +79,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      */
     public function getTransactionsByMessageId(
         string $messageId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,
@@ -68,6 +88,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
 
     /**
      * @param string $nodeId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -76,6 +97,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      */
     public function getTransactionsByNodeId(
         string $nodeId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,
@@ -84,6 +106,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
 
     /**
      * @param string $blockId
+     * @param bool $hideConnections
      * @param string $sort
      * @param string $order
      * @param int $limit
@@ -92,6 +115,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      */
     public function getTransactionsByBlockId(
         string $blockId,
+        bool $hideConnections,
         string $sort,
         string $order,
         int $limit,

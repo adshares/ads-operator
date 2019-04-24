@@ -35,6 +35,7 @@ class ApiContext implements Context
     private $resource;
     private $body;
     private $response;
+    private $hideConnections = false;
 
     public function __construct(ClientInterface $client) {
         $this->client = $client;
@@ -104,6 +105,14 @@ class ApiContext implements Context
     }
 
     /**
+     * @Given I want to hide connections
+     */
+    public function iWantToHideConnections()
+    {
+        $this->hideConnections = true;
+    }
+
+    /**
      * @Given I provide the data:
      */
     public function iProvideTheData(PyStringNode $body)
@@ -138,6 +147,7 @@ class ApiContext implements Context
         if (null !== $this->offset) {
             $data['offset'] = $this->offset;
         }
+        $data['hideConnections'] = $this->hideConnections ? 1 : 0;
 
         if (!empty($data)) {
             $url = sprintf('%s?%s', $url, http_build_query($data));

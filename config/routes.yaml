@@ -7,3 +7,8 @@ auth:
     resource: "./routes/auth.yaml"
     type:     yaml
     prefix:   /api/%api_version%/auth/
+
+exchange_rate:
+    resource: "./routes/exchange_rate.yaml"
+    type:     yaml
+    prefix:   /api/%api_version%/exchange-rate/

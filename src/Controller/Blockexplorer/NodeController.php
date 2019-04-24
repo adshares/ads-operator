@@ -347,6 +347,12 @@ class NodeController extends ApiController
      *          type="string",
      *          description="Node Id (hexadecimal number, e.g. 0001)"
      *     ),
+     *      @SWG\Parameter(
+     *          name="hideConnections",
+     *          in="query",
+     *          type="boolean",
+     *          description="The field used to hide connect transactions"
+     *      ),
      *     @SWG\Parameter(
      *          name="sort",
      *          in="query",
@@ -389,9 +395,11 @@ class NodeController extends ApiController
         $order = $this->getOrder($request);
         $limit = $this->getLimit($request);
         $offset = $this->getOffset($request);
+        $hideConnections = (bool)$request->get('hideConnections', false);
 
         $transactions = $this->transactionRepository->getTransactionsByNodeId(
             $nodeId,
+            $hideConnections,
             $sort,
             $order,
             $limit,
