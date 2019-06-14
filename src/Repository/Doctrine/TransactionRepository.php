@@ -21,11 +21,12 @@
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\Ads\Entity\Transaction\AbstractTransaction;
+use Adshares\AdsOperator\Repository\TickerRepositoryInterface;
 use Adshares\AdsOperator\Repository\TransactionRepositoryInterface;
 use Doctrine\ODM\MongoDB\MongoDBException;
 use Doctrine\ODM\MongoDB\Query\Builder;
 
-class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface
+class TransactionRepository extends BaseRepository implements TransactionRepositoryInterface, TickerRepositoryInterface
 {
     /**
      * @return array
@@ -70,7 +71,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
      * @throws \Doctrine\ODM\MongoDB\LockException
      * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
      */
-    public function getTransaction(string $transactionId):? AbstractTransaction
+    public function getTransaction(string $transactionId): ?AbstractTransaction
     {
         /** @var AbstractTransaction $transaction */
         $transaction = $this->find($transactionId);
@@ -249,5 +250,107 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         }
 
         return $cursor;
+    }
+
+    /**
+     * @return array
+     */
+    public function availableTickerIntervals(): array
+    {
+        return [
+            'year',
+            'month',
+            'day',
+            'hour',
+            'minute',
+            'second',
+        ];
+    }
+
+    /**
+     * @param \DateTime $start
+     * @param \DateTime $end
+     * @param string $interval
+     * @param int $limit
+     * @param int $offset
+     * @return array
+     */
+    public function getTickers(
+        \DateTime $start,
+        \DateTime $end,
+        string $interval,
+        int $limit,
+        int $offset
+    ): array {
+
+        $results = [];
+        try {
+            $builder = $this->createAggregationBuilder();
+
+            $builder->hydrate('Adshares\AdsOperator\Document\Stats\TransactionTicker');
+            $builder->addFields()
+                ->field('manyAmount')
+                ->expression($builder->expr()->sum(
+                    $builder->expr()->map('$wires', 'el', '$$el.amount')
+                ));
+            $builder->match()
+                ->field('time')
+                ->gte($start)
+                ->lt($end);
+            $builder->group()
+                ->field('_id')
+                ->dateToString(self::getTimeFormat($interval), '$time')
+                ->field('quantity')
+                ->sum(1)
+                ->field('fee')
+                ->sum('$senderFee')
+                ->field('oneVolume')
+                ->sum('$amount')
+                ->field('manyVolume')
+                ->sum('$manyAmount');
+            $builder->project()
+                ->field('date')
+                ->expression('$_id')
+                ->field('quantity')
+                ->expression('$quantity')
+                ->field('fee')
+                ->divide('$fee', 100000000000)
+                ->field('volume')
+                ->divide($builder->expr()->sum('$oneVolume', '$manyVolume'), 100000000000);
+
+            $cursor = $builder
+                ->sort('date', 'asc')
+                ->skip($offset)
+                ->limit($limit)
+                ->execute();
+
+            $data = $cursor->toArray();
+
+            foreach ($data as $ticker) {
+                $results[] = $ticker;
+            }
+        } catch (MongoDBException $ex) {
+            return [];
+        }
+
+        return $results;
+    }
+
+    private static function getTimeFormat(string $interval): string
+    {
+        switch ($interval) {
+            case 'year':
+                return '%Y-01-01';
+            case 'month':
+                return '%Y-%m-01';
+            case 'hour':
+                return '%Y-%m-%dT%H:00:00';
+            case 'minute':
+                return '%Y-%m-%dT%H:%M:00';
+            case 'second':
+                return '%Y-%m-%dT%H:%M:%S';
+            default:
+                return '%Y-%m-%d';
+        }
     }
 }

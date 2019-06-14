@@ -1,0 +1,16 @@
+Adshares\AdsOperator\Document\Stats\TransactionTicker:
+    exclusion_policy: ALL
+    properties:
+        date:
+            expose: true
+            type: DateTime
+        quantity:
+            expose: true
+            type: int
+        fee:
+            expose: true
+            type: float
+        volume:
+            expose: true
+            type: float
+

@@ -4,9 +4,14 @@ info:
     methods: [GET]
 
 info_field:
-        path: /info/{field}
-        controller: Adshares\AdsOperator\Controller\Blockexplorer\InfoController::showFieldAction
-        methods: [GET]
+    path: /info/{field}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\InfoController::showFieldAction
+    methods: [GET]
+
+stats_transactions:
+    path: /stats/transactions
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\StatsController::transactionsAction
+    methods: [GET]
 
 node_list:
     path: /nodes

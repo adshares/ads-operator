@@ -1,0 +1,15 @@
+Adshares\AdsOperator\Document\Stats\TransactionTicker:
+    type: document
+    collection: transaction
+    fields:
+        date:
+            id: true
+            strategy: NONE
+            type: date
+        quantity:
+            type: int
+        fee:
+            type: float
+        volume:
+            type: float
+
