@@ -27,5 +27,5 @@ use DateTime;
 
 interface ClientInterface
 {
-    public function fetchExchangeRate(DateTime $date): ExchangeRate;
+    public function fetchExchangeRate(DateTime $date, string $currency): ExchangeRate;
 }

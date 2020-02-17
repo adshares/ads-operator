@@ -18,14 +18,12 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\Tests\Unit\UseCase\Exchange;
 
 use Adshares\AdsOperator\Document\ExchangeRate;
 use Adshares\AdsOperator\Exchange\Calculation\CalculationMedianMethod;
-use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Exception\CalculationMethodRuntimeException;
 use Adshares\AdsOperator\Repository\ExchangeRateHistoryRepositoryInterface;
 use Adshares\AdsOperator\Repository\ExchangeRateRepositoryInterface;
@@ -51,7 +49,7 @@ final class CalculateInternalExchangeRateTest extends TestCase
             new CalculationMedianMethod()
         );
 
-        $useCase->calculate(new DateTime(), new DateTime(), new Currency('usd'));
+        $useCase->calculate(new DateTime(), new DateTime(), 'usd');
     }
 
     public function testWhenDataExistsInHistoryRepositoryShouldStoreCalculation(): void
@@ -85,7 +83,7 @@ final class CalculateInternalExchangeRateTest extends TestCase
             new CalculationMedianMethod()
         );
 
-        $useCase->calculate(new DateTime(), new DateTime(), new Currency('usd'));
+        $useCase->calculate(new DateTime(), new DateTime(), 'usd');
 
         $this->assertNotNull($useCase->getRateValue());
     }

@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\UseCase\Exchange;
 
+use Adshares\AdsOperator\Document\ExchangeRate as exchangeRateDocument;
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
 use Adshares\AdsOperator\Exchange\Calculation\CalculationMethodInterface;
-use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRateCollection;
-use Adshares\AdsOperator\Document\ExchangeRate as exchangeRateDocument;
 use Adshares\AdsOperator\Repository\ExchangeRateHistoryRepositoryInterface;
 use Adshares\AdsOperator\Repository\ExchangeRateRepositoryInterface;
 use DateTime;
@@ -54,8 +53,9 @@ class CalculateInternalExchangeRate
         $this->exchangeRateRepository = $exchangeRateRepository;
     }
 
-    public function calculate(DateTime $start, DateTime $end, Currency $currency): void
+    public function calculate(DateTime $start, DateTime $end, string $currency): void
     {
+        $currency = strtolower($currency);
         $exchangeRatesHistory = $this->exchangeRateHis->fetchForCurrencyBetweenDates($currency, $start, $end);
 
         $collection = new ExchangeRateCollection();
@@ -67,7 +67,7 @@ class CalculateInternalExchangeRate
 
         $rate = $this->calculationMethod->calculate($collection);
 
-        $this->exchangeRateRepository->addExchangeRate(new exchangeRateDocument($start, $rate, $currency->toString()));
+        $this->exchangeRateRepository->addExchangeRate(new exchangeRateDocument($start, $rate, $currency));
 
         $this->rate = $rate;
     }

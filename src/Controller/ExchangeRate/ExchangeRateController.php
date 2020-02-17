@@ -81,8 +81,8 @@ class ExchangeRateController extends ApiController
             throw new BadRequestHttpException(sprintf('Date (%s) is not valid.', $date));
         }
 
-        if ($currency !== 'usd') {
-            throw new BadRequestHttpException('Only `usd` currency is supported.');
+        if ($currency !== 'usd' && $currency !== 'btc') {
+            throw new BadRequestHttpException('Only `usd` and `btc` currencies are supported.');
         }
 
         $hourlyDate->setTime((int)$hourlyDate->format('H'), 0);

@@ -40,23 +40,21 @@ class CoinGecko implements ClientInterface
     private $timeout;
     /** @var string */
     private $id;
-    /** @var string */
-    private $currency;
 
-    public function __construct(string $serviceUrl, string $id, string $currency, int $timeout)
+    public function __construct(string $serviceUrl, string $id, int $timeout)
     {
         $this->serviceUrl = $serviceUrl;
         $this->timeout = $timeout;
         $this->id = $id;
-        $this->currency = strtolower($currency);
     }
 
-    public function fetchExchangeRate(DateTime $date): ExchangeRate
+    public function fetchExchangeRate(DateTime $date, string $currency): ExchangeRate
     {
+        $currency = strtolower($currency);
         $client = new Client($this->requestParameters());
 
         try {
-            $uri = sprintf('%s/simple/price?ids=%s&vs_currencies=%s', $this->serviceUrl, $this->id, $this->currency);
+            $uri = sprintf('%s/simple/price?ids=%s&vs_currencies=%s', $this->serviceUrl, $this->id, $currency);
             $response = $client->get($uri);
         } catch (RequestException $exception) {
             throw new ProviderRuntimeException(
@@ -69,10 +67,10 @@ class CoinGecko implements ClientInterface
         $statusCode = $response->getStatusCode();
         $body = (string)$response->getBody();
 
-        $this->validateResponse($statusCode, $body);
+        $this->validateResponse($statusCode, $body, $currency);
         $decoded = json_decode($body, true);
 
-        return new ExchangeRate($date, $decoded['adshares'][$this->currency], $this->currency);
+        return new ExchangeRate($date, $decoded['adshares'][$currency], $currency);
     }
 
     private function requestParameters(): array
@@ -88,7 +86,7 @@ class CoinGecko implements ClientInterface
         return $params;
     }
 
-    private function validateResponse(int $statusCode, string $body): void
+    private function validateResponse(int $statusCode, string $body, string $currency): void
     {
         if ($statusCode !== Response::HTTP_OK) {
             throw new ProviderRuntimeException(sprintf('Unexpected response code `%s`.', $statusCode));
@@ -100,7 +98,7 @@ class CoinGecko implements ClientInterface
 
         $decoded = json_decode($body, true);
 
-        if (!isset($decoded['adshares'][$this->currency])) {
+        if (!isset($decoded['adshares'][$currency])) {
             throw new ProviderRuntimeException(sprintf('Unsupported response format (%s)', $body));
         }
     }

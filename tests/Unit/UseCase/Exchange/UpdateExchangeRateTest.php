@@ -18,13 +18,11 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\Tests\Unit\UseCase\Exchange;
 
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
 use Adshares\AdsOperator\Exchange\Provider\Client\ClientInterface;
 use Adshares\AdsOperator\Exchange\Provider\Provider;
@@ -42,17 +40,15 @@ final class UpdateExchangeRateTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('fetchNewest')
-            ->willThrowException(new ExchangeRateNotFoundException())
-        ;
+            ->willThrowException(new ExchangeRateNotFoundException());
 
         $repository
             ->expects($this->once())
-            ->method('addExchangeRate')
-        ;
+            ->method('addExchangeRate');
 
         $dateTime = new DateTime();
-        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime), new Currency('USD'));
-        $useCase->update(new DateTime(), 'coin_gecko');
+        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime));
+        $useCase->update(new DateTime(), 'coin_gecko', 'USD');
     }
 
     public function testWhenDateFromRepositoryIsGreaterThanProviderDateThanAddExchangeRateIsNotCalled(): void
@@ -61,17 +57,15 @@ final class UpdateExchangeRateTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('fetchNewest')
-            ->willReturn(new ExchangeRateHistory(new DateTime(), 0.05, 'coin_gecko'))
-        ;
+            ->willReturn(new ExchangeRateHistory(new DateTime(), 0.05, 'coin_gecko'));
 
         $repository
             ->expects($this->never())
-            ->method('addExchangeRate')
-        ;
+            ->method('addExchangeRate');
 
         $dateTime = new DateTime('-1 hour');
-        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime), new Currency('USD'));
-        $useCase->update(new DateTime(), 'coin_gecko');
+        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime));
+        $useCase->update(new DateTime(), 'coin_gecko', 'USD');
     }
 
     public function testWhenDateFromRepositoryIsSmallerThanProviderDateThanAddExchangeRateIsCalled(): void
@@ -80,17 +74,15 @@ final class UpdateExchangeRateTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('fetchNewest')
-            ->willReturn(new ExchangeRateHistory(new DateTime('-1 hour'), 0.05, 'coin_gecko'))
-        ;
+            ->willReturn(new ExchangeRateHistory(new DateTime('-1 hour'), 0.05, 'coin_gecko'));
 
         $repository
             ->expects($this->once())
-            ->method('addExchangeRate')
-        ;
+            ->method('addExchangeRate');
 
         $dateTime = new DateTime();
-        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime), new Currency('USD'));
-        $useCase->update(new DateTime(), 'coin_gecko');
+        $useCase = new UpdateExchangeRate($repository, $this->mockProvider($dateTime));
+        $useCase->update(new DateTime(), 'coin_gecko', 'USD');
     }
 
     private function mockProvider(DateTime $dateTime, ?ExchangeRate $exchangeRate = null)
@@ -102,15 +94,13 @@ final class UpdateExchangeRateTest extends TestCase
         $client
             ->expects($this->once())
             ->method('fetchExchangeRate')
-            ->willReturn($exchangeRate)
-        ;
+            ->willReturn($exchangeRate);
 
         $provider = $this->createMock(Provider::class);
         $provider
             ->expects($this->once())
             ->method('get')
-            ->willReturn($client)
-        ;
+            ->willReturn($client);
 
         return $provider;
     }

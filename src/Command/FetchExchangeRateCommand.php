@@ -18,7 +18,7 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\Command;
 
@@ -27,9 +27,11 @@ use Adshares\AdsOperator\Exchange\Provider\Provider;
 use Adshares\AdsOperator\UseCase\Exchange\UpdateExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class FetchExchangeRateCommand extends ContainerAwareCommand
 {
@@ -53,32 +55,47 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
     protected function configure(): void
     {
         $this
+            ->setName('ops:exchange:import')
+            ->setDescription('Importing exchange rate from provider')
+            ->addArgument(
+                'currencies',
+                InputArgument::IS_ARRAY,
+                'Which currencies do you want to import',
+                explode(',', $_ENV['EXCHANGE_CURRENCIES'] ?? '')
+            )
             ->addOption(
                 'provider',
-                null,
-                InputOption::VALUE_OPTIONAL,
+                'p',
+                InputOption::VALUE_REQUIRED,
                 'Which provider do you want to use',
                 self::COIN_GECKO
-            )
-            ->setName('ops:exchange:import')
-            ->setDescription('Importing exchange rate from provider');
+            );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Starting importing an exchange rate.');
+        $io = new SymfonyStyle($input, $output);
+
         $providerName = $input->getOption('provider');
-
         if (!array_key_exists($providerName, self::SUPPORTED_PROVIDERS)) {
-            $output->writeln(sprintf('Provider `%s` is not supported.', $providerName));
+            $io->error(sprintf('Provider `%s` is not supported.', $providerName));
+
+            return 1;
         }
 
-        try {
-            $this->useCase->update(new DateTime(), $providerName);
-        } catch (ProviderRuntimeException $exception) {
-            $output->writeln(sprintf('[Error] %s', $exception->getMessage()));
+        $currencies = $input->getArgument('currencies');
+        if (empty($currencies)) {
+            $io->warning('Currencies list is empty.');
         }
 
-        $output->writeln('Finished importing an exchange rate.');
+        foreach ($currencies as $currency) {
+            try {
+                $io->comment(sprintf('Starting importing an exchange rate for %s from %s', $currency, $providerName));
+                $this->useCase->update(new DateTime(), $providerName, $currency);
+                $io->success('Finished importing an exchange rate');
+            } catch (ProviderRuntimeException $exception) {
+                $io->error(sprintf('Error: %s', $exception->getMessage()));
+            }
+        }
     }
 }

@@ -53,7 +53,7 @@ class ProviderTest extends TestCase
     public function testWhenProviderExistsAndIsConfigured(): void
     {
         $providers = [
-            new CoinGecko('', '', '', 5)
+            new CoinGecko('', '', 5)
         ];
 
         $provider = new Provider($providers);

@@ -289,16 +289,11 @@ services:
       arguments:
         $template: '@twig'
 
-    Adshares\AdsOperator\Exchange\Currency:
-      arguments:
-        $currency: '%env(EXCHANGE_CURRENCY)%'
-
     Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko:
       class: Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko
       arguments:
         $serviceUrl: '%env(EXCHANGE_PROVIDER_COINGECKO_SERVICE_URL)%'
         $id: '%env(EXCHANGE_PROVIDER_COINGECKO_ID)%'
-        $currency: '%env(EXCHANGE_CURRENCY)%'
         $timeout: '%env(EXCHANGE_PROVIDER_TIMEOUT)%'
       tags: ['adshares.adsoperator.exchange']
 

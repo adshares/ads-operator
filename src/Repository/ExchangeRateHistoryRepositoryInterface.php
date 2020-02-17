@@ -18,13 +18,11 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
 use DateTime;
 
 interface ExchangeRateHistoryRepositoryInterface
@@ -33,5 +31,5 @@ interface ExchangeRateHistoryRepositoryInterface
 
     public function addExchangeRate(ExchangeRateHistory $exchangeRateHistory);
 
-    public function fetchForCurrencyBetweenDates(Currency $currency, DateTime $start, DateTime $end): array;
+    public function fetchForCurrencyBetweenDates(string $currency, DateTime $start, DateTime $end): array;
 }

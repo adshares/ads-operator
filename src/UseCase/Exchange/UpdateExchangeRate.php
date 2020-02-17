@@ -18,13 +18,11 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\UseCase\Exchange;
 
 use Adshares\AdsOperator\Document\ExchangeRateHistory;
-use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Provider\Provider;
 use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\Repository\ExchangeRateHistoryRepositoryInterface;
@@ -34,25 +32,23 @@ final class UpdateExchangeRate
 {
     /** @var ExchangeRateHistoryRepositoryInterface */
     private $repository;
-    /** @var Currency */
-    private $currency;
+
     /** @var Provider */
     private $provider;
 
     public function __construct(
         ExchangeRateHistoryRepositoryInterface $repository,
-        Provider $provider,
-        Currency $currency
+        Provider $provider
     ) {
         $this->repository = $repository;
         $this->provider = $provider;
-        $this->currency = $currency;
     }
 
-    public function update(DateTime $dateTime, string $providerName): void
+    public function update(DateTime $dateTime, string $providerName, string $currency): void
     {
+        $currency = strtolower($currency);
         $provider = $this->provider->get($providerName);
-        $newestFromProvider = $provider->fetchExchangeRate($dateTime);
+        $newestFromProvider = $provider->fetchExchangeRate($dateTime, $currency);
 
         try {
             $newestFromRepository = $this->repository->fetchNewest();
@@ -65,7 +61,7 @@ final class UpdateExchangeRate
                 $newestFromProvider->getDate(),
                 $newestFromProvider->getRate(),
                 $providerName,
-                $this->currency->toString()
+                $currency
             );
 
             $this->repository->addExchangeRate($exchangeRate);

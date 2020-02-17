@@ -18,19 +18,20 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Adshares\AdsOperator\Command;
 
-use Adshares\AdsOperator\Exchange\Currency;
 use Adshares\AdsOperator\Exchange\Exception\CalculationMethodRuntimeException;
 use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\UseCase\Exchange\CalculateInternalExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 {
@@ -38,15 +39,11 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 
     /** @var CalculateInternalExchangeRate */
     private $useCase;
-    /** @var Currency */
-    private $currency;
 
-    public function __construct(CalculateInternalExchangeRate $useCase, Currency $currency)
+    public function __construct(CalculateInternalExchangeRate $useCase)
     {
         $this->useCase = $useCase;
-
         parent::__construct();
-        $this->currency = $currency;
     }
 
     /**
@@ -58,46 +55,59 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
         $date->setTime((int)$date->format('H'), 0);
 
         $this
+            ->setName('ops:exchange:calculate')
+            ->setDescription('Importing exchange rate from provider')
+            ->addArgument(
+                'currencies',
+                InputArgument::IS_ARRAY,
+                'Which currencies do you want to import',
+                explode(',', $_ENV['EXCHANGE_CURRENCIES'] ?? '')
+            )
             ->addOption(
                 'date',
-                null,
-                InputOption::VALUE_OPTIONAL,
+                'd',
+                InputOption::VALUE_REQUIRED,
                 'Date for',
                 $date->format(DateTime::ATOM)
-            )
-            ->setName('ops:exchange:calculate')
-            ->setDescription('Importing exchange rate from provider');
+            );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $startDate = DateTime::createFromFormat(DateTime::ATOM, $input->getOption('date'));
+        $io = new SymfonyStyle($input, $output);
 
+        $startDate = DateTime::createFromFormat(DateTime::ATOM, $input->getOption('date'));
         if (!$startDate) {
-            $output->writeln(sprintf('Start Date (%s) is not valid.', $input->getOption('date')));
-            exit();
+            $io->error(sprintf('Start Date (%s) is not valid.', $input->getOption('date')));
+
+            return 1;
+        }
+
+        $currencies = $input->getArgument('currencies');
+        if (empty($currencies)) {
+            $io->warning('Currencies list is empty.');
         }
 
         $startDate->setTime((int)$startDate->format('H'), 0);
         $endDate = (clone $startDate)->modify(sprintf('+%d hour', self::CALCULATION_HOUR_PERIOD));
+        $io->comment(
+            sprintf(
+                'Calculating hourly currency rate for %s to %s',
+                $startDate->format('Y-m-d H:i'),
+                $endDate->format('Y-m-d H:i')
+            )
+        );
 
-        $output->writeln(sprintf(
-            'Starting calculating hourly currency rate for %s to %s',
-            $startDate->format('Y-m-d H:i'),
-            $endDate->format('Y-m-d H:i')
-        ));
-
-        try {
-            $this->useCase->calculate($startDate, $endDate, $this->currency);
-        } catch (CalculationMethodRuntimeException|ExchangeRateNotFoundException $exception) {
-            $output->writeln(sprintf($exception->getMessage()));
-            exit();
+        foreach ($currencies as $currency) {
+            try {
+                $io->comment(sprintf('Starting calculating for %s', $currency));
+                $this->useCase->calculate($startDate, $endDate, $currency);
+                $io->success('Finished calculating an internal rate');
+            } catch (CalculationMethodRuntimeException|ExchangeRateNotFoundException $exception) {
+                $io->error(sprintf('Error: %s', $exception->getMessage()));
+            }
         }
 
-        $output->writeln(sprintf(
-            'Finished calculating an internal rate (%s) for %s.',
-            $this->useCase->getRateValue(),
-            $startDate->format('Y-m-d H:i')
-        ));
+        return 0;
     }
 }
