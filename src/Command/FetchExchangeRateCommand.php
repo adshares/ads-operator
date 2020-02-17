@@ -97,5 +97,7 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
                 $io->error(sprintf('Error: %s', $exception->getMessage()));
             }
         }
+
+        return 0;
     }
 }
