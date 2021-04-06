@@ -27,6 +27,7 @@ use Adshares\AdsOperator\Repository\Exception\ExchangeRateNotFoundException;
 use Adshares\AdsOperator\UseCase\Exchange\CalculateInternalExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,6 +36,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 {
+    use LockableTrait;
+
     private const CALCULATION_HOUR_PERIOD = 1; // 1 hour
 
     /** @var CalculateInternalExchangeRate */
@@ -74,6 +77,12 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 0;
+        }
+
         $io = new SymfonyStyle($input, $output);
 
         $startDate = DateTime::createFromFormat(DateTime::ATOM, $input->getOption('date'));

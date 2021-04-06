@@ -24,11 +24,14 @@ use Adshares\AdsOperator\Event\UserChangedEmail;
 use Adshares\AdsOperator\Queue\QueueInterface;
 use Adshares\AdsOperator\UseCase\SendChangeUserEmailConfirmation;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class SendChangeEmailConfirmationCommand extends ContainerAwareCommand
 {
+    use LockableTrait;
+
     private $queue;
 
     private $sendEmail;
@@ -51,8 +54,14 @@ class SendChangeEmailConfirmationCommand extends ContainerAwareCommand
             ->setDescription('Send a confirmation email containing a link');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 1;
+        }
+
         $callback = function ($message) {
             $data = json_decode($message->body, true);
 
@@ -60,5 +69,6 @@ class SendChangeEmailConfirmationCommand extends ContainerAwareCommand
         };
 
         $this->queue->consume(UserChangedEmail::EVENT_NAME, $callback);
+        return 0;
     }
 }

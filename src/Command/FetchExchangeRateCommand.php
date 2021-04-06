@@ -27,6 +27,7 @@ use Adshares\AdsOperator\Exchange\Provider\Provider;
 use Adshares\AdsOperator\UseCase\Exchange\UpdateExchangeRate;
 use DateTime;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -35,6 +36,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class FetchExchangeRateCommand extends ContainerAwareCommand
 {
+    use LockableTrait;
+
     private const COIN_GECKO = 'coin_gecko';
 
     private const SUPPORTED_PROVIDERS = Provider::PROVIDER_LIST;
@@ -74,6 +77,12 @@ final class FetchExchangeRateCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 0;
+        }
+
         $io = new SymfonyStyle($input, $output);
 
         $providerName = $input->getOption('provider');

@@ -24,6 +24,7 @@ use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\AdsImporter\Importer;
 use Adshares\AdsOperator\AdsImporter\ImporterResult;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\LockableTrait;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -34,6 +35,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ImportADSCommand extends ContainerAwareCommand
 {
+    use LockableTrait;
     /**
      * @var Importer
      */
@@ -64,14 +66,20 @@ class ImportADSCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        if (!$this->lock()) {
+            $output->writeln('The command is already running in another process.');
+
+            return 1;
+        }
+
         try {
             /** @var ImporterResult $result */
             $result = $this->adsImporter->import();
         } catch (AdsClientException $ex) {
             $output->writeln(sprintf('Import cannot be proceed: %s', $ex->getMessage()));
-            return;
+            return 1;
         }
 
         $output->writeln(sprintf(
@@ -82,5 +90,6 @@ class ImportADSCommand extends ContainerAwareCommand
             $result->nodes,
             $result->accounts
         ));
+        return 0;
     }
 }
