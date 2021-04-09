@@ -134,6 +134,7 @@ class Importer
         do {
             try {
                 $blockResponse = $this->client->getBlock($blockId);
+                $this->logger->info("Processing BLOCK %s", $blockId);
 
                 /** @var Block $block */
                 $block = $blockResponse->getBlock();
@@ -195,6 +196,7 @@ class Importer
 
         /** @var Node $node */
         foreach ($nodes as $node) {
+            $this->logger->info("Processing NODE %s", $node->getId());
             if ($node->isSpecial()) {
                 continue;
             }
@@ -221,6 +223,7 @@ class Importer
 
         /** @var Account $account */
         foreach ($accounts as $account) {
+            $this->logger->info("Processing ACCOUNT %s", $account->getAddress());
             $account->setTransactionCount($this->databaseMigration->getAccountTransactionCount($account->getAddress()));
             $this->databaseMigration->addOrUpdateAccount($account, $node);
             ++$this->importerResult->accounts;
@@ -240,6 +243,7 @@ class Importer
             $messageIds = $messageIdResponse->getMessageIds();
 
             foreach ($messageIds as $messageId) {
+                $this->logger->info("Processing MESSAGE %s", $messageId);
                 $messageResponse = $this->getMessageResponse($messageId, $block);
 
                 if (!$messageResponse) {
@@ -291,6 +295,7 @@ class Importer
     {
         /** @var ArrayableInterface $transaction */
         foreach ($transactions as $transaction) {
+            $this->logger->info("Processing TX %s", $transaction->toArray()['_id']);
             if ($transaction instanceof ConnectionTransaction) {
                 $transaction->setTime($message->getTime());
             }
