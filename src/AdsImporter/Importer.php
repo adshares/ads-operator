@@ -181,7 +181,7 @@ class Importer
         $from = $this->databaseMigration->getNewestBlockTime();
 
         if ($from) {
-            return $from + $this->blockLength;
+            return $from;
         }
 
         return $this->genesisTime;
