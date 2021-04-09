@@ -26,3 +26,7 @@ Adshares\AdsOperator\Document\Transaction:
             id: true
             strategy: NONE
             type: string
+    indexes:
+        nodeid:
+            keys:
+                nodeId: desc
