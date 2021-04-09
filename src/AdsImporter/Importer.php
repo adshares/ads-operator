@@ -157,13 +157,15 @@ class Importer
         } while ($startTime <= $endTime);
 
 
-        try {
-            $blockResponse = $this->client->getBlock();
-            $this->updateNodes($blockResponse);
-            $this->updateInfo($blockResponse);
-        } catch (CommandException $ex) {
-            if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
-                throw new AdsClientException('Cannot proceed importing data: '.$ex->getMessage());
+        if($this->importerResult->blocks > 0) {
+            try {
+                $blockResponse = $this->client->getBlock();
+                $this->updateNodes($blockResponse);
+                $this->updateInfo($blockResponse);
+            } catch (CommandException $ex) {
+                if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
+                    throw new AdsClientException('Cannot proceed importing data: ' . $ex->getMessage());
+                }
             }
         }
 
@@ -178,7 +180,7 @@ class Importer
         $from = $this->databaseMigration->getNewestBlockTime();
 
         if ($from) {
-            return $from;
+            return $from + $this->blockLength;
         }
 
         return $this->genesisTime;

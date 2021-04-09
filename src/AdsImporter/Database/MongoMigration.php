@@ -374,13 +374,13 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     public function getNewestBlockTime(): ?int
     {
-        $collection = $this->db->selectCollection(self::BLOCK_COLLECTION);
-        $cursor = $collection->find()->sort(['time' => -1])->limit(1);
+        $collection = $this->db->selectCollection(self::INFO_COLLECTION);
+        $cursor = $collection->find()->sort(['lastBlockId' => -1])->limit(1);
         $cursor->next();
         $document = $cursor->current();
 
         if ($document) {
-            return $document['time']->sec;
+            return hexdec($document['lastBlockId']);
         }
 
         return null;
