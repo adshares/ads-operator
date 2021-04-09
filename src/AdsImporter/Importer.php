@@ -158,7 +158,7 @@ class Importer
         } while ($startTime <= $endTime);
 
 
-        if($this->importerResult->blocks > 0) {
+        if($this->importerResult->blocks > 1) {
             try {
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
