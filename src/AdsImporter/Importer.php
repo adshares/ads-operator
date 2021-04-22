@@ -158,7 +158,7 @@ class Importer
         } while ($startTime <= $endTime);
 
 
-        if($this->importerResult->blocks > 1) {
+        if($this->importerResult->blocks > 0) {
             try {
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
@@ -323,14 +323,14 @@ class Importer
             $supply += $node->getBalance();
         }
 
-        $circulatingSupply = $supply;
-        foreach ($this->nonCirculatingAccounts as $address) {
-            /** @var Account $account */
-            $account = $this->client->getAccount($address)->getAccount();
-            if ($account !== null) {
-                $circulatingSupply -= $account->getBalance();
-            }
-        }
+        $circulatingSupply = (15653207 * 1e11) - (38758206 * 1e11 - $supply); // ICO converted coins minus dividend fund
+//        foreach ($this->nonCirculatingAccounts as $address) {
+//            /** @var Account $account */
+//            $account = $this->client->getAccount($address)->getAccount();
+//            if ($account !== null) {
+//                $circulatingSupply -= $account->getBalance();
+//            }
+//        }
 
         $info->setCirculatingSupply($circulatingSupply / 10 ** $this->amountPrecision);
         $info->setUnpaidDividend(($this->totalSupply - $supply) / 10 ** $this->amountPrecision);
