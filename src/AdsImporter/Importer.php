@@ -304,6 +304,27 @@ class Importer
         }
     }
 
+    const RELEASE = [
+        ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 2310500],
+        ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 1155250],
+        ['from' => '2021-05-01', 'to' => '2022-03-01', 'amount' => 1155250],
+        ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 4621000],
+        ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 2310500],
+        ['from' => '2021-05-01', 'to' => '2022-03-01', 'amount' => 1155250],
+        ['from' => '2021-12-01', 'to' => '2023-04-01', 'amount' => 3465750],
+        ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 2310500],
+        ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 3465750],
+        ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 1155250],
+    ];
+
+    private static function getMonthDiff(\DateTime $now, \DateTime $base) {
+
+        $diff = $base->diff($now);
+
+        return ($diff->invert ? -1 : 1 ) * ($diff->format("%y") * 12 + $diff->format("%m")*1 + 1);
+
+    }
+
     /**
      * @param GetBlockResponse $blockResponse
      */
@@ -323,14 +344,24 @@ class Importer
             $supply += $node->getBalance();
         }
 
-        $circulatingSupply = (15653207 * 1e11) - (38758206 * 1e11 - $supply); // ICO converted coins minus dividend fund
-//        foreach ($this->nonCirculatingAccounts as $address) {
-//            /** @var Account $account */
-//            $account = $this->client->getAccount($address)->getAccount();
-//            if ($account !== null) {
-//                $circulatingSupply -= $account->getBalance();
-//            }
-//        }
+        $circulatingSupply = $supply;
+        foreach ($this->nonCirculatingAccounts as $address) {
+            /** @var Account $account */
+            $account = $this->client->getAccount($address)->getAccount();
+            if ($account !== null) {
+                $circulatingSupply -= $account->getBalance();
+            }
+        }
+
+        foreach (self::RELEASE as $schedule) {
+            $from = new \DateTime($schedule['from'], new \DateTimeZone('UTC'));
+            $to = new \DateTime($schedule['to'], new \DateTimeZone('UTC'));
+            $now = new \DateTime('now', new \DateTimeZone('UTC'));
+            $y = self::getMonthDiff($to, $from);
+            $x = min($y, max(0, self::getMonthDiff($now, $from)));
+            $progress = $x / $y;
+            $circulatingSupply -= (1 - $progress) * $schedule['amount'];
+        }
 
         $info->setCirculatingSupply($circulatingSupply / 10 ** $this->amountPrecision);
         $info->setUnpaidDividend(($this->totalSupply - $supply) / 10 ** $this->amountPrecision);
