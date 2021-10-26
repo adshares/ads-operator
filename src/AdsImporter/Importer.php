@@ -322,7 +322,6 @@ class Importer
         $diff = $base->diff($now);
 
         return ($diff->invert ? -1 : 1 ) * ($diff->format("%y") * 12 + $diff->format("%m")*1 + 1);
-
     }
 
     /**
@@ -360,7 +359,7 @@ class Importer
             $y = self::getMonthDiff($to, $from);
             $x = min($y, max(0, self::getMonthDiff($now, $from)));
             $progress = $x / $y;
-            $circulatingSupply -= (1 - $progress) * $schedule['amount'];
+            $circulatingSupply -= (1 - $progress) * $schedule['amount'] * (10 ** $this->amountPrecision);
         }
 
         $info->setCirculatingSupply($circulatingSupply / 10 ** $this->amountPrecision);
