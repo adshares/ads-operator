@@ -171,7 +171,6 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         $this->messageCollection->update(['_id' => $message->getId()], $document, $this->mongoUpdateOptions);
-
     }
 
     /**

@@ -136,7 +136,8 @@ class Importer
         $this->genesisData = json_decode(file_get_contents($root . '/genesis.json'), true);
     }
 
-    private function getStartingBalance($accountId) {
+    private function getStartingBalance($accountId)
+    {
         if ($this->genesisData === null) {
             throw new \RuntimeException("Genesis not loaded");
         }
@@ -158,7 +159,7 @@ class Importer
         $r = $this->addMissingDividend($account->getRemoteChange()->getTimestamp(), $account->getLocalChange()->getTimestamp(), $account->getBalance(), $block->getTime()->getTimestamp(), $block->getDividendBalance());
         $account->setBalance($r['balance']);
         $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
-        if($r['dividend'] != 0) {
+        if ($r['dividend'] != 0) {
             $this->addDividendTransaction($account->getAddress(), $block->getId(), $r['dividend']);
         }
     }
@@ -185,7 +186,7 @@ class Importer
     {
         $lastDividendBlockTime = $blockTime - ($blockTime % (self::BLOCKSEC * self::BLOCKDIV));
         $div = 0;
-        if ($accountRemoteChange < $lastDividendBlockTime)  {
+        if ($accountRemoteChange < $lastDividendBlockTime) {
             if ($accountLocalChange- self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE) {
                 $div = -(int)((int)$accountBalance / 1000);
             } else {
@@ -256,14 +257,14 @@ class Importer
             $accBalance = $this->getStartingBalance($account['_id']);
             $accLastActive = 1535460864;
 
-            if($account['msid'] == 1) {
+            if ($account['msid'] == 1) {
                 $accLastActive = $account['localChange'];
                 $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
 //                print_r($account);exit;
-            } else if($accBalance == self::TXS_DIV_FEE) {
+            } elseif ($accBalance == self::TXS_DIV_FEE) {
                 $transactions->rewind();
                 $tx = $transactions->current();
-                if($tx) {
+                if ($tx) {
 //                    print_r($tx);
                     $accLastActive =$tx['time']->sec - $tx['time']->sec%self::BLOCKSEC;
                     $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
@@ -318,7 +319,7 @@ class Importer
 //                            $fee=min($accBalance, self::TXS_DIV_FEE);
                         }
 
-                        if($div != 0) {
+                        if ($div != 0) {
                             $this->addDividendTransaction($account['_id'], $blockHex, $div);
                             echo("$blockHex {$account['_id']} dividend " . $div / 1e11 . "!\n");
                         }
@@ -333,7 +334,7 @@ class Importer
             $types = [];
 
             foreach ($transactions as $txData) {
-                if($txData['type'] == 'dividend') {
+                if ($txData['type'] == 'dividend') {
                     continue;
                 }
                 foreach ($txData as &$value) {
@@ -392,7 +393,6 @@ class Importer
 //                        echo "Received ", $tx->getAmount() / 1e11, "\n";
                     }
                 } elseif ($tx instanceof SendManyTransaction) {
-
                     $tmp = 0;
                     foreach ($tx->getWires() as $wire) {
                         if ($tx->getSenderAddress() == $account['_id']) {
@@ -410,13 +410,11 @@ class Importer
                         print_r($tx);
                         exit;
                     }
-
                 } elseif ($tx instanceof NetworkTransaction) {
-                    if($tx->getType() == 'account_created') {
+                    if ($tx->getType() == 'account_created') {
                         $accBalance -= $tx->getSenderFee();
                     }
                 }
-
             }
 
 //                die(print_r($account));
@@ -485,7 +483,7 @@ class Importer
         } while ($startTime <= $endTime);
 
 
-        if($this->importerResult->blocks > 0) {
+        if ($this->importerResult->blocks > 0) {
             try {
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
@@ -647,7 +645,8 @@ class Importer
         ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 1155250],
     ];
 
-    private static function getMonthDiff(\DateTime $now, \DateTime $base) {
+    private static function getMonthDiff(\DateTime $now, \DateTime $base)
+    {
 
         $diff = $base->diff($now);
 

@@ -64,7 +64,7 @@ class DividendTransaction extends BaseEmptyTransaction implements ArrayableInter
     {
         parent::fillWithRawData($data);
 
-        if(!$this->time) {
+        if (!$this->time) {
             $this->time = new \DateTime('@' . hexdec($this->blockId));
         }
     }

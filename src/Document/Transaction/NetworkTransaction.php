@@ -42,7 +42,7 @@ class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInte
 
     public function getSenderFee(): int
     {
-        switch($this->type) {
+        switch ($this->type) {
             case 'create_account':
                 return 100000000 + 20000000;
             case 'account_created':
