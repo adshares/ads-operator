@@ -67,6 +67,23 @@ class Account extends \Adshares\Ads\Entity\Account
         return $this->messageCount;
     }
 
+
+    /**
+     * @param int $balance
+     */
+    public function setBalance(int $balance)
+    {
+        $this->balance = $balance;
+    }
+
+    /**
+     * @param \DateTime $value
+     */
+    public function setRemoteChange(\DateTime $value)
+    {
+        $this->remoteChange = $value;
+    }
+
     /**
      * @param int $transactionCount
      */
