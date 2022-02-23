@@ -1,0 +1,22 @@
+Adshares\AdsOperator\Document\Transaction\DividendTransaction:
+    type: document
+    collection: transaction
+    fields:
+        id:
+            id: true
+            strategy: NONE
+            type: string
+        blockId:
+            type: string
+        type:
+            type: string
+        time:
+            type: date
+        amount:
+            type: int
+        targetAddress:
+            type: string
+    indexes:
+        blockid:
+            keys:
+                blockId: desc

@@ -21,27 +21,52 @@
 namespace Adshares\AdsOperator\Document\Transaction;
 
 use Adshares\AdsOperator\Document\ArrayableInterface;
-use Adshares\Ads\Entity\Transaction\KeyTransaction as BaseKeyTransaction;
+use Adshares\Ads\Entity\Transaction\EmptyTransaction as BaseEmptyTransaction;
 
 /**
- * Class KeyTransaction
+ * Class EmptyTransaction
  * @package Adshares\AdsOperator\Document\Transaction
  */
-class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
+class DividendTransaction extends BaseEmptyTransaction implements ArrayableInterface
 {
-    /**
-     * @var string
-     */
-    protected $senderAddress;
-
     /**
      * @var string
      */
     protected $targetAddress;
 
-    public function getSenderFee(): int
+    /**
+     * @var int
+     */
+    protected $amount;
+
+    /**
+     * @var \DateTime
+     */
+    protected $time;
+
+    /**
+     * @return null|string
+     */
+    public function getTargetAddress(): ?string
     {
-        return 10000000;
+        return $this->targetAddress;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+
+        if(!$this->time) {
+            $this->time = new \DateTime('@' . hexdec($this->blockId));
+        }
     }
 
     /**
@@ -51,24 +76,11 @@ class KeyTransaction extends BaseKeyTransaction implements ArrayableInterface
     {
         return [
             '_id' => $this->id,
-            'size' => $this->size,
             'type' => $this->type,
-            'nodeId' => $this->nodeId,
             'blockId' => $this->blockId,
-            'messageId' => $this->messageId,
-            'msgId' => $this->msgId,
-            'newPublicKey' => $this->newPublicKey,
-            'publicKey' => $this->publicKey,
-            'oldPublicKey' => $this->oldPublicKey,
-            'publicKeySignature' => $this->publicKeySignature,
-            'signature' => $this->signature,
-            'node' => $this->node,
-            'targetNode' => $this->targetNode,
-            'targetUser' => $this->targetUser,
             'time' => $this->time,
-            'user' => $this->user,
-            'senderAddress' => $this->getSenderAddress(),
-            'targetAddress' => $this->getTargetAddress(),
+            'targetAddress' => $this->targetAddress,
+            'amount' => $this->amount,
         ];
     }
 }

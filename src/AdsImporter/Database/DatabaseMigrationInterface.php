@@ -26,6 +26,7 @@ use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
+use Doctrine\MongoDB\Cursor;
 
 /**
  * DatabaseMigrationInterface should be implemented by every database engine.
@@ -86,7 +87,21 @@ interface DatabaseMigrationInterface
     public function getAccountTransactionCount(string $accountId): int;
 
     /**
+     * @param string $accountId
+     * @return Cursor
+     */
+    public function getAccountTransactions(string $accountId): Cursor;
+
+    public function deleteAccountTransaction($id);
+
+    public function getTransaction($txid);
+
+    /**
      * @return int|null
      */
     public function getNewestBlockTime():? int;
+
+    public function getAllAccounts(): Cursor;
+
+    public function getBlock($blockId);
 }

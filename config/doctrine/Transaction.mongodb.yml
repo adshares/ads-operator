@@ -7,6 +7,7 @@ Adshares\AdsOperator\Document\Transaction:
     discriminatorMap:
         broadcast: Adshares\AdsOperator\Document\Transaction\BroadcastTransaction
         connection: Adshares\AdsOperator\Document\Transaction\ConnectionTransaction
+        dividend: Adshares\AdsOperator\Document\Transaction\DividendTransaction
         empty: Adshares\AdsOperator\Document\Transaction\EmptyTransaction
         account_created: Adshares\AdsOperator\Document\Transaction\KeyTransaction
         change_account_key: Adshares\AdsOperator\Document\Transaction\KeyTransaction

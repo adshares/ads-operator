@@ -28,7 +28,7 @@ final class MessageTest extends TestCase
     public function testMessage(): void
     {
         $transactionCount = 10;
-        $message = new Message($transactionCount);
+        $message = Message::create($transactionCount);
 
         $this->assertEquals($transactionCount, $message->getTransactionCount());
     }

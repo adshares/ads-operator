@@ -34,6 +34,11 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
      */
     protected $senderAddress;
 
+    public function getSenderFee()
+    {
+        return (($this->messageLength)<32 ? 10000 : (10000 + 1000*($this->messageLength-32)));
+    }
+
     /**
      * {@inheritdoc}
      */

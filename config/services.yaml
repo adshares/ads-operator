@@ -13,6 +13,7 @@ parameters:
         BroadcastTransaction: '\Adshares\AdsOperator\Document\Transaction\BroadcastTransaction'
         ConnectionTransaction: '\Adshares\AdsOperator\Document\Transaction\ConnectionTransaction'
         EmptyTransaction: '\Adshares\AdsOperator\Document\Transaction\EmptyTransaction'
+
         KeyTransaction: '\Adshares\AdsOperator\Document\Transaction\KeyTransaction'
         LogAccountTransaction: '\Adshares\AdsOperator\Document\Transaction\LogAccountTransaction'
         NetworkTransaction: '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction'

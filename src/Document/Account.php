@@ -44,12 +44,14 @@ class Account extends \Adshares\Ads\Entity\Account
      * Account constructor.
      * @param string|null $address
      */
-    public function __construct(string $address = null)
+    public static function create(string $address = null): self
     {
+        $x = new self();
         if (null !== $address) {
-            $this->id = $address;
-            $this->address = $address;
+            $x->id = $address;
+            $x->address = $address;
         }
+        return $x;
     }
 
     public function getId(): string

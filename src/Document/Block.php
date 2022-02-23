@@ -44,19 +44,21 @@ class Block extends \Adshares\Ads\Entity\Block
      * @param array $nodes
      * @param int|null $messageCount
      */
-    public function __construct(string $id = null, array $nodes = [], int $messageCount = null)
+    public static function create(string $id = null, array $nodes = [], int $messageCount = null): self
     {
+        $x = new self();
         if (null !== $id) {
-            $this->id = $id;
+            $x->id = $id;
         }
 
         if ($nodes) {
-            $this->nodes = $nodes;
+            $x->nodes = $nodes;
         }
 
         if (null !== $messageCount) {
-            $this->messageCount = $messageCount;
+            $x->messageCount = $messageCount;
         }
+        return $x;
     }
 
     /**

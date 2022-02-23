@@ -25,7 +25,9 @@ security:
             stateless: true
             anonymous: true
             provider: user_provider
-            lexik_jwt: ~
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
 
     access_control:
         - { path: ^/api/%api_version%/auth/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
