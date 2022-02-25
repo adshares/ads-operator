@@ -30,14 +30,14 @@ final class BlockTest extends TestCase
     {
         $id = '00001';
         $nodes = [
-            new Node('1'),
-            new Node('2'),
-            new Node('3'),
-            new Node('4'),
+            Node::create('1'),
+            Node::create('2'),
+            Node::create('3'),
+            Node::create('4'),
         ];
         $messageCount = 5;
 
-        $block = new Block($id, $nodes, $messageCount);
+        $block = Block::create($id, $nodes, $messageCount);
 
         $this->assertEquals($id, $block->getId());
         $this->assertEquals($nodes, $block->getNodes());

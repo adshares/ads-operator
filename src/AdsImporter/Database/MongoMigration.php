@@ -31,8 +31,10 @@ use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Doctrine\MongoDB\Connection;
+use Doctrine\MongoDB\Cursor;
 use MongoDB\BSON\UTCDateTime;
 use Doctrine\MongoDB\Collection;
+use phpDocumentor\Reflection\Types\Iterable_;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -157,6 +159,7 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     public function addMessage(Message $message): void
     {
+
         $document = [
             '_id' => $message->getId(),
             'nodeId' => $message->getNodeId(),
@@ -206,6 +209,11 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         $this->blockCollection->update(['_id' => $block->getId()], $document, $this->mongoUpdateOptions);
+    }
+
+    public function getBlock($blockId)
+    {
+        return $this->blockCollection->findOne(['_id' => $blockId]);
     }
 
     /**
@@ -368,6 +376,28 @@ class MongoMigration implements DatabaseMigrationInterface
     }
 
     /**
+     * @param string $accountId
+     *
+     * @return Cursor
+     */
+    public function getAccountTransactions(string $accountId): Cursor
+    {
+        $queryBuilder = $this->transactionCollection->createQueryBuilder();
+        $cursor = $queryBuilder
+            ->field('type')->notEqual('connection')
+            ->addOr($queryBuilder->expr()->field('senderAddress')->equals($accountId))
+            ->addOr($queryBuilder->expr()->field('targetAddress')->equals($accountId))
+            ->addOr($queryBuilder->expr()->field('wires.targetAddress')->equals($accountId))
+            ->sort('time', 1)
+            ->getQuery()
+            ->execute();
+
+
+        return $cursor;
+    }
+
+
+    /**
      * Gets newest block's time from database.
      *
      * @return int|null
@@ -393,5 +423,20 @@ class MongoMigration implements DatabaseMigrationInterface
     private function createMongoDate(\DateTime $date): UTCDateTime
     {
         return new UTCDateTime((int)$date->format('U') * 1000);
+    }
+
+    public function getAllAccounts(): Cursor
+    {
+        return $this->accountCollection->find();
+    }
+
+    public function getTransaction($txid)
+    {
+        return $this->transactionCollection->findOne(['_id' => $txid]);
+    }
+
+    public function deleteAccountTransaction($id)
+    {
+        return $this->accountTransactionCollection->remove(['_id' => $id]);
     }
 }

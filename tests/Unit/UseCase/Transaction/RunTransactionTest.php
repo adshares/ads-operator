@@ -65,16 +65,20 @@ class RunTransactionTest extends TestCase
 
         $response = $this->createMock(ChangeAccountKeyResponse::class);
 
+
+
         $response
             ->expects($this->once())
             ->method('getTx')
-            ->willReturn(new class($data, $fee) extends Tx {
-                public function __construct(string $data, int $fee)
+            ->willReturn((new class extends Tx {
+                public static function construct(string $data, int $fee)
                 {
-                    $this->data = $data;
-                    $this->fee = $fee;
+                    $x = new self();
+                    $x->data = $data;
+                    $x->fee = $fee;
+                    return $x;
                 }
-            });
+            })::construct($data, $fee));
 
         $client = $this->addGetAccount($this->createAdsClient(), $rawData);
         $client

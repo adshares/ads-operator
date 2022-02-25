@@ -20,6 +20,8 @@
 
 namespace Adshares\AdsOperator\AdsImporter;
 
+use Adshares\Ads\Entity\AbstractEntity;
+use Adshares\Ads\Entity\EntityFactory;
 use Adshares\Ads\Response\GetBlockResponse;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\Document\ArrayableInterface;
@@ -34,8 +36,15 @@ use Adshares\Ads\Driver\CommandError;
 use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
+use Adshares\AdsOperator\Document\Transaction\DividendTransaction;
+use Adshares\AdsOperator\Document\Transaction\KeyTransaction;
+use Adshares\AdsOperator\Document\Transaction\NetworkTransaction;
+use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
+use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
+use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
+use Web3\Net;
 
 /**
  * Imports network's data using ADS Client.
@@ -121,6 +130,323 @@ class Importer
         $this->importerResult = new ImporterResult();
     }
 
+    private ?array $genesisData = null;
+    public function loadGenesis($root)
+    {
+        $this->genesisData = json_decode(file_get_contents($root . '/genesis.json'), true);
+    }
+
+    private function getStartingBalance($accountId)
+    {
+        if ($this->genesisData === null) {
+            throw new \RuntimeException("Genesis not loaded");
+        }
+        [$node, $user, $checksum] = explode('-', $accountId);
+        $node = hexdec($node)-1;
+        $user = hexdec($user);
+
+        return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance'] ?? (self::TXS_DIV_FEE / 1e11) ) * (10 ** 11));
+    }
+
+    private const BLOCKSEC = 512; /* block period in seconds (17min) */
+    private const BLOCKDIV = 2048; /* number of blocks for dividend update (dividend period 12 days) */
+    private const ACCOUNT_INACTIVE_AGE  =  365*24*3600; /* account is considered inactive after one year */
+    private const ACCOUNT_DORMANT_AGE   =  2*365*24*3600; /* account is considered dormant after two years */
+    private const TXS_DIV_FEE   =    (20000000);  //(0x100000)  /* dividend fee collected every BLOCKDIV blocks ( $0.1 / year ) */
+
+    private function updateMissingDividend(Account $account, Block $block)
+    {
+        $r = $this->addMissingDividend($account->getRemoteChange()->getTimestamp(), $account->getLocalChange()->getTimestamp(), $account->getBalance(), $block->getTime()->getTimestamp(), $block->getDividendBalance());
+        $account->setBalance($r['balance']);
+        $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
+        if ($r['dividend'] != 0) {
+            $lastDividendBlockTime = $block->getTime()->getTimestamp() - ($block->getTime()->getTimestamp() % (self::BLOCKSEC * self::BLOCKDIV));
+            $this->addDividendTransaction($account->getAddress(), dechex($lastDividendBlockTime), $r['dividend']);
+        }
+    }
+
+    private function addDividendTransaction($targetAccount, $blockId, $div)
+    {
+        $tx = new DividendTransaction();
+        $tx->fillWithRawData(
+            [
+                '_id'           => 'dividend:' . $targetAccount . ':' . $blockId,
+                'size'          => 0,
+                'type'          => 'dividend',
+                'nodeId'        => 0,
+                'blockId'       => $blockId,
+                'messageId'     => 0,
+                'amount'        => $div,
+                'targetAddress' => $targetAccount
+            ]
+        );
+        $this->databaseMigration->addTransaction($tx);
+    }
+
+    private function addMissingDividend($accountRemoteChange, $accountLocalChange, $accountBalance, $blockTime, $blockDividendBalance): array
+    {
+        $lastDividendBlockTime = $blockTime - ($blockTime % (self::BLOCKSEC * self::BLOCKDIV));
+        $div = 0;
+        if ($accountRemoteChange < $lastDividendBlockTime) {
+            if ($accountLocalChange- self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE) {
+                $div = -(int)((int)$accountBalance / 1000);
+            } else {
+                if ($accountLocalChange  - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime
+                    - self::ACCOUNT_INACTIVE_AGE
+                ) {
+                    $div = 0;
+                } else {
+                    $div = (int)((((int)$accountBalance) >> 16) * $blockDividendBalance);
+                }
+            }
+
+            $div -= self::TXS_DIV_FEE;
+            if ($div < -$accountBalance) {
+                $div = -$accountBalance;
+            }
+            $accountRemoteChange = $lastDividendBlockTime;
+        }
+        return [
+            'balance' => max(0, $accountBalance + $div),
+            'remoteChange' => $accountRemoteChange,
+            'dividend' => $div
+        ];
+    }
+
+    private static $TX_CLASS_MAP = [
+        'broadcast' => '\Adshares\AdsOperator\Document\Transaction\BroadcastTransaction',
+        'connection' => '\Adshares\AdsOperator\Document\Transaction\ConnectionTransaction',
+        'create_account' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'account_created' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'retrieve_funds' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'empty' => '\Adshares\AdsOperator\Document\Transaction\EmptyTransaction',
+        'change_account_key' => '\Adshares\AdsOperator\Document\Transaction\KeyTransaction',
+        'log_account' => '\Adshares\AdsOperator\Document\Transaction\LogAccountTransaction',
+        'network' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'send_many' => '\Adshares\AdsOperator\Document\Transaction\SendManyTransaction',
+        'send_one' => '\Adshares\AdsOperator\Document\Transaction\SendOneTransaction',
+        'set_account_status' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'unset_account_status' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'set_bank_status' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+        'unset_bank_status' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
+    ];
+
+    public function calculateDividends(): string
+    {
+        $blockDividends = [];
+        $accounts = $this->databaseMigration->getAllAccounts();
+        foreach ($accounts as $account) {
+            foreach ($account as &$value) {
+                if ($value instanceof \MongoDate) {
+                    $value = $value->sec;
+                }
+            }
+            unset($value);
+//            if ($account['_id'] <= '0011-00000003-AF56') {
+//                continue;
+//            }
+            if (stristr($account['_id'], '-00000000-')) {
+                // node operator. Not brave enough to calculate this
+                continue;
+            }
+//            echo('Account ' . $account['_id']), "\n";
+
+            $transactions = $this->databaseMigration->getAccountTransactions($account['_id']);
+
+            $currentBlock = 1535460864; // genesis
+
+            $accBalance = $this->getStartingBalance($account['_id']);
+            $accLastActive = 1535460864;
+
+            if ($account['msid'] == 1) {
+                $accLastActive = $account['localChange'];
+                $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
+//                print_r($account);exit;
+            } elseif ($accBalance == self::TXS_DIV_FEE) {
+                $transactions->rewind();
+                $tx = $transactions->current();
+                if ($tx) {
+//                    print_r($tx);
+                    $accLastActive =$tx['time']->sec - $tx['time']->sec%self::BLOCKSEC;
+                    $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
+                }
+            }
+
+//            echo "Start balance: ", $accBalance / 1e11, "\n";
+
+            $advanceBlockFn = function ($nextBlock) use (
+                $account,
+                &$blockDividends,
+                &$currentBlock,
+                &$accBalance,
+                &$accLastActive
+            ) {
+                for ($block = $currentBlock + self::BLOCKSEC; $block <= $nextBlock; $block += self::BLOCKSEC) {
+                    $blockHex = strtoupper(dechex($block));
+
+                    if ($block % (self::BLOCKSEC * self::BLOCKDIV) == 0) {
+                        if (!isset($blockDividends[$block])) {
+                            $divBlockData = $this->databaseMigration->getBlock(
+                                strtoupper(dechex($block))
+                            );
+                            $blockDividends[$block] = $divBlockData['dividendBalance'] ?? 0;
+                        }
+
+//                        echo("$blockHex Dividend before = " . $accBalance / 1e11 . "!\n");
+//                        echo("$currentBlock $block $nextBlock dividend = {$blockDividends[$block]}!\n");
+                        $fee = 0;
+                        if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block - self::ACCOUNT_DORMANT_AGE) {
+                            $div = -(int)((int)$accBalance / 1000);
+//                            echo("$blockHex Negative dividend!\n");
+                        } else {
+                            if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block
+                                - self::ACCOUNT_INACTIVE_AGE
+                            ) {
+                                $div = 0;
+//                                echo("$blockHex Dividend inactive!\n");
+                            } else {
+                                $div = (((int)$accBalance) >> 16) * $blockDividends[$block];
+//                                echo("$blockHex Dividend $div " . ((int)$accBalance >> 16)
+//                                    . " * {$blockDividends[$block]}\n");
+                            }
+                        }
+                        $div -= self::TXS_DIV_FEE;
+//                        echo("$blockHex dividend " . $div / 1e11 . "! $accLastActive\n");
+//                        echo("Dividend inactive $div!\n");
+
+                        if ($div < -$accBalance) {
+                            $div = -$accBalance;
+                        } else {
+//                            $fee=min($accBalance, self::TXS_DIV_FEE);
+                        }
+
+                        if ($div != 0) {
+                            $this->addDividendTransaction($account['_id'], $blockHex, $div);
+                            echo("$blockHex {$account['_id']} dividend " . $div / 1e11 . "!\n");
+                        }
+
+                        $accBalance += $div;
+//                        echo("$blockHex Dividend after = " . $accBalance / 1e11 . "!\n");
+                    }
+                }
+                $currentBlock = $nextBlock;
+            };
+
+            $types = [];
+
+            foreach ($transactions as $txData) {
+                if ($txData['type'] == 'dividend') {
+                    continue;
+                }
+                foreach ($txData as &$value) {
+                    if ($value instanceof \MongoDate) {
+                        $value = $value->sec;
+                    }
+                }
+//                    print_r($txData);
+//                    exit;
+                $class = self::$TX_CLASS_MAP[$txData['type']];
+                $tx = new $class();
+                if (isset($txData['amount'])) {
+                    $txData['amount'] /= 10 ** 11;
+                }
+                if (isset($txData['senderFee'])) {
+                    $txData['senderFee'] /= 10 ** 11;
+                }
+
+                if (isset($txData['wires'])) {
+                    foreach ($txData['wires'] as &$wire) {
+                        $wire['amount'] /= 10 ** 11;
+                    }
+                    unset($wire);
+                }
+
+                $tx->fillWithRawData($txData);
+
+
+                if ($tx->getSenderAddress() == $account['_id']) {
+                    $advanceBlockFn($tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp()%self::BLOCKSEC);
+                    $accLastActive = $tx->getTime()->getTimestamp();
+                }
+
+                $advanceBlockFn(hexdec($tx->getBlockId()));
+
+//                echo $txData['type'], ' ', $txData['_id'], " Current time: ", date(
+//                    'd.m.Y H:i:s',
+//                    method_exists($tx, 'getTime') ? $tx->getTime()->getTimestamp() : $currentBlock,
+//                ), "\n";
+
+                $types[$txData['type']] = ($types[$txData['type']] ?? 0) + 1;
+
+                if ($tx->getSenderAddress() == $account['_id']) {
+                    $accLastActive = $tx->getTime()->getTimestamp()- $tx->getTime()->getTimestamp()%self::BLOCKSEC+ self::BLOCKSEC;
+                    $accBalance -= $tx->getSenderFee();
+//                    echo "Paid fee ", $tx->getSenderFee() / 1e11, "\n";
+                }
+
+                if ($tx instanceof SendOneTransaction) {
+                    if ($tx->getSenderAddress() == $account['_id']) {
+                        $accBalance -= $tx->getAmount();
+//                        echo "Sent ", $tx->getAmount() / 1e11, "\n";
+                    }
+                    if ($tx->getTargetAddress() == $account['_id']) {
+                        $accBalance += $tx->getAmount();
+//                        echo "Received ", $tx->getAmount() / 1e11, "\n";
+                    }
+                } elseif ($tx instanceof SendManyTransaction) {
+                    $tmp = 0;
+                    foreach ($tx->getWires() as $wire) {
+                        if ($tx->getSenderAddress() == $account['_id']) {
+                            $accBalance -= $wire->getAmount();
+//                            echo "Sent ", $wire->getAmount() / 1e11, "\n";
+                            $tmp++;
+                        }
+                        if ($wire->getTargetAddress() == $account['_id']) {
+                            $accBalance += $wire->getAmount();
+//                            echo "Received ", $wire->getAmount() / 1e11, "\n";
+                            $tmp++;
+                        }
+                    }
+                    if ($tmp == 0) {
+                        print_r($tx);
+                        exit;
+                    }
+                } elseif ($tx instanceof NetworkTransaction) {
+                    if ($tx->getType() == 'account_created') {
+                        $accBalance -= $tx->getSenderFee();
+                    }
+                }
+            }
+
+//                die(print_r($account));
+
+
+            $advanceBlockFn($this->databaseMigration->getNewestBlockTime());
+
+            $blockData = $this->databaseMigration->getBlock(
+                strtoupper(dechex($currentBlock))
+            );
+
+            $r = $this->addMissingDividend($account['remoteChange'], $account['localChange'], $account['balance'], $currentBlock, $blockData['dividendBalance']);
+            $account['remoteChange'] = $r['remoteChange'];
+            $account['balance'] = $r['balance'];
+
+
+//            echo "Calculated balance: ", $accBalance / 1e11, "\n";
+//            echo "Actual balance:     ", $account['balance'] / 1e11, "\n";
+
+//            if(abs($accBalance - $account['balance']) > 2) {
+                echo "Mismatch for account {$account['_id']}; diff = " . sprintf("%.11f", ($accBalance - $account['balance'])/1e11) ." ADS\n";
+//                print_r($types);
+//                exit;
+//            }
+
+//            exit;
+//            sleep(5);
+        }
+        return 1;
+    }
+
     /**
      * @return ImporterResult
      */
@@ -158,7 +484,7 @@ class Importer
         } while ($startTime <= $endTime);
 
 
-        if($this->importerResult->blocks > 0) {
+        if ($this->importerResult->blocks > 0) {
             try {
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
@@ -193,6 +519,8 @@ class Importer
     private function updateNodes(GetBlockResponse $blockResponse): void
     {
         $nodes = $blockResponse->getBlock()->getNodes();
+        /** @var Block $block */
+        $block =$blockResponse->getBlock();
 
         /** @var Node $node */
         foreach ($nodes as $node) {
@@ -204,7 +532,7 @@ class Importer
             $node->setVersion($this->databaseMigration->getNodeVersion($node->getId()));
             $node->setTransactionCount($this->databaseMigration->getNodeTransactionCount($node->getId()));
 
-            $this->updateAccounts($node);
+            $this->updateAccounts($node, $block);
 
             $this->databaseMigration->addOrUpdateNode($node);
             ++$this->importerResult->nodes;
@@ -216,13 +544,14 @@ class Importer
     /**
      * @param Node $node
      */
-    private function updateAccounts(Node $node): void
+    private function updateAccounts(Node $node, Block $block): void
     {
         $accountResponse = $this->client->getAccounts($node->getId());
         $accounts = $accountResponse->getAccounts();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
+            $this->updateMissingDividend($account, $block);
             $this->logger->info(sprintf("Processing ACCOUNT %s", $account->getAddress()));
             $account->setTransactionCount($this->databaseMigration->getAccountTransactionCount($account->getAddress()));
             $this->databaseMigration->addOrUpdateAccount($account, $node);
@@ -317,7 +646,8 @@ class Importer
         ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 1155250],
     ];
 
-    private static function getMonthDiff(\DateTime $now, \DateTime $base) {
+    private static function getMonthDiff(\DateTime $now, \DateTime $base)
+    {
 
         $diff = $base->diff($now);
 

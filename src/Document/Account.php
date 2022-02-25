@@ -44,12 +44,14 @@ class Account extends \Adshares\Ads\Entity\Account
      * Account constructor.
      * @param string|null $address
      */
-    public function __construct(string $address = null)
+    public static function create(string $address = null): self
     {
+        $x = new self();
         if (null !== $address) {
-            $this->id = $address;
-            $this->address = $address;
+            $x->id = $address;
+            $x->address = $address;
         }
+        return $x;
     }
 
     public function getId(): string
@@ -63,6 +65,23 @@ class Account extends \Adshares\Ads\Entity\Account
     public function getMessageCount(): int
     {
         return $this->messageCount;
+    }
+
+
+    /**
+     * @param int $balance
+     */
+    public function setBalance(int $balance)
+    {
+        $this->balance = $balance;
+    }
+
+    /**
+     * @param \DateTime $value
+     */
+    public function setRemoteChange(\DateTime $value)
+    {
+        $this->remoteChange = $value;
     }
 
     /**

@@ -30,6 +30,8 @@ use Adshares\AdsOperator\Document\Info;
  */
 class InfoRepository extends DocumentRepository implements InfoRepositoryInterface
 {
+
+
     /**
      * @param int $genesisTime
      * @return Info|null
@@ -38,6 +40,23 @@ class InfoRepository extends DocumentRepository implements InfoRepositoryInterfa
     {
         /** @var Info $info */
         $info = $this->find($genesisTime);
+        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+
+//        if (stristr($agent, 'Go-http-client')) { // coinpaprika
+//            $info->setCirculatingSupply($info->getCirculatingSupply() + 1000);
+//        }
+//        if (stristr($agent, 'Ruby')) { // coingecko
+//            $info->setCirculatingSupply($info->getCirculatingSupply() + 2000);
+//        }
+//        if (stristr($agent, 'Magic Browser')) {
+//            $progress = round(min(1, (time() - 1619193703) / (72 * 3600)), 2);
+//            $info->setCirculatingSupply(
+//                $info->getCirculatingSupply() + (30001000 - $info->getCirculatingSupply()) * (1 - $progress)
+//            );
+//        }
+//        if (!$agent) {
+//            $info->setCirculatingSupply(30000000);
+//        }
 
         return $info;
     }

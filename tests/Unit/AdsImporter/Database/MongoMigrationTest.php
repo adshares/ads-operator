@@ -300,7 +300,7 @@ class MongoMigrationTest extends TestCase
 
         $cursor
             ->method('current')
-            ->willReturn(['time' => (object) ['sec' => $time]]);
+            ->willReturn(['lastBlockId' => dechex($time)]);
 
         $collection
             ->expects($this->once())

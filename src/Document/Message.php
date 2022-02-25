@@ -40,11 +40,13 @@ class Message extends \Adshares\Ads\Entity\Message
      * Message constructor.
      * @param int|null $transactionCount
      */
-    public function __construct(?int $transactionCount = 0)
+    public static function create(?int $transactionCount = 0): self
     {
+        $x = new self();
         if ($transactionCount) {
-            $this->transactionCount = $transactionCount;
+            $x->transactionCount = $transactionCount;
         }
+        return $x;
     }
 
     /**

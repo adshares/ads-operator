@@ -84,6 +84,6 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains('Import cannot be proceed', $output);
+        $this->assertContains('The command is already running in another', $output);
     }
 }

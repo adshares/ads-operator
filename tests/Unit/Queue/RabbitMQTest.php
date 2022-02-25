@@ -68,7 +68,6 @@ class RabbitMQTest extends TestCase
     public function testPublishWhenQueueMessageCannotBeCreated()
     {
         $this->expectException(QueueCannotAddMessage::class);
-        \PhpAmqpLib\Channel\AbstractChannel::$PROTOCOL_CONSTANTS_CLASS = 'PhpAmqpLib\Wire\Constants091';
 
         $data = [
             'old_email' => 'old@example.com',

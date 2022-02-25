@@ -39,6 +39,28 @@ class NetworkTransaction extends BaseNetworkTransaction implements ArrayableInte
      */
     protected $targetAddress;
 
+
+    public function getSenderFee(): int
+    {
+        switch ($this->type) {
+            case 'create_account':
+                return 100000000 + 20000000;
+            case 'account_created':
+                return 100000000;
+            case 'retrieve_funds':
+                return 2 * 1000000;
+            case 'set_account_status':
+                return 10000000;
+            case 'unset_account_status':
+                return 10000000;
+            case 'set_bank_status':
+                return 10000000;
+            case 'unset_bank_status':
+                return 10000000;
+        }
+        throw new \RuntimeException("Unknown transaction fee for '{$this->type}");
+    }
+
     /**
      * {@inheritdoc}
      */

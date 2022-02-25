@@ -6,6 +6,7 @@ Adshares\AdsOperator\Document\Transaction:
         map:
             broadcast: Adshares\AdsOperator\Document\Transaction\BroadcastTransaction
             connection: Adshares\AdsOperator\Document\Transaction\ConnectionTransaction
+            dividend: Adshares\AdsOperator\Document\Transaction\DividendTransaction
             empty: Adshares\AdsOperator\Document\Transaction\EmptyTransaction
             key: Adshares\AdsOperator\Document\Transaction\KeyTransaction
             log_account: Adshares\AdsOperator\Document\Transaction\LogAccountTransaction
