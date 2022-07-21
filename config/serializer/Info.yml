@@ -19,3 +19,15 @@ Adshares\AdsOperator\Document\Info:
         unpaidDividend:
             expose: true
             type: float
+        nodes:
+            expose: true
+            type: int
+        accounts:
+            expose: true
+            type: int
+        messages:
+            expose: true
+            type: int
+        transactions:
+            expose: true
+            type: int

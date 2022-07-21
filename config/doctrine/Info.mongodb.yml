@@ -17,4 +17,12 @@ Adshares\AdsOperator\Document\Info:
             type: float
         unpaidDividend:
             type: float
+        nodes:
+            type: int
+        accounts:
+            type: int
+        messages:
+            type: int
+        transactions:
+            type: int
 
