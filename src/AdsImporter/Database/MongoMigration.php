@@ -141,6 +141,11 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     public function addOrUpdateInfo(Info $info): void
     {
+        $info->setNodes($this->nodeCollection->count());
+        $info->setAccounts($this->accountCollection->count());
+        $info->setMessages($this->messageCollection->count());
+        $info->setTransactions($this->transactionCollection->count());
+
         $document = [
             '_id' => $info->getGenesisTime(),
             'blockLength' => $info->getBlockLength(),
@@ -148,6 +153,10 @@ class MongoMigration implements DatabaseMigrationInterface
             'totalSupply' => $info->getTotalSupply(),
             'circulatingSupply' => $info->getCirculatingSupply(),
             'unpaidDividend' => $info->getUnpaidDividend(),
+            'nodes' => $info->getNodes(),
+            'accounts' => $info->getAccounts(),
+            'messages' => $info->getMessages(),
+            'transactions' => $info->getTransactions(),
         ];
 
         $this->infoCollection->update(['_id' => $info->getGenesisTime()], $document, $this->mongoUpdateOptions);

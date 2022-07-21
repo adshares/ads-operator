@@ -57,6 +57,26 @@ class Info
     protected $unpaidDividend;
 
     /**
+     * @var int
+     */
+    protected $nodes;
+
+    /**
+     * @var int
+     */
+    protected $accounts;
+
+    /**
+     * @var int
+     */
+    protected $messages;
+
+    /**
+     * @var int
+     */
+    protected $transactions;
+
+    /**
      * Info constructor.
      * @param int|null $genesisTime
      * @param int|null $blockLength
@@ -165,5 +185,69 @@ class Info
     public function setUnpaidDividend(float $unpaidDividend): void
     {
         $this->unpaidDividend = $unpaidDividend;
+    }
+
+    /**
+     * @return int
+     */
+    public function getNodes(): int
+    {
+        return $this->nodes;
+    }
+
+    /**
+     * @param int $nodes
+     */
+    public function setNodes(int $nodes): void
+    {
+        $this->nodes = $nodes;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAccounts(): int
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * @param int $accounts
+     */
+    public function setAccounts(int $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMessages(): int
+    {
+        return $this->messages;
+    }
+
+    /**
+     * @param int $messages
+     */
+    public function setMessages(int $messages): void
+    {
+        $this->messages = $messages;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTransactions(): int
+    {
+        return $this->transactions;
+    }
+
+    /**
+     * @param int $transactions
+     */
+    public function setTransactions(int $transactions): void
+    {
+        $this->transactions = $transactions;
     }
 }
