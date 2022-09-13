@@ -9,7 +9,7 @@
     ·
     <a href="https://github.com/adshares/ads-operator/issues/new?template=feature_request.md&labels=New%20Feature">Request feature</a>
     ·
-    <a href="https://github.com/adshares/ads-operator/wiki">Wiki</a>
+    <a href="https://docs.adshares.net/ads-operator/">Docs</a>
 </p>
 
 [![Quality Status](https://sonarcloud.io/api/project_badges/measure?project=adshares-ads-operator&metric=alert_status)](https://sonarcloud.io/dashboard?id=adshares-ads-operator)
@@ -24,13 +24,13 @@ ADS Operator system consists of three parts:
 
 ## Getting Started
 
-Clone the repo: `git@github.com:adshares/ads-operator.git` and follow the instruction on [Wiki](https://github.com/adshares/ads-operator/wiki/Installation).
+Clone the repo: `git@github.com:adshares/ads-operator.git` and follow the instruction on [docs](https://docs.adshares.net/ads-operator/installation.html).
  
 
 ## Documentation
-* [Installation](https://github.com/adshares/ads-operator/wiki/Installation)
-* [Usage](https://github.com/adshares/ads-operator/wiki/Usage)
-* [Quality](https://github.com/adshares/ads-operator/wiki/Quality)
+* [Installation](https://docs.adshares.net/ads-operator/installation.html)
+* [Usage](https://docs.adshares.net/ads-operator/usage.html)
+* [Quality](https://docs.adshares.net/ads-operator/quality.html)
 
 
 ## Contributing
