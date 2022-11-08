@@ -148,6 +148,7 @@ class TransactionController extends ApiController
      */
     public function showAction(string $id): Response
     {
+        $id = strtoupper($id);
         if (!Transaction::validateId($id)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }

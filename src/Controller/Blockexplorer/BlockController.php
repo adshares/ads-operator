@@ -145,6 +145,7 @@ class BlockController extends ApiController
      */
     public function showAction(string $id): Response
     {
+        $id = strtoupper($id);
         if (!Block::validateId($id)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -217,6 +218,7 @@ class BlockController extends ApiController
      */
     public function messagesAction(Request $request, string $blockId): Response
     {
+        $blockId = strtoupper($blockId);
         if (!Block::validateId($blockId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -304,6 +306,7 @@ class BlockController extends ApiController
      */
     public function transactionsAction(Request $request, string $blockId): Response
     {
+        $blockId = strtoupper($blockId);
         if (!Block::validateId($blockId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }

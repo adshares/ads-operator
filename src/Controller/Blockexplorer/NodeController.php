@@ -157,6 +157,7 @@ class NodeController extends ApiController
      */
     public function showAction(string $id): Response
     {
+        $id = strtoupper($id);
         if (!Node::validateId($id)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -225,6 +226,7 @@ class NodeController extends ApiController
      */
     public function accountsAction(Request $request, string $nodeId): Response
     {
+        $nodeId = strtoupper($nodeId);
         if (!Node::validateId($nodeId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -302,6 +304,7 @@ class NodeController extends ApiController
      */
     public function messagesAction(Request $request, string $nodeId): Response
     {
+        $nodeId = strtoupper($nodeId);
         if (!Node::validateId($nodeId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -385,6 +388,7 @@ class NodeController extends ApiController
      */
     public function transactionsAction(Request $request, string $nodeId): Response
     {
+        $nodeId = strtoupper($nodeId);
         if (!Node::validateId($nodeId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }

@@ -161,7 +161,7 @@ class Importer
         $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
         if ($r['dividend'] != 0) {
             $lastDividendBlockTime = $block->getTime()->getTimestamp() - ($block->getTime()->getTimestamp() % (self::BLOCKSEC * self::BLOCKDIV));
-            $this->addDividendTransaction($account->getAddress(), dechex($lastDividendBlockTime), $r['dividend']);
+            $this->addDividendTransaction($account->getAddress(), strtoupper(dechex($lastDividendBlockTime)), $r['dividend']);
         }
     }
 

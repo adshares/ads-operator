@@ -135,6 +135,7 @@ class MessageController extends ApiController
      */
     public function showAction(string $id): Response
     {
+        $id = strtoupper($id);
         if (!Message::validateId($id)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -213,6 +214,7 @@ class MessageController extends ApiController
      */
     public function transactionsAction(Request $request, string $messageId): Response
     {
+        $messageId = strtoupper($messageId);
         if (!Message::validateId($messageId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }

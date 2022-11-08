@@ -137,6 +137,7 @@ class AccountController extends ApiController
      */
     public function showAction(string $id): Response
     {
+        $id = strtoupper($id);
         if (!Account::validateId($id)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
@@ -209,6 +210,7 @@ class AccountController extends ApiController
      */
     public function transactionsAction(Request $request, string $accountId): Response
     {
+        $accountId = strtoupper($accountId);
         if (!Account::validateId($accountId)) {
             throw new UnprocessableEntityHttpException(self::INVALID_RESOURCE_MESSAGE);
         }
