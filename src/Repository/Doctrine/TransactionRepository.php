@@ -1,21 +1,21 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z o.o.
+ * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
- * ADS Operator is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * ADS Operator is free software: you can redistribute and/or modify it
+ * under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * ADS Operator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
+ * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Adshares\AdsOperator\Repository\Doctrine;
@@ -97,6 +97,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $offset
     ): array {
         $results = [];
+        $count = 0;
 
         $cursor = $this->createBuilderForList($sort, $order, $limit, $offset, $conditions);
         if ($hideConnections) {
@@ -104,19 +105,23 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         }
 
         try {
-            $data = $cursor
+            $cursor = $cursor
                 ->getQuery()
-                ->execute()
-                ->toArray();
+                ->execute();
+
+            $data = $cursor->toArray();
+            $count = $cursor->count();
 
             foreach ($data as $transaction) {
                 $results[] = $transaction;
             }
         } catch (MongoDBException $ex) {
-            return [];
         }
 
-        return $results;
+        return [
+            'data' => $results,
+            'meta' => ['count' => $count]
+        ];
     }
 
     /**
@@ -135,6 +140,7 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
         int $offset
     ): array {
         $results = [];
+        $count = 0;
 
         try {
             $queryBuilder = $this->createQueryBuilder();
@@ -151,15 +157,19 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
                 ->execute();
 
             $data = $cursor->toArray();
+            $count = $cursor->count();
 
             foreach ($data as $transaction) {
                 $results[] = $transaction;
             }
 
-            return $results;
         } catch (MongoDBException $ex) {
-            return [];
         }
+
+        return [
+            'data' => $results,
+            'meta' => ['count' => $count]
+        ];
     }
 
     /**
@@ -330,7 +340,6 @@ class TransactionRepository extends BaseRepository implements TransactionReposit
                 $results[] = $ticker;
             }
         } catch (MongoDBException $ex) {
-            return [];
         }
 
         return $results;
