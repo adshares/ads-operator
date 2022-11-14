@@ -1,27 +1,25 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z o.o.
+ * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
- * ADS Operator is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * ADS Operator is free software: you can redistribute and/or modify it
+ * under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * ADS Operator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
+ * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Adshares\AdsOperator\AdsImporter;
 
-use Adshares\Ads\Entity\AbstractEntity;
-use Adshares\Ads\Entity\EntityFactory;
 use Adshares\Ads\Response\GetBlockResponse;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\Document\ArrayableInterface;
@@ -37,14 +35,11 @@ use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\Ads\Exception\CommandException;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\Document\Transaction\DividendTransaction;
-use Adshares\AdsOperator\Document\Transaction\KeyTransaction;
 use Adshares\AdsOperator\Document\Transaction\NetworkTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
-use JetBrains\PhpStorm\ArrayShape;
 use Psr\Log\LoggerInterface;
-use Web3\Net;
 
 /**
  * Imports network's data using ADS Client.
@@ -131,6 +126,7 @@ class Importer
     }
 
     private ?array $genesisData = null;
+
     public function loadGenesis($root)
     {
         $this->genesisData = json_decode(file_get_contents($root . '/genesis.json'), true);
@@ -142,26 +138,37 @@ class Importer
             throw new \RuntimeException("Genesis not loaded");
         }
         [$node, $user, $checksum] = explode('-', $accountId);
-        $node = hexdec($node)-1;
+        $node = hexdec($node) - 1;
         $user = hexdec($user);
 
-        return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance'] ?? (self::TXS_DIV_FEE / 1e11) ) * (10 ** 11));
+        return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance'] ?? (self::TXS_DIV_FEE / 1e11)) * (10 ** 11));
     }
 
     private const BLOCKSEC = 512; /* block period in seconds (17min) */
     private const BLOCKDIV = 2048; /* number of blocks for dividend update (dividend period 12 days) */
-    private const ACCOUNT_INACTIVE_AGE  =  365*24*3600; /* account is considered inactive after one year */
-    private const ACCOUNT_DORMANT_AGE   =  2*365*24*3600; /* account is considered dormant after two years */
-    private const TXS_DIV_FEE   =    (20000000);  //(0x100000)  /* dividend fee collected every BLOCKDIV blocks ( $0.1 / year ) */
+    private const ACCOUNT_INACTIVE_AGE = 365 * 24 * 3600; /* account is considered inactive after one year */
+    private const ACCOUNT_DORMANT_AGE = 2 * 365 * 24 * 3600; /* account is considered dormant after two years */
+    private const TXS_DIV_FEE = (20000000);  //(0x100000)  /* dividend fee collected every BLOCKDIV blocks ( $0.1 / year ) */
 
     private function updateMissingDividend(Account $account, Block $block)
     {
-        $r = $this->addMissingDividend($account->getRemoteChange()->getTimestamp(), $account->getLocalChange()->getTimestamp(), $account->getBalance(), $block->getTime()->getTimestamp(), $block->getDividendBalance());
+        $r = $this->addMissingDividend(
+            $account->getRemoteChange()->getTimestamp(),
+            $account->getLocalChange()->getTimestamp(),
+            $account->getBalance(),
+            $block->getTime()->getTimestamp(),
+            $block->getDividendBalance()
+        );
         $account->setBalance($r['balance']);
         $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
         if ($r['dividend'] != 0) {
-            $lastDividendBlockTime = $block->getTime()->getTimestamp() - ($block->getTime()->getTimestamp() % (self::BLOCKSEC * self::BLOCKDIV));
-            $this->addDividendTransaction($account->getAddress(), strtoupper(dechex($lastDividendBlockTime)), $r['dividend']);
+            $lastDividendBlockTime = $block->getTime()->getTimestamp() - ($block->getTime()->getTimestamp(
+                    ) % (self::BLOCKSEC * self::BLOCKDIV));
+            $this->addDividendTransaction(
+                $account->getAddress(),
+                strtoupper(dechex($lastDividendBlockTime)),
+                $r['dividend']
+            );
         }
     }
 
@@ -170,28 +177,33 @@ class Importer
         $tx = new DividendTransaction();
         $tx->fillWithRawData(
             [
-                '_id'           => 'dividend:' . $targetAccount . ':' . $blockId,
-                'size'          => 0,
-                'type'          => 'dividend',
-                'nodeId'        => 0,
-                'blockId'       => $blockId,
-                'messageId'     => 0,
-                'amount'        => $div,
+                '_id' => 'dividend:' . $targetAccount . ':' . $blockId,
+                'size' => 0,
+                'type' => 'dividend',
+                'nodeId' => 0,
+                'blockId' => $blockId,
+                'messageId' => 0,
+                'amount' => $div,
                 'targetAddress' => $targetAccount
             ]
         );
         $this->databaseMigration->addTransaction($tx);
     }
 
-    private function addMissingDividend($accountRemoteChange, $accountLocalChange, $accountBalance, $blockTime, $blockDividendBalance): array
-    {
+    private function addMissingDividend(
+        $accountRemoteChange,
+        $accountLocalChange,
+        $accountBalance,
+        $blockTime,
+        $blockDividendBalance
+    ): array {
         $lastDividendBlockTime = $blockTime - ($blockTime % (self::BLOCKSEC * self::BLOCKDIV));
         $div = 0;
         if ($accountRemoteChange < $lastDividendBlockTime) {
-            if ($accountLocalChange- self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE) {
+            if ($accountLocalChange - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE) {
                 $div = -(int)((int)$accountBalance / 1000);
             } else {
-                if ($accountLocalChange  - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime
+                if ($accountLocalChange - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime
                     - self::ACCOUNT_INACTIVE_AGE
                 ) {
                     $div = 0;
@@ -242,14 +254,10 @@ class Importer
                 }
             }
             unset($value);
-//            if ($account['_id'] <= '0011-00000003-AF56') {
-//                continue;
-//            }
             if (stristr($account['_id'], '-00000000-')) {
                 // node operator. Not brave enough to calculate this
                 continue;
             }
-//            echo('Account ' . $account['_id']), "\n";
 
             $transactions = $this->databaseMigration->getAccountTransactions($account['_id']);
 
@@ -261,18 +269,14 @@ class Importer
             if ($account['msid'] == 1) {
                 $accLastActive = $account['localChange'];
                 $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
-//                print_r($account);exit;
             } elseif ($accBalance == self::TXS_DIV_FEE) {
                 $transactions->rewind();
                 $tx = $transactions->current();
                 if ($tx) {
-//                    print_r($tx);
-                    $accLastActive =$tx['time']->sec - $tx['time']->sec%self::BLOCKSEC;
+                    $accLastActive = $tx['time']->sec - $tx['time']->sec % self::BLOCKSEC;
                     $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
                 }
             }
-
-//            echo "Start balance: ", $accBalance / 1e11, "\n";
 
             $advanceBlockFn = function ($nextBlock) use (
                 $account,
@@ -291,28 +295,19 @@ class Importer
                             );
                             $blockDividends[$block] = $divBlockData['dividendBalance'] ?? 0;
                         }
-
-//                        echo("$blockHex Dividend before = " . $accBalance / 1e11 . "!\n");
-//                        echo("$currentBlock $block $nextBlock dividend = {$blockDividends[$block]}!\n");
                         $fee = 0;
                         if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block - self::ACCOUNT_DORMANT_AGE) {
                             $div = -(int)((int)$accBalance / 1000);
-//                            echo("$blockHex Negative dividend!\n");
                         } else {
                             if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block
                                 - self::ACCOUNT_INACTIVE_AGE
                             ) {
                                 $div = 0;
-//                                echo("$blockHex Dividend inactive!\n");
                             } else {
                                 $div = (((int)$accBalance) >> 16) * $blockDividends[$block];
-//                                echo("$blockHex Dividend $div " . ((int)$accBalance >> 16)
-//                                    . " * {$blockDividends[$block]}\n");
                             }
                         }
                         $div -= self::TXS_DIV_FEE;
-//                        echo("$blockHex dividend " . $div / 1e11 . "! $accLastActive\n");
-//                        echo("Dividend inactive $div!\n");
 
                         if ($div < -$accBalance) {
                             $div = -$accBalance;
@@ -326,7 +321,6 @@ class Importer
                         }
 
                         $accBalance += $div;
-//                        echo("$blockHex Dividend after = " . $accBalance / 1e11 . "!\n");
                     }
                 }
                 $currentBlock = $nextBlock;
@@ -365,45 +359,35 @@ class Importer
 
 
                 if ($tx->getSenderAddress() == $account['_id']) {
-                    $advanceBlockFn($tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp()%self::BLOCKSEC);
+                    $advanceBlockFn($tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp() % self::BLOCKSEC);
                     $accLastActive = $tx->getTime()->getTimestamp();
                 }
 
                 $advanceBlockFn(hexdec($tx->getBlockId()));
-
-//                echo $txData['type'], ' ', $txData['_id'], " Current time: ", date(
-//                    'd.m.Y H:i:s',
-//                    method_exists($tx, 'getTime') ? $tx->getTime()->getTimestamp() : $currentBlock,
-//                ), "\n";
-
                 $types[$txData['type']] = ($types[$txData['type']] ?? 0) + 1;
 
                 if ($tx->getSenderAddress() == $account['_id']) {
-                    $accLastActive = $tx->getTime()->getTimestamp()- $tx->getTime()->getTimestamp()%self::BLOCKSEC+ self::BLOCKSEC;
+                    $accLastActive = $tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp(
+                        ) % self::BLOCKSEC + self::BLOCKSEC;
                     $accBalance -= $tx->getSenderFee();
-//                    echo "Paid fee ", $tx->getSenderFee() / 1e11, "\n";
                 }
 
                 if ($tx instanceof SendOneTransaction) {
                     if ($tx->getSenderAddress() == $account['_id']) {
                         $accBalance -= $tx->getAmount();
-//                        echo "Sent ", $tx->getAmount() / 1e11, "\n";
                     }
                     if ($tx->getTargetAddress() == $account['_id']) {
                         $accBalance += $tx->getAmount();
-//                        echo "Received ", $tx->getAmount() / 1e11, "\n";
                     }
                 } elseif ($tx instanceof SendManyTransaction) {
                     $tmp = 0;
                     foreach ($tx->getWires() as $wire) {
                         if ($tx->getSenderAddress() == $account['_id']) {
                             $accBalance -= $wire->getAmount();
-//                            echo "Sent ", $wire->getAmount() / 1e11, "\n";
                             $tmp++;
                         }
                         if ($wire->getTargetAddress() == $account['_id']) {
                             $accBalance += $wire->getAmount();
-//                            echo "Received ", $wire->getAmount() / 1e11, "\n";
                             $tmp++;
                         }
                     }
@@ -418,31 +402,30 @@ class Importer
                 }
             }
 
-//                die(print_r($account));
-
-
             $advanceBlockFn($this->databaseMigration->getNewestBlockTime());
 
             $blockData = $this->databaseMigration->getBlock(
                 strtoupper(dechex($currentBlock))
             );
 
-            $r = $this->addMissingDividend($account['remoteChange'], $account['localChange'], $account['balance'], $currentBlock, $blockData['dividendBalance']);
+            $r = $this->addMissingDividend(
+                $account['remoteChange'],
+                $account['localChange'],
+                $account['balance'],
+                $currentBlock,
+                $blockData['dividendBalance']
+            );
             $account['remoteChange'] = $r['remoteChange'];
             $account['balance'] = $r['balance'];
 
-
-//            echo "Calculated balance: ", $accBalance / 1e11, "\n";
-//            echo "Actual balance:     ", $account['balance'] / 1e11, "\n";
-
 //            if(abs($accBalance - $account['balance']) > 2) {
-                echo "Mismatch for account {$account['_id']}; diff = " . sprintf("%.11f", ($accBalance - $account['balance'])/1e11) ." ADS\n";
+            echo "Mismatch for account {$account['_id']}; diff = " . sprintf(
+                    "%.11f",
+                    ($accBalance - $account['balance']) / 1e11
+                ) . " ADS\n";
 //                print_r($types);
 //                exit;
 //            }
-
-//            exit;
-//            sleep(5);
         }
         return 1;
     }
@@ -520,7 +503,7 @@ class Importer
     {
         $nodes = $blockResponse->getBlock()->getNodes();
         /** @var Block $block */
-        $block =$blockResponse->getBlock();
+        $block = $blockResponse->getBlock();
 
         /** @var Node $node */
         foreach ($nodes as $node) {
@@ -605,7 +588,7 @@ class Importer
      * @param Block $block
      * @return GetMessageResponse|null
      */
-    private function getMessageResponse(string $messageId, Block $block):? GetMessageResponse
+    private function getMessageResponse(string $messageId, Block $block): ?GetMessageResponse
     {
         try {
             return $this->client->getMessage($messageId, $block->getId());
@@ -648,10 +631,9 @@ class Importer
 
     private static function getMonthDiff(\DateTime $now, \DateTime $base)
     {
-
         $diff = $base->diff($now);
 
-        return ($diff->invert ? -1 : 1 ) * ($diff->format("%y") * 12 + $diff->format("%m")*1 + 1);
+        return ($diff->invert ? -1 : 1) * ($diff->format("%y") * 12 + $diff->format("%m") * 1 + 1);
     }
 
     /**

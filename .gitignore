@@ -14,16 +14,16 @@ logs/
 
 ###> phpunit/phpunit ###
 /phpunit.xml
+.phpunit.*.cache
 ###< phpunit/phpunit ###
 
 ###> behat/symfony2-extension ###
 behat.yml
 ###< behat/symfony2-extension ###
-
-###> symfony/web-server-bundle ###
-/.web-server-pid
-###< symfony/web-server-bundle ###
-
 ###> lexik/jwt-authentication-bundle ###
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
+
+###> friends-of-behat/symfony-extension ###
+/behat.yml
+###< friends-of-behat/symfony-extension ###

@@ -1,21 +1,21 @@
 <?php
 /**
- * Copyright (C) 2018 Adshares sp. z o.o.
+ * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
- * ADS Operator is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
+ * ADS Operator is free software: you can redistribute and/or modify it
+ * under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
  * ADS Operator is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * but WITHOUT ANY WARRANTY; without even the implied warranty
+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
+ * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
 namespace Adshares\AdsOperator\Tests\Unit\Command;
@@ -57,11 +57,11 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains('10 blocks', $output);
-        $this->assertContains('20 messages', $output);
-        $this->assertContains('111 transactions', $output);
-        $this->assertContains('3 nodes', $output);
-        $this->assertContains('10 accounts', $output);
+        $this->assertStringContainsString('10 blocks', $output);
+        $this->assertStringContainsString('20 messages', $output);
+        $this->assertStringContainsString('111 transactions', $output);
+        $this->assertStringContainsString('3 nodes', $output);
+        $this->assertStringContainsString('10 accounts', $output);
     }
 
     public function testSecondExecutionWhenImporterThrowsException()
@@ -84,6 +84,6 @@ final class ImportADSCommandTest extends KernelTestCase
 
         $output = $commandTester->getDisplay();
 
-        $this->assertContains('The command is already running in another', $output);
+        $this->assertStringContainsString('The command is already running in another', $output);
     }
 }

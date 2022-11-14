@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         bootstrap="vendor/autoload.php"
+<!--
+  ~ Copyright (c) 2018-2022 Adshares sp. z o.o.
+  ~
+  ~ This file is part of ADS Operator
+  ~
+  ~ ADS Operator is free software: you can redistribute and/or modify it
+  ~ under the terms of the GNU General Public License as published
+  ~ by the Free Software Foundation, either version 3 of the License, or
+  ~ (at your option) any later version.
+  ~
+  ~ ADS Operator is distributed in the hope that it will be useful,
+  ~ but WITHOUT ANY WARRANTY; without even the implied warranty
+  ~ of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+  ~ See the GNU General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
+  -->
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
          colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         stopOnFailure="false">
-<testsuites>
-    <testsuite name="Unit">
-        <directory suffix="Test.php">tests/Unit</directory>
-    </testsuite>
-    <testsuite name="E2E">
-        <directory suffix="Test.php">tests/E2E</directory>
-    </testsuite>
-</testsuites>
-<filter>
-    <whitelist processUncoveredFilesFromWhitelist="true">
-        <directory suffix=".php">./src</directory>
+         bootstrap="vendor/autoload.php"
+>
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
         <exclude>
             <directory suffix=".php">./src/Controller/Blockexplorer</directory>
             <directory suffix=".php">./src/Controller/Auth</directory>
             <directory suffix=".php">./src/Repository</directory>
             <file>./src/Kernel.php</file>
         </exclude>
-    </whitelist>
-</filter>
-<logging>
-    <log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
-    <log type="coverage-clover" target="var/report/coverage.xml"/>
-    <log type="junit" target="var/report/logfile.xml"/>
-</logging>
-<php>
-    <ini name="error_reporting" value="-1" />
-    <env name="KERNEL_CLASS" value="Adshares\AdsOperator\Kernel" />
-    <env name="APP_ENV" value="test" />
-    <env name="APP_DEBUG" value="1" />
-    <env name="APP_SECRET" value="s$cretf0rt3st" />
-    <env name="SHELL_VERBOSITY" value="-1" />
-    <!-- define your env variables for the test env here -->
-    <!-- ###+ doctrine/mongodb-odm-bundle ### -->
-    <env name="MONGODB_URL" value="mongodb://localhost:27017"/>
-    <env name="MONGODB_DB" value="symfony"/>
-    <!-- ###- doctrine/mongodb-odm-bundle ### -->
-</php>
+    </coverage>
+    <php>
+        <ini name="error_reporting" value="-1" />
+        <env name="KERNEL_CLASS" value="Adshares\AdsOperator\Kernel" />
+        <env name="APP_ENV" value="test" />
+        <env name="APP_DEBUG" value="1" />
+        <env name="APP_SECRET" value="s$cretf0rt3st" />
+        <env name="SHELL_VERBOSITY" value="-1" />
+        <!-- define your env variables for the test env here -->
+        <!-- ###+ doctrine/mongodb-odm-bundle ### -->
+        <env name="MONGODB_URL" value="mongodb://localhost:27017"/>
+        <env name="MONGODB_DB" value="symfony"/>
+        <!-- ###- doctrine/mongodb-odm-bundle ### -->
+    </php>
+    <testsuites>
+        <testsuite name="Unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="E2E">
+            <directory>tests/E2E</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
