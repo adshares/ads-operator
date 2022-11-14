@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Tests\Unit\AdsImporter;
 
 use Adshares\Ads\AdsClient;
@@ -25,20 +28,20 @@ use Adshares\Ads\Command\CommandInterface;
 use Adshares\Ads\Command\GetMessageCommand;
 use Adshares\Ads\Command\GetMessageIdsCommand;
 use Adshares\Ads\Driver\CommandError;
-use Adshares\Ads\Response\GetAccountResponse;
-use Adshares\Ads\Response\GetMessageIdsResponse;
-use Adshares\Ads\Response\GetMessageResponse;
-use Adshares\AdsOperator\Document\Account;
-use Adshares\AdsOperator\Document\ArrayableInterface;
-use Adshares\AdsOperator\Document\Node;
 use Adshares\Ads\Exception\CommandException;
+use Adshares\Ads\Response\GetAccountResponse;
 use Adshares\Ads\Response\GetAccountsResponse;
 use Adshares\Ads\Response\GetBlockResponse;
+use Adshares\Ads\Response\GetMessageIdsResponse;
+use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
 use Adshares\AdsOperator\AdsImporter\Importer;
+use Adshares\AdsOperator\Document\Account;
+use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
+use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Transaction;
 use Adshares\AdsOperator\Tests\Unit\PrivateMethodTrait;
 use DateTime;
@@ -65,8 +68,12 @@ final class ImporterTest extends TestCase
     {
         parent::__construct($name, $data, $dataName);
 
-        $accounts = [Account::create('01'),Account::create('02'), Account::create('03')];
-        $block = Block::create('1', [Node::create('1'), Node::create('2'), Node::create('3'), Node::create('4'), Node::create('0000')], 4);
+        $accounts = [Account::create('01'), Account::create('02'), Account::create('03')];
+        $block = Block::create(
+            '1',
+            [Node::create('1'), Node::create('2'), Node::create('3'), Node::create('4'), Node::create('0000')],
+            4
+        );
 
         $accountsResponse = $this->createMock(GetAccountsResponse::class);
         $accountsResponse
@@ -259,11 +266,13 @@ final class ImporterTest extends TestCase
         $database
             ->expects($this->exactly(4))
             ->method('addOrUpdateNode')
-            ->with($this->callback(
-                function (Node $node) use ($version) {
-                    return $node->getVersion() === $version;
-                }
-            ));
+            ->with(
+                $this->callback(
+                    function (Node $node) use ($version) {
+                        return $node->getVersion() === $version;
+                    }
+                )
+            );
 
         $importer = new Importer(
             $this->adsClient,
@@ -293,11 +302,13 @@ final class ImporterTest extends TestCase
         $database
             ->expects($this->exactly(4))
             ->method('addOrUpdateNode')
-            ->with($this->callback(
-                function (Node $node) use ($count) {
-                    return $node->getTransactionCount() === $count;
-                }
-            ));
+            ->with(
+                $this->callback(
+                    function (Node $node) use ($count) {
+                        return $node->getTransactionCount() === $count;
+                    }
+                )
+            );
 
         $importer = new Importer(
             $this->adsClient,
@@ -357,11 +368,13 @@ final class ImporterTest extends TestCase
         $database
             ->expects($this->exactly(3))
             ->method('addOrUpdateAccount')
-            ->with($this->callback(
-                function (Account $account) use ($count) {
-                    return $account->getTransactionCount() === $count;
-                }
-            ));
+            ->with(
+                $this->callback(
+                    function (Account $account) use ($count) {
+                        return $account->getTransactionCount() === $count;
+                    }
+                )
+            );
 
         $node = $this->createMock(Node::class);
         $node

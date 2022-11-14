@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
@@ -30,13 +33,11 @@ use Adshares\AdsOperator\Document\Info;
  */
 class InfoRepository extends DocumentRepository implements InfoRepositoryInterface
 {
-
-
     /**
      * @param int $genesisTime
      * @return Info|null
      */
-    public function getInfo(int $genesisTime):? Info
+    public function getInfo(int $genesisTime): ?Info
     {
         /** @var Info $info */
         $info = $this->find($genesisTime);

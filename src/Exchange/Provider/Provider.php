@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -20,12 +21,12 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Exchange\Provider;
 
 use Adshares\AdsOperator\Exchange\Provider\Client\ClientInterface;
 use Adshares\AdsOperator\Exchange\Provider\Client\CoinGecko;
 use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
+
 use function array_key_exists;
 
 class Provider

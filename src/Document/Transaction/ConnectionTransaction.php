@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Document\Transaction;
 
 use Adshares\AdsOperator\Document\ArrayableInterface;
@@ -29,7 +32,6 @@ use Adshares\Ads\Entity\Transaction\ConnectionTransaction as BaseConnectionTrans
  */
 class ConnectionTransaction extends BaseConnectionTransaction implements ArrayableInterface
 {
-
     /**
      * @var \DateTime
      */

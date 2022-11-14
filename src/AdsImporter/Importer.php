@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
@@ -18,22 +19,24 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\AdsImporter;
 
+use Adshares\Ads\AdsClient;
+use Adshares\Ads\Driver\CommandError;
+use Adshares\Ads\Exception\CommandException;
 use Adshares\Ads\Response\GetBlockResponse;
+use Adshares\Ads\Response\GetMessageResponse;
+use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
-use Adshares\Ads\AdsClient;
-use Adshares\Ads\Driver\CommandError;
-use Adshares\Ads\Response\GetMessageResponse;
-use Adshares\Ads\Exception\CommandException;
-use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\Document\Transaction\DividendTransaction;
 use Adshares\AdsOperator\Document\Transaction\NetworkTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
@@ -141,14 +144,15 @@ class Importer
         $node = hexdec($node) - 1;
         $user = hexdec($user);
 
-        return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance'] ?? (self::TXS_DIV_FEE / 1e11)) * (10 ** 11));
+        return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance']
+                ?? (self::TXS_DIV_FEE / 1e11)) * (10 ** 11));
     }
 
-    private const BLOCKSEC = 512; /* block period in seconds (17min) */
-    private const BLOCKDIV = 2048; /* number of blocks for dividend update (dividend period 12 days) */
-    private const ACCOUNT_INACTIVE_AGE = 365 * 24 * 3600; /* account is considered inactive after one year */
-    private const ACCOUNT_DORMANT_AGE = 2 * 365 * 24 * 3600; /* account is considered dormant after two years */
-    private const TXS_DIV_FEE = (20000000);  //(0x100000)  /* dividend fee collected every BLOCKDIV blocks ( $0.1 / year ) */
+    private const BLOCKSEC = 512; // block period in seconds (17min)
+    private const BLOCKDIV = 2048; // number of blocks for dividend update (dividend period 12 days)
+    private const ACCOUNT_INACTIVE_AGE = 365 * 24 * 3600; // account is considered inactive after one year
+    private const ACCOUNT_DORMANT_AGE = 2 * 365 * 24 * 3600; // account is considered dormant after two years
+    private const TXS_DIV_FEE = (20000000);  //(0x100000)  // dividend fee collected every BLOCKDIV blocks ($0.1 / year)
 
     private function updateMissingDividend(Account $account, Block $block)
     {
@@ -162,8 +166,8 @@ class Importer
         $account->setBalance($r['balance']);
         $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
         if ($r['dividend'] != 0) {
-            $lastDividendBlockTime = $block->getTime()->getTimestamp() - ($block->getTime()->getTimestamp(
-                    ) % (self::BLOCKSEC * self::BLOCKDIV));
+            $lastDividendBlockTime = $block->getTime()->getTimestamp() -
+                ($block->getTime()->getTimestamp() % (self::BLOCKSEC * self::BLOCKDIV));
             $this->addDividendTransaction(
                 $account->getAddress(),
                 strtoupper(dechex($lastDividendBlockTime)),
@@ -200,16 +204,18 @@ class Importer
         $lastDividendBlockTime = $blockTime - ($blockTime % (self::BLOCKSEC * self::BLOCKDIV));
         $div = 0;
         if ($accountRemoteChange < $lastDividendBlockTime) {
-            if ($accountLocalChange - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE) {
+            if (
+                $accountLocalChange - self::BLOCKSEC * self::BLOCKDIV <
+                $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE
+            ) {
                 $div = -(int)((int)$accountBalance / 1000);
+            } elseif (
+                $accountLocalChange - self::BLOCKSEC * self::BLOCKDIV <
+                $lastDividendBlockTime - self::ACCOUNT_INACTIVE_AGE
+            ) {
+                $div = 0;
             } else {
-                if ($accountLocalChange - self::BLOCKSEC * self::BLOCKDIV < $lastDividendBlockTime
-                    - self::ACCOUNT_INACTIVE_AGE
-                ) {
-                    $div = 0;
-                } else {
-                    $div = (int)((((int)$accountBalance) >> 16) * $blockDividendBalance);
-                }
+                $div = (int)((((int)$accountBalance) >> 16) * $blockDividendBalance);
             }
 
             $div -= self::TXS_DIV_FEE;
@@ -243,7 +249,7 @@ class Importer
         'unset_bank_status' => '\Adshares\AdsOperator\Document\Transaction\NetworkTransaction',
     ];
 
-    public function calculateDividends(): string
+    public function calculateDividends(): int
     {
         $blockDividends = [];
         $accounts = $this->databaseMigration->getAllAccounts();
@@ -298,14 +304,13 @@ class Importer
                         $fee = 0;
                         if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block - self::ACCOUNT_DORMANT_AGE) {
                             $div = -(int)((int)$accBalance / 1000);
+                        } elseif (
+                            $accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block
+                            - self::ACCOUNT_INACTIVE_AGE
+                        ) {
+                            $div = 0;
                         } else {
-                            if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block
-                                - self::ACCOUNT_INACTIVE_AGE
-                            ) {
-                                $div = 0;
-                            } else {
-                                $div = (((int)$accBalance) >> 16) * $blockDividends[$block];
-                            }
+                            $div = (((int)$accBalance) >> 16) * $blockDividends[$block];
                         }
                         $div -= self::TXS_DIV_FEE;
 
@@ -367,8 +372,8 @@ class Importer
                 $types[$txData['type']] = ($types[$txData['type']] ?? 0) + 1;
 
                 if ($tx->getSenderAddress() == $account['_id']) {
-                    $accLastActive = $tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp(
-                        ) % self::BLOCKSEC + self::BLOCKSEC;
+                    $accLastActive = $tx->getTime()->getTimestamp() -
+                        $tx->getTime()->getTimestamp() % self::BLOCKSEC + self::BLOCKSEC;
                     $accBalance -= $tx->getSenderFee();
                 }
 
@@ -419,13 +424,12 @@ class Importer
             $account['balance'] = $r['balance'];
 
 //            if(abs($accBalance - $account['balance']) > 2) {
-            echo "Mismatch for account {$account['_id']}; diff = " . sprintf(
-                    "%.11f",
-                    ($accBalance - $account['balance']) / 1e11
-                ) . " ADS\n";
+            echo "Mismatch for account {$account['_id']}; diff = "
+                . sprintf("%.11f", ($accBalance - $account['balance']) / 1e11)
+                . " ADS\n";
 //                print_r($types);
 //                exit;
-//            }
+//
         }
         return 1;
     }
@@ -616,7 +620,7 @@ class Importer
         }
     }
 
-    const RELEASE = [
+    private const RELEASE = [
         ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 2310500],
         ['from' => '2021-05-01', 'to' => '2023-04-01', 'amount' => 1155250],
         ['from' => '2021-05-01', 'to' => '2022-03-01', 'amount' => 1155250],

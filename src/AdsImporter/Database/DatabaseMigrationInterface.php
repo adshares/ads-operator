@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
 use Adshares\AdsOperator\Document\ArrayableInterface;
@@ -35,7 +38,6 @@ use Doctrine\MongoDB\Cursor;
  */
 interface DatabaseMigrationInterface
 {
-
     /**
      * @param Info $info
      */
@@ -99,7 +101,7 @@ interface DatabaseMigrationInterface
     /**
      * @return int|null
      */
-    public function getNewestBlockTime():? int;
+    public function getNewestBlockTime(): ?int;
 
     public function getAllAccounts(): Cursor;
 

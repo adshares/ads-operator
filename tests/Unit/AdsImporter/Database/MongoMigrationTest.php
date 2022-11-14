@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
+
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Tests\Unit\AdsImporter\Database;
 
@@ -125,7 +128,7 @@ class MongoMigrationTest extends TestCase
             ->willReturn($this->database);
     }
 
-    public function testAllTypesOfTransactions():void
+    public function testAllTypesOfTransactions(): void
     {
         $transactions = [
             BroadcastTransaction::class,
@@ -142,10 +145,10 @@ class MongoMigrationTest extends TestCase
         /** @var AbstractTransaction $transaction */
         foreach ($transactions as $class) {
             $transaction = $class::createFromRawData([
-                'user'=> '1',
-                'node'=> '1',
+                'user' => '1',
+                'node' => '1',
                 'nodeId' => '0001',
-                'time'=> time(),
+                'time' => time(),
                 'senderAddress' => '1234',
                 'id' => '12312',
                 'target_address' => '1222',
@@ -253,7 +256,7 @@ class MongoMigrationTest extends TestCase
         $this->assertTrue(true);
     }
 
-    public function testAddOrUpdateNode():void
+    public function testAddOrUpdateNode(): void
     {
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
@@ -262,7 +265,7 @@ class MongoMigrationTest extends TestCase
         $mongoMigration->addOrUpdateNode($node);
     }
 
-    public function testAddOrUpdateNodeWhenMongoExceptionIsThrown():void
+    public function testAddOrUpdateNodeWhenMongoExceptionIsThrown(): void
     {
         $this->prepareConnectionMockWithMethod('update');
         $node = $this->createMock(Node::class);
@@ -272,7 +275,7 @@ class MongoMigrationTest extends TestCase
     }
 
 
-    public function testAddOrUpdateAccount():void
+    public function testAddOrUpdateAccount(): void
     {
         $this->prepareConnectionMockWithMethod('update');
         $account = $this->createMock(Account::class);

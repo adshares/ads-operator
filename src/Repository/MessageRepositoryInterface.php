@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\Message;
@@ -32,7 +35,7 @@ interface MessageRepositoryInterface extends ListRepositoryInterface
      * @param string $messageId
      * @return Message
      */
-    public function getMessage(string $messageId):? Message;
+    public function getMessage(string $messageId): ?Message;
 
     /**
      * @param string $blockId

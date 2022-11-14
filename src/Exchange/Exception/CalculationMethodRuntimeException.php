@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -20,12 +21,10 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Exchange\Exception;
 
 use RuntimeException;
 
 class CalculationMethodRuntimeException extends RuntimeException
 {
-
 }

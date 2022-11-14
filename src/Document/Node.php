@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Document;
 
 /**
@@ -26,7 +29,7 @@ namespace Adshares\AdsOperator\Document;
  */
 class Node extends \Adshares\Ads\Entity\Node
 {
-    const SPECIAL_NODE = '0000';
+    private const SPECIAL_NODE = '0000';
 
     /**
      * @var string|null
@@ -119,6 +122,6 @@ class Node extends \Adshares\Ads\Entity\Node
      */
     public static function validateId(string $id): bool
     {
-        return (bool) preg_match('/^[0-9A-F]{4}$/', $id);
+        return (bool)preg_match('/^[0-9A-F]{4}$/', $id);
     }
 }

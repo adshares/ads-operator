@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Controller;
 
 use JMS\Serializer\SerializerInterface;
@@ -33,7 +36,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class ApiController
 {
-    const INVALID_RESOURCE_MESSAGE = 'Invalid resource identity';
+    protected const INVALID_RESOURCE_MESSAGE = 'Invalid resource identity';
 
     /**
      * @var mixed

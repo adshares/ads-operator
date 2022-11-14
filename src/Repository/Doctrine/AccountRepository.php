@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
+
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
@@ -48,7 +51,7 @@ class AccountRepository extends BaseRepository implements AccountRepositoryInter
      * @throws \Doctrine\ODM\MongoDB\LockException
      * @throws \Doctrine\ODM\MongoDB\Mapping\MappingException
      */
-    public function getAccount(string $accountId):? Account
+    public function getAccount(string $accountId): ?Account
     {
         /** @var Account $account */
         $account = $this->find($accountId);

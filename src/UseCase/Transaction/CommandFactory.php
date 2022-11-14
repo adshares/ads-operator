@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
+
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
@@ -41,7 +44,7 @@ class CommandFactory
             throw new UnsupportedTransactionException(sprintf('Unsupported transaction type: %s', $type));
         }
 
-        $class = "\Adshares\Ads\Command\\".ucfirst($type)."Command";
+        $class = "\Adshares\Ads\Command\\" . ucfirst($type) . "Command";
 
         if (!class_exists($class)) {
             throw new UnsupportedTransactionException(sprintf('Class %s does not exist.', $class));

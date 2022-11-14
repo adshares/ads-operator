@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -20,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Exchange\Provider\Client;
 
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
@@ -29,6 +29,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Symfony\Component\HttpFoundation\Response;
 use Adshares\AdsOperator\Exchange\Exception\ProviderRuntimeException;
+
 use function json_decode;
 use function strtolower;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,23 +19,24 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\AdsImporter\Database;
 
 use Adshares\Ads\Entity\Transaction\SendManyTransactionWire;
+use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\ArrayableInterface;
+use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
-use Adshares\AdsOperator\Document\Account;
-use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
+use Doctrine\MongoDB\Collection;
 use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Cursor;
 use MongoDB\BSON\UTCDateTime;
-use Doctrine\MongoDB\Collection;
-use phpDocumentor\Reflection\Types\Iterable_;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -44,13 +46,13 @@ use Psr\Log\LoggerInterface;
  */
 class MongoMigration implements DatabaseMigrationInterface
 {
-    const INFO_COLLECTION = 'info';
-    const BLOCK_COLLECTION = 'block';
-    const MESSAGE_COLLECTION = 'message';
-    const TRANSACTION_COLLECTION = 'transaction';
-    const NODE_COLLECTION = 'node';
-    const ACCOUNT_COLLECTION = 'account';
-    const ACCOUNT_TRANSACTION_COLLECTION = 'account_transaction';
+    private const INFO_COLLECTION = 'info';
+    private const BLOCK_COLLECTION = 'block';
+    private const MESSAGE_COLLECTION = 'message';
+    private const TRANSACTION_COLLECTION = 'transaction';
+    private const NODE_COLLECTION = 'node';
+    private const ACCOUNT_COLLECTION = 'account';
+    private const ACCOUNT_TRANSACTION_COLLECTION = 'account_transaction';
 
     /**
      * @var Connection
@@ -168,7 +170,6 @@ class MongoMigration implements DatabaseMigrationInterface
      */
     public function addMessage(Message $message): void
     {
-
         $document = [
             '_id' => $message->getId(),
             'nodeId' => $message->getNodeId(),

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -26,5 +27,4 @@ use RuntimeException;
 
 class ExchangeRateAlreadyExistsException extends RuntimeException
 {
-
 }

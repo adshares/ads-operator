@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,7 +19,7 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Command;
 
@@ -112,7 +113,7 @@ class CalculateInternalExchangeRateCommand extends ContainerAwareCommand
                 $io->comment(sprintf('Starting calculating for %s', $currency));
                 $this->useCase->calculate($startDate, $endDate, $currency);
                 $io->success('Finished calculating an internal rate');
-            } catch (CalculationMethodRuntimeException|ExchangeRateNotFoundException $exception) {
+            } catch (CalculationMethodRuntimeException | ExchangeRateNotFoundException $exception) {
                 $io->error(sprintf('Error: %s', $exception->getMessage()));
             }
         }

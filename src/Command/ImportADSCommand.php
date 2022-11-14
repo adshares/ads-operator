@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Command;
 
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
@@ -36,6 +39,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ImportADSCommand extends ContainerAwareCommand
 {
     use LockableTrait;
+
     /**
      * @var Importer
      */

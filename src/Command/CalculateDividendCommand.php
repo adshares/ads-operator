@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Command;
 
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
@@ -33,9 +36,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @package Adshares\AdsOperator\Command
  */
-class DividendCommand extends ContainerAwareCommand
+class CalculateDividendCommand extends ContainerAwareCommand
 {
     use LockableTrait;
+
     /**
      * @var Importer
      */
@@ -59,7 +63,8 @@ class DividendCommand extends ContainerAwareCommand
     protected function configure(): void
     {
         $this
-            ->setName('ads:dividend')
+            ->setName('ads:dividend:calculate')
+            ->setAliases(['ads:dividend'])
             ->setDescription('Calculate missing dividend transactions');
     }
 

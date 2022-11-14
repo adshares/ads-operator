@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -20,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Exchange\Calculation;
 
 use Adshares\AdsOperator\Exchange\Dto\ExchangeRate;
@@ -29,7 +29,6 @@ use Adshares\AdsOperator\Exchange\Exception\CalculationMethodRuntimeException;
 
 class CalculationMedianMethod implements CalculationMethodInterface
 {
-
     public function calculate(ExchangeRateCollection $collection): float
     {
         $data = [];

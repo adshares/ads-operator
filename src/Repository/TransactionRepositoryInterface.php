@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\Ads\Entity\Transaction\AbstractTransaction;
@@ -32,7 +35,7 @@ interface TransactionRepositoryInterface extends ListRepositoryInterface
      * @param string $transactionId
      * @return AbstractTransaction
      */
-    public function getTransaction(string $transactionId):? AbstractTransaction;
+    public function getTransaction(string $transactionId): ?AbstractTransaction;
 
     /**
      * @param array $conditions

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Document\Transaction;
 
 use Adshares\AdsOperator\Document\ArrayableInterface;
@@ -36,7 +39,7 @@ class BroadcastTransaction extends BaseBroadcastTransaction implements Arrayable
 
     public function getSenderFee()
     {
-        return (($this->messageLength)<32 ? 10000 : (10000 + 1000*($this->messageLength-32)));
+        return (($this->messageLength) < 32 ? 10000 : (10000 + 1000 * ($this->messageLength - 32)));
     }
 
     /**

@@ -19,11 +19,13 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Document;
 
 class SnapshotNode extends \Adshares\Ads\Entity\Node
 {
-    protected  $id;
+    protected $id;
 
     public function getId(): string
     {

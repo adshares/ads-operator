@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
+
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Document\Transaction;
 
@@ -71,7 +74,7 @@ class LogAccountTransaction extends BaseLogAccountTransaction implements Arrayab
             'pairedAddress' => $this->networkAccount->getPairedAddress(),
             'pairedNode' => $this->networkAccount->getPairedNode(),
             'publicKey' => $this->networkAccount->getPublicKey(),
-            'remoteChange'=> $this->networkAccount->getRemoteChange(),
+            'remoteChange' => $this->networkAccount->getRemoteChange(),
             'status' => $this->networkAccount->getStatus(),
             'time' => $this->networkAccount->getTime(),
 

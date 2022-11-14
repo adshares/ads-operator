@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\Block;
@@ -32,5 +35,5 @@ interface BlockRepositoryInterface extends ListRepositoryInterface
      * @param string $blockId
      * @return Block
      */
-    public function getBlock(string $blockId):? Block;
+    public function getBlock(string $blockId): ?Block;
 }

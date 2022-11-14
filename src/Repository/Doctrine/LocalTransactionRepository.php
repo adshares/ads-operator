@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (c) 2018-2022 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\LocalTransaction;
@@ -27,7 +30,6 @@ use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 
 class LocalTransactionRepository extends DocumentRepository implements LocalTransactionRepositoryInterface
 {
-
     public function add(LocalTransaction $transaction): void
     {
         $this->saveOrUpdate($transaction);

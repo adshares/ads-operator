@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\UseCase\Transaction;
 
 use Adshares\AdsOperator\Document\Account;
@@ -29,7 +32,7 @@ use Adshares\AdsOperator\UseCase\Exception\InvalidValueException;
 
 class ChangeUserKey
 {
-    const USER_CHANGE_ACCOUNT_KEY = 'changeAccountKey';
+    public const USER_CHANGE_ACCOUNT_KEY = 'changeAccountKey';
 
     /**
      * @var RunTransaction

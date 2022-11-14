@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -20,7 +21,6 @@
 
 declare(strict_types=1);
 
-
 namespace Adshares\AdsOperator\Controller\ExchangeRate;
 
 use Adshares\AdsOperator\Controller\ApiController;
@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use function sprintf;
 
 class ExchangeRateController extends ApiController

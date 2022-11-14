@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -17,6 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
+
+declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Tests\Unit\UseCase\Transaction;
 
@@ -64,9 +67,9 @@ class ChangeUserKeyTest extends TestCase
         $validSignature = StringHelper::randHex(128);
 
         $invalidPublicKeyLength = StringHelper::randHex(63);
-        $invalidPublicKeyCharacters = StringHelper::randHex(62).'XX';
+        $invalidPublicKeyCharacters = StringHelper::randHex(62) . 'XX';
         $invalidSignatureLength = StringHelper::randHex(127);
-        $invalidSignatureCharacters = StringHelper::randHex(126).'XX';
+        $invalidSignatureCharacters = StringHelper::randHex(126) . 'XX';
 
         return [
             [

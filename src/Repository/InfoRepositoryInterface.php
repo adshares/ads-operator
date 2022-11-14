@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright (C) 2018 Adshares sp. z o.o.
  *
@@ -18,6 +19,8 @@
  * along with ADS Operator.  If not, see <https://www.gnu.org/licenses/>
  */
 
+declare(strict_types=1);
+
 namespace Adshares\AdsOperator\Repository;
 
 use Adshares\AdsOperator\Document\Info;
@@ -32,5 +35,5 @@ interface InfoRepositoryInterface
      * @param int $genesisTime
      * @return Info|null
      */
-    public function getInfo(int $genesisTime):? Info;
+    public function getInfo(int $genesisTime): ?Info;
 }
