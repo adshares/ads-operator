@@ -21,31 +21,21 @@
 namespace Adshares\AdsOperator\Tests\Unit\Document;
 
 use Adshares\AdsOperator\Document\Snapshot;
-use Adshares\AdsOperator\Document\Node;
+use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 
 final class SnapshotTest extends TestCase
 {
-//    public function testBlock(): void
-//    {
-//        $id = '00001';
-//        $nodes = [
-//            Node::create('1'),
-//            Node::create('2'),
-//            Node::create('3'),
-//            Node::create('4'),
-//        ];
-//        $messageCount = 5;
-//
-//        $snapshot = Snapshot::create($id, $nodes, $messageCount);
-//
-//        $this->assertEquals($id, $snapshot->getId());
-//        $this->assertEquals($nodes, $snapshot->getNodes());
-//        $this->assertEquals($messageCount, $snapshot->getMessageCount());
-//
-//        $snapshot->setTransactionCount(100);
-//        $this->assertEquals(100, $snapshot->getTransactionCount());
-//    }
+    public function testSnapshot(): void
+    {
+        $id = '00001';
+        $time = new DateTimeImmutable('-5 days');
+
+        $snapshot = Snapshot::create($id, $time);
+
+        $this->assertEquals($id, $snapshot->getId());
+        $this->assertEquals($time, $snapshot->getTime());
+    }
 
     public function testValidation()
     {

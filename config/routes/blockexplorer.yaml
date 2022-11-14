@@ -38,6 +38,11 @@ transaction_list:
     controller: Adshares\AdsOperator\Controller\Blockexplorer\TransactionController::listAction
     methods: [GET]
 
+snapshot_list:
+    path: /snapshots
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::listAction
+    methods: [GET]
+
 node_show:
     path: /nodes/{id}
     controller: Adshares\AdsOperator\Controller\Blockexplorer\NodeController::showAction
@@ -61,6 +66,11 @@ message_show:
 transaction_show:
     path: /transactions/{id}
     controller: Adshares\AdsOperator\Controller\Blockexplorer\TransactionController::showAction
+    methods: [GET]
+
+snapshot_show:
+    path: /snapshots/{id}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::showAction
     methods: [GET]
 
 account_list_by_nodeid:

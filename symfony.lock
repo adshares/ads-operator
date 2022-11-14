@@ -71,21 +71,6 @@
     "exsyst/swagger": {
         "version": "v0.4.0"
     },
-    "friends-of-behat/symfony-extension": {
-        "version": "2.3",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "main",
-            "version": "2.0",
-            "ref": "1e012e04f573524ca83795cd19df9ea690adb604"
-        },
-        "files": [
-            "behat.yml.dist",
-            "config/services_test.yaml",
-            "features/demo.feature",
-            "tests/Behat/DemoContext.php"
-        ]
-    },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
     },
@@ -160,9 +145,6 @@
             "version": "3.0",
             "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
         }
-    },
-    "nikic/php-parser": {
-        "version": "v4.0.2"
     },
     "paragonie/constant_time_encoding": {
         "version": "v2.5.0"

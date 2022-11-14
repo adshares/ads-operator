@@ -21,17 +21,38 @@
 
 namespace Adshares\AdsOperator\Document;
 
+use DateTimeInterface;
+
 class Snapshot
 {
     protected string $id;
+
+    protected DateTimeInterface $time;
 
     public function getId(): string
     {
         return $this->id;
     }
 
+    public function getTime(): DateTimeInterface
+    {
+        return $this->time;
+    }
+
     public static function validateId(string $id): bool
     {
-        return (bool) preg_match('/^[0-9A-F]{8}$/', $id);
+        return (bool)preg_match('/^[0-9A-F]{8}$/', $id);
+    }
+
+    public static function create(?string $id = null, ?DateTimeInterface $time = null): self
+    {
+        $x = new self();
+        if (null !== $id) {
+            $x->id = $id;
+        }
+        if (null !== $time) {
+            $x->time = $time;
+        }
+        return $x;
     }
 }

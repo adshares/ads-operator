@@ -18,11 +18,9 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Command;
 
-use Adshares\AdsOperator\Document\Snapshot;
-
-interface SnapshotRepositoryInterface extends ListRepositoryInterface
+class CreateSnapshotCommand
 {
-    public function getSnapshot(string $snapshotId): ?Snapshot;
+
 }

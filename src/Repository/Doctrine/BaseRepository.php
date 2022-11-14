@@ -20,7 +20,7 @@
 
 namespace Adshares\AdsOperator\Repository\Doctrine;
 
-use Doctrine\ODM\MongoDB\DocumentRepository;
+use Doctrine\ODM\MongoDB\Repository\DocumentRepository;
 use Doctrine\ODM\MongoDB\MongoDBException;
 
 /**

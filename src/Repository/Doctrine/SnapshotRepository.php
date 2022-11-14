@@ -18,11 +18,29 @@
  * along with ADS Operator. If not, see <https://www.gnu.org/licenses/>
  */
 
-namespace Adshares\AdsOperator\Repository;
+namespace Adshares\AdsOperator\Repository\Doctrine;
 
 use Adshares\AdsOperator\Document\Snapshot;
+use Adshares\AdsOperator\Repository\SnapshotRepositoryInterface;
+use Doctrine\ODM\MongoDB\LockException;
+use Doctrine\ODM\MongoDB\Mapping\MappingException;
 
-interface SnapshotRepositoryInterface extends ListRepositoryInterface
+class SnapshotRepository extends BaseRepository implements SnapshotRepositoryInterface
 {
-    public function getSnapshot(string $snapshotId): ?Snapshot;
+    public function availableSortingFields(): array
+    {
+        return [
+            'id',
+            'time',
+        ];
+    }
+
+    /**
+     * @throws MappingException
+     * @throws LockException
+     */
+    public function getSnapshot(string $snapshotId): ?Snapshot
+    {
+        return $this->find($snapshotId);
+    }
 }

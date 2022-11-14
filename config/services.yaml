@@ -111,6 +111,14 @@ services:
         arguments:
           $repository: '@Adshares\AdsOperator\Repository\Doctrine\TransactionRepository'
 
+    Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController:
+      parent: Adshares\AdsOperator\Controller\ApiController
+      public: true
+      autowire: false
+      autoconfigure: false
+      arguments:
+        $repository: '@Adshares\AdsOperator\Repository\Doctrine\SnapshotRepository'
+
     Adshares\AdsOperator\Controller\Auth\AuthController:
       parent: Adshares\AdsOperator\Controller\ApiController
       public: true
@@ -175,52 +183,57 @@ services:
             $logger: '@logger'
 
     Adshares\AdsOperator\Repository\Doctrine\InfoRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Info']
 
     Adshares\AdsOperator\Repository\Doctrine\NodeRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Node']
 
     Adshares\AdsOperator\Repository\Doctrine\BlockRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Block']
 
     Adshares\AdsOperator\Repository\Doctrine\AccountRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Account']
 
     Adshares\AdsOperator\Repository\Doctrine\MessageRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Message']
 
     Adshares\AdsOperator\Repository\Doctrine\TransactionRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\Transaction']
 
+    Adshares\AdsOperator\Repository\Doctrine\SnapshotRepository:
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\Snapshot']
+
     Adshares\AdsOperator\Repository\Doctrine\UserRepository:
-        class: Doctrine\ODM\DocumentRepository
+        class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
         factory: 'doctrine.odm.mongodb.document_manager:getRepository'
         arguments: ['Adshares\AdsOperator\Document\User']
 
     Adshares\AdsOperator\Repository\Doctrine\LocalTransactionRepository:
-      class: Doctrine\ODM\DocumentRepository
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\LocalTransaction']
 
     Adshares\AdsOperator\Repository\Doctrine\ExchangeRateHistoryRepository:
-      class: Doctrine\ODM\DocumentRepository
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\ExchangeRateHistory']
 
     Adshares\AdsOperator\Repository\Doctrine\ExchangeRateRepository:
-      class: Doctrine\ODM\DocumentRepository
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\ExchangeRate']
 

@@ -1,0 +1,18 @@
+Adshares\AdsOperator\Document\Snapshot:
+  type: document
+  collection: snapshot
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\SnapshotRepository
+  fields:
+    id:
+      id: true
+      strategy: NONE
+      type: string
+    time:
+      type: date
+  indexes:
+    time_1:
+      keys:
+        time: asc
+    time_-1:
+      keys:
+        time: desc

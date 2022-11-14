@@ -66,7 +66,7 @@ script:
   # PHP_CodeSniffer: check PHP compatibility
   - ./vendor/bin/phpcs -s --standard=PHPCompatibility src tests
   # PHP_CodeSniffer: check PSR2 standard
-  - ./vendor/bin/phpcs -s --standard=PSR2 src tests
+  - ./vendor/bin/phpcs -s --standard=PSR12 src tests
   # PHP Static Analysis Tool
   - ./vendor/bin/phpstan --no-ansi --no-progress analyse -c phpstan.neon -l 7 src tests
   # PHP unit tests
