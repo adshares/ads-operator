@@ -30,19 +30,25 @@ use Adshares\Ads\Response\GetBlockResponse;
 use Adshares\Ads\Response\GetMessageResponse;
 use Adshares\AdsOperator\AdsImporter\Database\DatabaseMigrationInterface;
 use Adshares\AdsOperator\AdsImporter\Exception\AdsClientException;
+use Adshares\AdsOperator\AdsImporter\Exception\AdsImporterException;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\ArrayableInterface;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
+use Adshares\AdsOperator\Document\Snapshot;
+use Adshares\AdsOperator\Document\SnapshotAccount;
+use Adshares\AdsOperator\Document\SnapshotNode;
 use Adshares\AdsOperator\Document\Transaction\ConnectionTransaction;
 use Adshares\AdsOperator\Document\Transaction\DividendTransaction;
 use Adshares\AdsOperator\Document\Transaction\NetworkTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
 use Adshares\AdsOperator\Helper\NumericalTransformation;
+use DateTime;
 use Psr\Log\LoggerInterface;
+use Throwable;
 
 /**
  * Imports network's data using ADS Client.
@@ -51,50 +57,21 @@ use Psr\Log\LoggerInterface;
  */
 class Importer
 {
-    /**
-     * @var AdsClient
-     */
-    private $client;
+    public const DIV_BLOCKS = 2048; // number of blocks for dividend update (dividend period 12 days)
+    public const ACCOUNT_INACTIVE_AGE = 365 * 24 * 3600; // account is considered inactive after one year
+    public const ACCOUNT_DORMANT_AGE = 2 * 365 * 24 * 3600; // account is considered dormant after two years
+    public const TXS_DIV_FEE = 2_0000_000;  //(0x100000)  // dividend fee collected every DIV_BLOCKS blocks ($0.1 / year)
+    public const CLICKS = 1e11; // 100_000_000_000 clicks in 1 ADS
 
-    /**
-     * @var DatabaseMigrationInterface
-     */
-    private $databaseMigration;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
-
-    /**
-     * @var int
-     */
-    private $amountPrecision;
-
-    /**
-     * @var int
-     */
-    private $totalSupply;
-
-    /**
-     * @var int
-     */
-    private $genesisTime;
-
-    /**
-     * @var int
-     */
-    private $blockLength;
-
-    /**
-     * @var array
-     */
-    private $nonCirculatingAccounts;
-
-    /**
-     * @var ImporterResult
-     */
-    private $importerResult;
+    private AdsClient $client;
+    private DatabaseMigrationInterface $databaseMigration;
+    private LoggerInterface $logger;
+    private int $amountPrecision;
+    private int $totalSupply;
+    private int $genesisTime;
+    private int $blockLength;
+    private array $nonCirculatingAccounts;
+    private ImporterResult $importerResult;
 
     /**
      * Importer constructor.
@@ -145,14 +122,8 @@ class Importer
         $user = hexdec($user);
 
         return (int)(($this->genesisData['nodes'][$node]['accounts'][$user]['balance']
-                ?? (self::TXS_DIV_FEE / 1e11)) * (10 ** 11));
+                ?? (self::TXS_DIV_FEE / self::CLICKS)) * (self::CLICKS));
     }
-
-    private const BLOCKSEC = 512; // block period in seconds (17min)
-    private const BLOCKDIV = 2048; // number of blocks for dividend update (dividend period 12 days)
-    private const ACCOUNT_INACTIVE_AGE = 365 * 24 * 3600; // account is considered inactive after one year
-    private const ACCOUNT_DORMANT_AGE = 2 * 365 * 24 * 3600; // account is considered dormant after two years
-    private const TXS_DIV_FEE = (20000000);  //(0x100000)  // dividend fee collected every BLOCKDIV blocks ($0.1 / year)
 
     private function updateMissingDividend(Account $account, Block $block)
     {
@@ -164,10 +135,10 @@ class Importer
             $block->getDividendBalance()
         );
         $account->setBalance($r['balance']);
-        $account->setRemoteChange(new \DateTime('@' . $r['remoteChange']));
+        $account->setRemoteChange(new DateTime('@' . $r['remoteChange']));
         if ($r['dividend'] != 0) {
             $lastDividendBlockTime = $block->getTime()->getTimestamp() -
-                ($block->getTime()->getTimestamp() % (self::BLOCKSEC * self::BLOCKDIV));
+                ($block->getTime()->getTimestamp() % ($this->blockLength * self::DIV_BLOCKS));
             $this->addDividendTransaction(
                 $account->getAddress(),
                 strtoupper(dechex($lastDividendBlockTime)),
@@ -201,16 +172,16 @@ class Importer
         $blockTime,
         $blockDividendBalance
     ): array {
-        $lastDividendBlockTime = $blockTime - ($blockTime % (self::BLOCKSEC * self::BLOCKDIV));
+        $lastDividendBlockTime = $blockTime - ($blockTime % ($this->blockLength * self::DIV_BLOCKS));
         $div = 0;
         if ($accountRemoteChange < $lastDividendBlockTime) {
             if (
-                $accountLocalChange - self::BLOCKSEC * self::BLOCKDIV <
+                $accountLocalChange - $this->blockLength * self::DIV_BLOCKS <
                 $lastDividendBlockTime - self::ACCOUNT_DORMANT_AGE
             ) {
                 $div = -(int)((int)$accountBalance / 1000);
             } elseif (
-                $accountLocalChange - self::BLOCKSEC * self::BLOCKDIV <
+                $accountLocalChange - $this->blockLength * self::DIV_BLOCKS <
                 $lastDividendBlockTime - self::ACCOUNT_INACTIVE_AGE
             ) {
                 $div = 0;
@@ -274,13 +245,13 @@ class Importer
 
             if ($account['msid'] == 1) {
                 $accLastActive = $account['localChange'];
-                $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
+                $currentBlock = $accLastActive - $accLastActive % $this->blockLength;
             } elseif ($accBalance == self::TXS_DIV_FEE) {
                 $transactions->rewind();
                 $tx = $transactions->current();
                 if ($tx) {
-                    $accLastActive = $tx['time']->sec - $tx['time']->sec % self::BLOCKSEC;
-                    $currentBlock = $accLastActive - $accLastActive % self::BLOCKSEC;
+                    $accLastActive = $tx['time']->sec - $tx['time']->sec % $this->blockLength;
+                    $currentBlock = $accLastActive - $accLastActive % $this->blockLength;
                 }
             }
 
@@ -291,10 +262,10 @@ class Importer
                 &$accBalance,
                 &$accLastActive
             ) {
-                for ($block = $currentBlock + self::BLOCKSEC; $block <= $nextBlock; $block += self::BLOCKSEC) {
+                for ($block = $currentBlock + $this->blockLength; $block <= $nextBlock; $block += $this->blockLength) {
                     $blockHex = strtoupper(dechex($block));
 
-                    if ($block % (self::BLOCKSEC * self::BLOCKDIV) == 0) {
+                    if ($block % ($this->blockLength * self::DIV_BLOCKS) == 0) {
                         if (!isset($blockDividends[$block])) {
                             $divBlockData = $this->databaseMigration->getBlock(
                                 strtoupper(dechex($block))
@@ -302,10 +273,10 @@ class Importer
                             $blockDividends[$block] = $divBlockData['dividendBalance'] ?? 0;
                         }
                         $fee = 0;
-                        if ($accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block - self::ACCOUNT_DORMANT_AGE) {
+                        if ($accLastActive - $this->blockLength * self::DIV_BLOCKS / 2 < $block - self::ACCOUNT_DORMANT_AGE) {
                             $div = -(int)((int)$accBalance / 1000);
                         } elseif (
-                            $accLastActive - self::BLOCKSEC * self::BLOCKDIV / 2 < $block
+                            $accLastActive - $this->blockLength * self::DIV_BLOCKS / 2 < $block
                             - self::ACCOUNT_INACTIVE_AGE
                         ) {
                             $div = 0;
@@ -322,7 +293,7 @@ class Importer
 
                         if ($div != 0) {
                             $this->addDividendTransaction($account['_id'], $blockHex, $div);
-                            echo("$blockHex {$account['_id']} dividend " . $div / 1e11 . "!\n");
+                            echo("$blockHex {$account['_id']} dividend " . $div / self::CLICKS . "!\n");
                         }
 
                         $accBalance += $div;
@@ -347,15 +318,15 @@ class Importer
                 $class = self::$TX_CLASS_MAP[$txData['type']];
                 $tx = new $class();
                 if (isset($txData['amount'])) {
-                    $txData['amount'] /= 10 ** 11;
+                    $txData['amount'] /= self::CLICKS;
                 }
                 if (isset($txData['senderFee'])) {
-                    $txData['senderFee'] /= 10 ** 11;
+                    $txData['senderFee'] /= self::CLICKS;
                 }
 
                 if (isset($txData['wires'])) {
                     foreach ($txData['wires'] as &$wire) {
-                        $wire['amount'] /= 10 ** 11;
+                        $wire['amount'] /= self::CLICKS;
                     }
                     unset($wire);
                 }
@@ -364,7 +335,9 @@ class Importer
 
 
                 if ($tx->getSenderAddress() == $account['_id']) {
-                    $advanceBlockFn($tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp() % self::BLOCKSEC);
+                    $advanceBlockFn(
+                        $tx->getTime()->getTimestamp() - $tx->getTime()->getTimestamp() % $this->blockLength
+                    );
                     $accLastActive = $tx->getTime()->getTimestamp();
                 }
 
@@ -373,7 +346,7 @@ class Importer
 
                 if ($tx->getSenderAddress() == $account['_id']) {
                     $accLastActive = $tx->getTime()->getTimestamp() -
-                        $tx->getTime()->getTimestamp() % self::BLOCKSEC + self::BLOCKSEC;
+                        $tx->getTime()->getTimestamp() % $this->blockLength + $this->blockLength;
                     $accBalance -= $tx->getSenderFee();
                 }
 
@@ -407,7 +380,7 @@ class Importer
                 }
             }
 
-            $advanceBlockFn($this->databaseMigration->getNewestBlockTime());
+            $advanceBlockFn(hexdec($this->databaseMigration->getLatestBlockId()));
 
             $blockData = $this->databaseMigration->getBlock(
                 strtoupper(dechex($currentBlock))
@@ -425,7 +398,7 @@ class Importer
 
 //            if(abs($accBalance - $account['balance']) > 2) {
             echo "Mismatch for account {$account['_id']}; diff = "
-                . sprintf("%.11f", ($accBalance - $account['balance']) / 1e11)
+                . sprintf("%.11f", ($accBalance - $account['balance']) / self::CLICKS)
                 . " ADS\n";
 //                print_r($types);
 //                exit;
@@ -466,6 +439,15 @@ class Importer
                 }
             }
 
+            if ($this->isDivBlock($blockId)) {
+                try {
+                    $this->calculateSnapshots([$blockId], true);
+                    ++$this->importerResult->snapshots;
+                } catch (AdsImporterException $exception) {
+                    $this->addExceptionToLog($exception, sprintf('Snapshot (%s)', $blockId));
+                }
+            }
+
             $startTime += $this->blockLength;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
@@ -486,12 +468,68 @@ class Importer
         return $this->importerResult;
     }
 
+    public function calculateSnapshots(array $blockIds = null, bool $force = false): array
+    {
+        if (empty($blockIds)) {
+            $blockIds = [$this->getCurrentBlockId()];
+        }
+
+        $calculated = [];
+        foreach ($blockIds as $blockId) {
+            $this->logger->info(sprintf('Calculating SNAPSHOT %s', $blockId));
+            if (!Block::validateId($blockId)) {
+                throw new AdsImporterException(sprintf('"%s" is not a valid block ID', $blockId));
+            }
+            if (!$force && !$this->isDivBlock($blockId)) {
+                throw new AdsImporterException(sprintf('"%s" is not a dividend block', $blockId));
+            }
+            $snapshot = $this->databaseMigration->getSnapshot($blockId);
+            if (!$force && null !== $snapshot) {
+                continue;
+            }
+            $block = $this->databaseMigration->getBlock($blockId);
+            if (null === $block) {
+                throw new AdsImporterException(sprintf('Cannot find "%s" block', $blockId));
+            }
+            if (!$force && $block['_id'] !== $this->databaseMigration->getLatestBlockId()) {
+                throw new AdsImporterException(sprintf('"%s" is not the latest block', $blockId));
+            }
+            $this->calculateSnapshot($block);
+            ++$this->importerResult->snapshots;
+            $calculated[] = $blockId;
+        }
+
+        return $calculated;
+    }
+
+    private function calculateSnapshot(array $block): Snapshot
+    {
+        $snapshot = Snapshot::create($block['_id'], $block['time']->toDateTime());
+        $this->databaseMigration->addOrUpdateSnapshot($snapshot);
+
+        foreach ($this->databaseMigration->getNodes() as $node) {
+            /** @var SnapshotNode $snapshotNode */
+            $snapshotNode = SnapshotNode::createFromRawData($node);
+            $snapshotNode->setSnapshotId($snapshot->getId());
+            $this->databaseMigration->addOrUpdateSnapshotNode($snapshotNode);
+        }
+
+        foreach ($this->databaseMigration->getAccounts() as $account) {
+            /** @var SnapshotAccount $snapshotAccount */
+            $snapshotAccount = SnapshotAccount::createFromRawData($account);
+            $snapshotAccount->setSnapshotId($snapshot->getId());
+            $this->databaseMigration->addOrUpdateSnapshotAccount($snapshotAccount);
+        }
+
+        return $snapshot;
+    }
+
     /**
      * @return int
      */
     private function getStartTime(): int
     {
-        $from = $this->databaseMigration->getNewestBlockTime();
+        $from = hexdec($this->databaseMigration->getLatestBlockId());
 
         if ($from) {
             return $from;
@@ -633,16 +671,13 @@ class Importer
         ['from' => '2022-03-01', 'to' => '2023-04-01', 'amount' => 1155250],
     ];
 
-    private static function getMonthDiff(\DateTime $now, \DateTime $base)
+    private static function getMonthDiff(DateTime $now, DateTime $base)
     {
         $diff = $base->diff($now);
 
         return ($diff->invert ? -1 : 1) * ($diff->format("%y") * 12 + $diff->format("%m") * 1 + 1);
     }
 
-    /**
-     * @param GetBlockResponse $blockResponse
-     */
     private function updateInfo(GetBlockResponse $blockResponse): void
     {
         $info = new Info($this->genesisTime, $this->blockLength);
@@ -669,9 +704,9 @@ class Importer
         }
 
         foreach (self::RELEASE as $schedule) {
-            $from = new \DateTime($schedule['from'], new \DateTimeZone('UTC'));
-            $to = new \DateTime($schedule['to'], new \DateTimeZone('UTC'));
-            $now = new \DateTime('now', new \DateTimeZone('UTC'));
+            $from = new DateTime($schedule['from'], new \DateTimeZone('UTC'));
+            $to = new DateTime($schedule['to'], new \DateTimeZone('UTC'));
+            $now = new DateTime('now', new \DateTimeZone('UTC'));
             $y = self::getMonthDiff($to, $from);
             $x = min($y, max(0, self::getMonthDiff($now, $from)));
             $progress = $x / $y;
@@ -684,12 +719,7 @@ class Importer
         $this->databaseMigration->addOrUpdateInfo($info);
     }
 
-    /**
-     * @param CommandException $exception
-     * @param string $message
-     * @param Block|null $block
-     */
-    private function addExceptionToLog(CommandException $exception, string $message, ?Block $block = null): void
+    private function addExceptionToLog(Throwable $exception, string $message, ?Block $block = null): void
     {
         $context = [
             'error_code' => $exception->getCode(),
@@ -705,9 +735,18 @@ class Importer
         $this->logger->error(sprintf($pattern, $message, $exception->getMessage()), $context);
     }
 
-    /**
-     * @return ImporterResult
-     */
+
+    private function getCurrentBlockId(): string
+    {
+        $now = time();
+        return strtoupper(dechex($now - $now % $this->blockLength));
+    }
+
+    private function isDivBlock(string $blockId): bool
+    {
+        return 0 === hexdec($blockId) % (self::DIV_BLOCKS * $this->blockLength);
+    }
+
     public function getResult(): ImporterResult
     {
         return $this->importerResult;

@@ -53,7 +53,6 @@ class ImportADSCommand extends ContainerAwareCommand
     public function __construct(Importer $adsImporter)
     {
         $this->adsImporter = $adsImporter;
-
         parent::__construct();
     }
 
@@ -87,12 +86,13 @@ class ImportADSCommand extends ContainerAwareCommand
         }
 
         $output->writeln(sprintf(
-            'Imported %s blocks, %s messages, %s transactions, %s nodes, %s accounts',
+            'Imported %d blocks, %d messages, %d transactions, %d nodes, %d accounts, %d snapshots',
             $result->blocks,
             $result->messages,
             $result->transactions,
             $result->nodes,
-            $result->accounts
+            $result->accounts,
+            $result->snapshots
         ));
         return 0;
     }

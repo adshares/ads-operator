@@ -23,17 +23,55 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Document;
 
-class SnapshotAccount extends \Adshares\Ads\Entity\Account
-{
-    protected string $id;
+use ReflectionClass;
 
-    public function getId(): string
+class SnapshotAccount extends Account
+{
+    protected string $snapshotId;
+
+    protected string $accountId;
+
+    public function setSnapshotId(string $snapshotId): self
     {
-        return $this->id;
+        $this->snapshotId = $snapshotId;
+        $this->id = sprintf('%s/%s', $snapshotId, $this->accountId);
+        return $this;
     }
 
-    public static function validateId(string $id): bool
+    public function getSnapshotId(): string
     {
-        return (bool) preg_match('/^[0-9A-F]{8}$/', $id);
+        return $this->snapshotId;
+    }
+
+    public function getAccountId(): string
+    {
+        return $this->accountId;
+    }
+
+    public static function create(?string $address = null): self
+    {
+        $x = new self();
+        if (null !== $address) {
+            $x->address = $address;
+            $x->accountId = $address;
+        }
+        return $x;
+    }
+
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+        $this->accountId = $data['_id'];
+    }
+
+    protected static function castProperty(string $name, $value, ReflectionClass $refClass = null)
+    {
+        if ('balance' === $name) {
+            return $value;
+        }
+        if ('time' === $name || 'localChange' === $name || 'remoteChange' === $name) {
+            return $value->toDateTime();
+        }
+        return parent::castProperty($name, $value, $refClass);
     }
 }

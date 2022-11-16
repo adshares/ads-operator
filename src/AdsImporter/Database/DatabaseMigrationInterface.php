@@ -29,6 +29,9 @@ use Adshares\AdsOperator\Document\Node;
 use Adshares\AdsOperator\Document\Account;
 use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Message;
+use Adshares\AdsOperator\Document\Snapshot;
+use Adshares\AdsOperator\Document\SnapshotAccount;
+use Adshares\AdsOperator\Document\SnapshotNode;
 use Doctrine\MongoDB\Cursor;
 
 /**
@@ -76,11 +79,15 @@ interface DatabaseMigrationInterface
      */
     public function getNodeTransactionCount(string $nodeId): int;
 
+    public function getNodes(): array;
+
     /**
      * @param Account $account
      * @param Node $node
      */
     public function addOrUpdateAccount(Account $account, Node $node): void;
+
+    public function getAccounts(): array;
 
     /**
      * @param string $accountId
@@ -94,16 +101,21 @@ interface DatabaseMigrationInterface
      */
     public function getAccountTransactions(string $accountId): Cursor;
 
-    public function deleteAccountTransaction($id);
+    public function deleteAccountTransaction(string $id);
 
-    public function getTransaction($txid);
+    public function getTransaction(string $txid);
 
-    /**
-     * @return int|null
-     */
-    public function getNewestBlockTime(): ?int;
+    public function getLatestBlockId(): ?string;
 
     public function getAllAccounts(): Cursor;
 
-    public function getBlock($blockId);
+    public function getBlock(string $blockId);
+
+    public function getSnapshot(string $snapshotId);
+
+    public function addOrUpdateSnapshot(Snapshot $snapshot): void;
+
+    public function addOrUpdateSnapshotNode(SnapshotNode $node): void;
+
+    public function addOrUpdateSnapshotAccount(SnapshotAccount $account): void;
 }

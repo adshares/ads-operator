@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\AdsImporter\Exception;
 
+use RuntimeException;
+
 /**
  * Class AdsClientException
  * @package Adshares\AdsOperator\AdsImporter\Exception
  */
-class AdsClientException extends \RuntimeException
+class AdsClientException extends RuntimeException
 {
 }

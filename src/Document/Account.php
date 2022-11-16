@@ -47,7 +47,7 @@ class Account extends \Adshares\Ads\Entity\Account
      * Account constructor.
      * @param string|null $address
      */
-    public static function create(string $address = null): self
+    public static function create(?string $address = null): self
     {
         $x = new self();
         if (null !== $address) {

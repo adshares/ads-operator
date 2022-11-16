@@ -287,7 +287,7 @@ class MongoMigrationTest extends TestCase
 
     public function testNewestBlockTimeWhenAtLeastOneBlockExists(): void
     {
-        $time = time();
+        $id = dechex(time());
         $database = $this->createMock(Database::class);
         $cursor = $this->createMock(Cursor::class);
         $collection = $this->createMock(Collection::class);
@@ -302,7 +302,7 @@ class MongoMigrationTest extends TestCase
 
         $cursor
             ->method('current')
-            ->willReturn(['lastBlockId' => dechex($time)]);
+            ->willReturn(['lastBlockId' => $id]);
 
         $collection
             ->expects($this->once())
@@ -323,9 +323,9 @@ class MongoMigrationTest extends TestCase
             ->willReturn($database);
 
         $mongoMigration = $this->createMongoMigrationInstance($connection);
-        $result = $mongoMigration->getNewestBlockTime();
+        $result = $mongoMigration->getLatestBlockId();
 
-        $this->assertEquals($time, $result);
+        $this->assertEquals($id, $result);
     }
 
     public function testNewestBlockTimeWhenBlockDoesNotExist(): void
@@ -365,7 +365,7 @@ class MongoMigrationTest extends TestCase
             ->willReturn($database);
 
         $mongoMigration = $this->createMongoMigrationInstance($connection);
-        $result = $mongoMigration->getNewestBlockTime();
+        $result = $mongoMigration->getLatestBlockId();
 
         $this->assertNull($result);
     }

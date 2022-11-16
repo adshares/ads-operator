@@ -173,7 +173,7 @@ class ApiController
             $limit = $this->defaultLimit;
         }
 
-        return $limit;
+        return (int)$limit;
     }
 
     /**
@@ -188,7 +188,7 @@ class ApiController
             $offset = $this->defaultOffset;
         }
 
-        return $offset;
+        return (int)$offset;
     }
 
     /**

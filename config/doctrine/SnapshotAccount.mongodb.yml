@@ -1,0 +1,56 @@
+Adshares\AdsOperator\Document\SnapshotAccount:
+  type: document
+  collection: snapshotAccount
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\SnapshotAccountRepository
+  fields:
+    id:
+      id: true
+      strategy: NONE
+      type: string
+    snapshotId:
+      type: string
+    accountId:
+      type: string
+    address:
+      type: string
+    balance:
+      type: int
+    messageCount:
+      type: int
+    transactionCount:
+      type: int
+    hash:
+      type: string
+    localChange:
+      type: date
+    msid:
+      type: int
+    node:
+      type: int
+    nodeId:
+      type: string
+    pairedAddress:
+      type: string
+    pairedNode:
+      type: int
+    publicKey:
+      type: string
+    remoteChange:
+      type: date
+    status:
+      type: int
+    time:
+      type: date
+  indexes:
+    snapshotId:
+      keys:
+        snapshotId: desc
+    accountId:
+      keys:
+        accountId: desc
+    address:
+      keys:
+        address: desc
+    nodeId:
+      keys:
+        nodeId: desc

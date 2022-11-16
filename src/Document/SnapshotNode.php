@@ -23,17 +23,54 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Document;
 
-class SnapshotNode extends \Adshares\Ads\Entity\Node
-{
-    protected $id;
+use ReflectionClass;
 
-    public function getId(): string
+class SnapshotNode extends Node
+{
+    protected string $snapshotId;
+
+    protected string $nodeId;
+
+    public function setSnapshotId(string $snapshotId): self
     {
-        return $this->id;
+        $this->snapshotId = $snapshotId;
+        $this->id = sprintf('%s/%s', $snapshotId, $this->nodeId);
+        return $this;
     }
 
-    public static function validateId(string $id): bool
+    public function getSnapshotId(): string
     {
-        return (bool) preg_match('/^[0-9A-F]{8}$/', $id);
+        return $this->snapshotId;
+    }
+
+    public function getNodeId(): string
+    {
+        return $this->nodeId;
+    }
+
+    public static function create(?string $id = null): self
+    {
+        $x = new self();
+        if (null !== $id) {
+            $x->nodeId = $id;
+        }
+        return $x;
+    }
+
+    public function fillWithRawData(array $data): void
+    {
+        parent::fillWithRawData($data);
+        $this->nodeId = $data['_id'];
+    }
+
+    protected static function castProperty(string $name, $value, ReflectionClass $refClass = null)
+    {
+        if ('balance' === $name) {
+            return $value;
+        }
+        if ('mtim' === $name) {
+            return $value->toDateTime();
+        }
+        return parent::castProperty($name, $value, $refClass);
     }
 }

@@ -21,19 +21,14 @@
 
 declare(strict_types=1);
 
-namespace Adshares\AdsOperator\AdsImporter;
+namespace Adshares\AdsOperator\AdsImporter\Exception;
+
+use RuntimeException;
 
 /**
- * Stores information how many objects have been recently imported.
- *
- * @package Adshares\AdsOperator\AdsImporter
+ * Class AdsClientException
+ * @package Adshares\AdsOperator\AdsImporter\Exception
  */
-class ImporterResult
+class AdsImporterException extends RuntimeException
 {
-    public int $blocks = 0;
-    public int $messages = 0;
-    public int $transactions = 0;
-    public int $nodes = 0;
-    public int $accounts = 0;
-    public int $snapshots = 0;
 }

@@ -107,3 +107,23 @@ transaction_list_by_messageId:
     path: /messages/{messageId}/transactions
     controller: Adshares\AdsOperator\Controller\Blockexplorer\MessageController::transactionsAction
     methods: [GET]
+
+snapshot_node_list:
+    path: /snapshots/{snapshotId}/nodes
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::nodesAction
+    methods: [GET]
+
+snapshot_node:
+    path: /snapshots/{snapshotId}/nodes/{nodeId}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::showNodeAction
+    methods: [GET]
+
+snapshot_account_list:
+    path: /snapshots/{snapshotId}/accounts
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::accountsAction
+    methods: [GET]
+
+snapshot_account:
+    path: /snapshots/{snapshotId}/accounts/{accountId}
+    controller: Adshares\AdsOperator\Controller\Blockexplorer\SnapshotController::showAccountAction
+    methods: [GET]

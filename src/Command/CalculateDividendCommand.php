@@ -40,15 +40,10 @@ class CalculateDividendCommand extends ContainerAwareCommand
 {
     use LockableTrait;
 
-    /**
-     * @var Importer
-     */
-    private $adsImporter;
+    private Importer $adsImporter;
 
     /**
      * ImportADSCommand constructor.
-     *
-     * @param Importer $adsImporter
      */
     public function __construct(Importer $adsImporter)
     {
@@ -57,9 +52,6 @@ class CalculateDividendCommand extends ContainerAwareCommand
         parent::__construct();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -68,9 +60,6 @@ class CalculateDividendCommand extends ContainerAwareCommand
             ->setDescription('Calculate missing dividend transactions');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if (!$this->lock()) {

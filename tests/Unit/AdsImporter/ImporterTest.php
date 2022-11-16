@@ -117,7 +117,7 @@ final class ImporterTest extends TestCase
         $database = $this->createMock(DatabaseMigrationInterface::class);
         $database
             ->expects($this->once())
-            ->method('getNewestBlockTime')
+            ->method('getLatestBlockId')
             ->willReturn($newestBlockTime);
 
         $importer = new Importer(
@@ -143,7 +143,7 @@ final class ImporterTest extends TestCase
         $database = $this->createMock(DatabaseMigrationInterface::class);
         $database
             ->expects($this->once())
-            ->method('getNewestBlockTime')
+            ->method('getLatestBlockId')
             ->willReturn($newestBlockTime);
 
         $importer = new Importer(

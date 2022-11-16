@@ -30,9 +30,13 @@ use Adshares\AdsOperator\Document\Block;
 use Adshares\AdsOperator\Document\Info;
 use Adshares\AdsOperator\Document\Message;
 use Adshares\AdsOperator\Document\Node;
+use Adshares\AdsOperator\Document\Snapshot;
+use Adshares\AdsOperator\Document\SnapshotAccount;
+use Adshares\AdsOperator\Document\SnapshotNode;
 use Adshares\AdsOperator\Document\Transaction\LogAccountTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendManyTransaction;
 use Adshares\AdsOperator\Document\Transaction\SendOneTransaction;
+use DateTimeInterface;
 use Doctrine\MongoDB\Collection;
 use Doctrine\MongoDB\Connection;
 use Doctrine\MongoDB\Cursor;
@@ -53,56 +57,23 @@ class MongoMigration implements DatabaseMigrationInterface
     private const NODE_COLLECTION = 'node';
     private const ACCOUNT_COLLECTION = 'account';
     private const ACCOUNT_TRANSACTION_COLLECTION = 'account_transaction';
+    private const SNAPSHOT_COLLECTION = 'snapshot';
+    private const SNAPSHOT_NODE_COLLECTION = 'snapshotNode';
+    private const SNAPSHOT_ACCOUNT_COLLECTION = 'snapshotAccount';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-
-    /**
-     * @var \Doctrine\MongoDB\Database
-     */
+    private Connection $connection;
     private $db;
-
-    /**
-     * @var Collection
-     */
-    private $infoCollection;
-
-    /**
-     * @var Collection
-     */
-    private $blockCollection;
-
-    /**
-     * @var Collection
-     */
-    private $messageCollection;
-
-    /**
-     * @var Collection
-     */
-    private $transactionCollection;
-
-    /**
-     * @var Collection
-     */
-    private $nodeCollection;
-
-    /**
-     * @var Collection
-     */
-    private $accountCollection;
-
-    /**
-     * @var Collection
-     */
-    private $accountTransactionCollection;
-
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private Collection $infoCollection;
+    private Collection $blockCollection;
+    private Collection $messageCollection;
+    private Collection $transactionCollection;
+    private Collection $nodeCollection;
+    private Collection $accountCollection;
+    private Collection $accountTransactionCollection;
+    private Collection $snapshotCollection;
+    private Collection $snapshotNodeCollection;
+    private Collection $snapshotAccountCollection;
+    private LoggerInterface $logger;
 
     private $mongoUpdateOptions = [
         'upsert' => true,
@@ -136,6 +107,9 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->nodeCollection = $this->db->selectCollection(self::NODE_COLLECTION);
         $this->accountCollection = $this->db->selectCollection(self::ACCOUNT_COLLECTION);
         $this->accountTransactionCollection = $this->db->selectCollection(self::ACCOUNT_TRANSACTION_COLLECTION);
+        $this->snapshotCollection = $this->db->selectCollection(self::SNAPSHOT_COLLECTION);
+        $this->snapshotNodeCollection = $this->db->selectCollection(self::SNAPSHOT_NODE_COLLECTION);
+        $this->snapshotAccountCollection = $this->db->selectCollection(self::SNAPSHOT_ACCOUNT_COLLECTION);
     }
 
     /**
@@ -221,7 +195,7 @@ class MongoMigration implements DatabaseMigrationInterface
         $this->blockCollection->update(['_id' => $block->getId()], $document, $this->mongoUpdateOptions);
     }
 
-    public function getBlock($blockId)
+    public function getBlock(string $blockId): ?array
     {
         return $this->blockCollection->findOne(['_id' => $blockId]);
     }
@@ -345,6 +319,11 @@ class MongoMigration implements DatabaseMigrationInterface
         return $cursor->count();
     }
 
+    public function getNodes(): array
+    {
+        return $this->nodeCollection->find()->toArray();
+    }
+
     /**
      * @param Account $account
      * @param Node $node
@@ -370,6 +349,11 @@ class MongoMigration implements DatabaseMigrationInterface
         ];
 
         $this->accountCollection->update(['_id' => $account->getAddress()], $document, $this->mongoUpdateOptions);
+    }
+
+    public function getAccounts(): array
+    {
+        return $this->accountCollection->find()->toArray();
     }
 
     /**
@@ -409,10 +393,8 @@ class MongoMigration implements DatabaseMigrationInterface
 
     /**
      * Gets newest block's time from database.
-     *
-     * @return int|null
      */
-    public function getNewestBlockTime(): ?int
+    public function getLatestBlockId(): ?string
     {
         $collection = $this->db->selectCollection(self::INFO_COLLECTION);
         $cursor = $collection->find()->sort(['lastBlockId' => -1])->limit(1);
@@ -420,7 +402,7 @@ class MongoMigration implements DatabaseMigrationInterface
         $document = $cursor->current();
 
         if ($document) {
-            return hexdec($document['lastBlockId']);
+            return $document['lastBlockId'];
         }
 
         return null;
@@ -430,7 +412,7 @@ class MongoMigration implements DatabaseMigrationInterface
      * @param \DateTime $date
      * @return UTCDateTime
      */
-    private function createMongoDate(\DateTime $date): UTCDateTime
+    private function createMongoDate(DateTimeInterface $date): UTCDateTime
     {
         return new UTCDateTime((int)$date->format('U') * 1000);
     }
@@ -448,5 +430,67 @@ class MongoMigration implements DatabaseMigrationInterface
     public function deleteAccountTransaction($id)
     {
         return $this->accountTransactionCollection->remove(['_id' => $id]);
+    }
+
+    public function getSnapshot(string $snapshotId): ?array
+    {
+        return $this->snapshotCollection->findOne(['_id' => $snapshotId]);
+    }
+
+    public function addOrUpdateSnapshot(Snapshot $snapshot): void
+    {
+        $document = [
+            '_id' => $snapshot->getId(),
+            'time' => $this->createMongoDate($snapshot->getTime()),
+        ];
+
+        $this->snapshotCollection->update(['_id' => $snapshot->getId()], $document, $this->mongoUpdateOptions);
+    }
+
+    public function addOrUpdateSnapshotNode(SnapshotNode $node): void
+    {
+        $document = [
+            '_id' => $node->getId(),
+            'snapshotId' => $node->getSnapshotId(),
+            'nodeId' => $node->getNodeId(),
+            'accountCount' => $node->getAccountCount(),
+            'messageCount' => $node->getMessageCount(),
+            'transactionCount' => $node->getTransactionCount(),
+            'balance' => $node->getBalance(),
+            'hash' => $node->getHash(),
+            'messageHash' => $node->getMessageHash(),
+            'ipv4' => $node->getIpv4(),
+            'msid' => $node->getMsid(),
+            'mtim' => $this->createMongoDate($node->getMtim()),
+            'port' => $node->getPort(),
+            'publicKey' => $node->getPublicKey(),
+            'status' => $node->getStatus(),
+            'version' => $node->getVersion(),
+        ];
+        $this->snapshotNodeCollection->update(['_id' => $node->getId()], $document, $this->mongoUpdateOptions);
+    }
+
+    public function addOrUpdateSnapshotAccount(SnapshotAccount $account): void
+    {
+        $document = [
+            '_id' => $account->getId(),
+            'snapshotId' => $account->getSnapshotId(),
+            'accountId' => $account->getAccountId(),
+            'nodeId' => $account->getNodeId(),
+            'pairedNode' => $account->getPairedNodeId(),
+            'address' => $account->getAddress(),
+            'balance' => $account->getBalance(),
+            'messageCount' => $account->getMessageCount(),
+            'transactionCount' => $account->getTransactionCount(),
+            'hash' => $account->getHash(),
+            'localChange' => $this->createMongoDate($account->getLocalChange()),
+            'remoteChange' => $this->createMongoDate($account->getRemoteChange()),
+            'time' => $this->createMongoDate($account->getTime()),
+            'msid' => $account->getMsid(),
+            'pairedAddress' => $account->getPairedAddress(),
+            'publicKey' => $account->getPublicKey(),
+            'status' => $account->getStatus(),
+        ];
+        $this->snapshotAccountCollection->update(['_id' => $account->getId()], $document, $this->mongoUpdateOptions);
     }
 }

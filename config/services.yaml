@@ -118,6 +118,8 @@ services:
       autoconfigure: false
       arguments:
         $repository: '@Adshares\AdsOperator\Repository\Doctrine\SnapshotRepository'
+        $nodeRepository: '@Adshares\AdsOperator\Repository\Doctrine\SnapshotNodeRepository'
+        $accountRepository: '@Adshares\AdsOperator\Repository\Doctrine\SnapshotAccountRepository'
 
     Adshares\AdsOperator\Controller\Auth\AuthController:
       parent: Adshares\AdsOperator\Controller\ApiController
@@ -216,6 +218,16 @@ services:
       class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
       factory: 'doctrine.odm.mongodb.document_manager:getRepository'
       arguments: ['Adshares\AdsOperator\Document\Snapshot']
+
+    Adshares\AdsOperator\Repository\Doctrine\SnapshotNodeRepository:
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\SnapshotNode']
+
+    Adshares\AdsOperator\Repository\Doctrine\SnapshotAccountRepository:
+      class: Doctrine\ODM\MongoDB\Repository\DocumentRepository
+      factory: 'doctrine.odm.mongodb.document_manager:getRepository'
+      arguments: ['Adshares\AdsOperator\Document\SnapshotAccount']
 
     Adshares\AdsOperator\Repository\Doctrine\UserRepository:
         class: Doctrine\ODM\MongoDB\Repository\DocumentRepository

@@ -50,7 +50,7 @@ class Node extends \Adshares\Ads\Entity\Node
      * Node constructor.
      * @param string|null $id
      */
-    public static function create(string $id = null): self
+    public static function create(?string $id = null): self
     {
         $x = new self();
         if (null !== $id) {

@@ -1,0 +1,47 @@
+Adshares\AdsOperator\Document\SnapshotNode:
+  type: document
+  collection: snapshotNode
+  repositoryClass: Adshares\AdsOperator\Repository\Doctrine\SnapshotNodeRepository
+  fields:
+    id:
+      id: true
+      strategy: NONE
+      type: string
+    snapshotId:
+      type: string
+    nodeId:
+      type: string
+    accountCount:
+      type: int
+    messageCount:
+        type: int
+    transactionCount:
+        type: int
+    balance:
+      type: int
+    hash:
+      type: string
+    ipv4:
+      type: string
+    messageHash:
+      type: string
+    msid:
+      type: string
+    mtim:
+      type: date
+    port:
+      type: int
+    publicKey:
+      type: string
+    status:
+      type: int
+    version:
+        type: string
+  indexes:
+    snapshotId:
+      keys:
+        snapshotId: desc
+    nodeId:
+      keys:
+        nodeId: desc
+
