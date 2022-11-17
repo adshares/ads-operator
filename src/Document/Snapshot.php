@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Adshares\AdsOperator\Document;
 
+use DateTimeImmutable;
 use DateTimeInterface;
 
 class Snapshot
@@ -46,14 +47,12 @@ class Snapshot
         return (bool)preg_match('/^[0-9A-F]{8}$/', $id);
     }
 
-    public static function create(?string $id = null, ?DateTimeInterface $time = null): self
+    public static function create(?string $id = null): self
     {
         $x = new self();
         if (null !== $id) {
             $x->id = $id;
-        }
-        if (null !== $time) {
-            $x->time = $time;
+            $x->time = new DateTimeImmutable('@' . hexdec($id));
         }
         return $x;
     }

@@ -1,0 +1,12 @@
+Adshares\AdsOperator\Document\SnapshotAccount:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        snapshotId:
+            expose: true
+            type: string
+        accountId:
+            expose: true
+            type: string

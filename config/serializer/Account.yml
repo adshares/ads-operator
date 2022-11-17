@@ -13,4 +13,10 @@ Adshares\AdsOperator\Document\Account:
         transactionCount:
             expose: true
             type: int
+        label:
+            expose: true
+            type: string
+        icon:
+            expose: true
+            type: string
 

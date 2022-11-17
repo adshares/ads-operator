@@ -37,6 +37,10 @@ Adshares\AdsOperator\Document\Account:
             type: int
         time:
             type: date
+        label:
+            type: string
+        icon:
+            type: string
     indexes:
         nodeid:
             keys:

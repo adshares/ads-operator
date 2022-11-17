@@ -1,0 +1,9 @@
+Adshares\AdsOperator\Document\Snapshot:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        time:
+            expose: true
+            type: DateTime

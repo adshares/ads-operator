@@ -31,10 +31,10 @@ final class SnapshotTest extends TestCase
 {
     public function testSnapshot(): void
     {
-        $id = '00001';
-        $time = new DateTimeImmutable('-5 days');
+        $id = '63700000';
+        $time = new DateTimeImmutable('Saturday, 12 November 2022 20:20:16');
 
-        $snapshot = Snapshot::create($id, $time);
+        $snapshot = Snapshot::create($id);
 
         $this->assertEquals($id, $snapshot->getId());
         $this->assertEquals($time, $snapshot->getTime());

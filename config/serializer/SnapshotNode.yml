@@ -1,0 +1,12 @@
+Adshares\AdsOperator\Document\SnapshotNode:
+    exclusion_policy: ALL
+    properties:
+        id:
+            expose: true
+            type: string
+        snapshotId:
+            expose: true
+            type: string
+        nodeId:
+            expose: true
+            type: string

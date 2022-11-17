@@ -439,15 +439,6 @@ class Importer
                 }
             }
 
-            if ($this->isDivBlock($blockId)) {
-                try {
-                    $this->calculateSnapshots([$blockId], true);
-                    ++$this->importerResult->snapshots;
-                } catch (AdsImporterException $exception) {
-                    $this->addExceptionToLog($exception, sprintf('Snapshot (%s)', $blockId));
-                }
-            }
-
             $startTime += $this->blockLength;
             $blockId = NumericalTransformation::decToHex($startTime);
         } while ($startTime <= $endTime);
@@ -458,6 +449,8 @@ class Importer
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
                 $this->updateInfo($blockResponse);
+                $this->updateInfo($blockResponse);
+                $this->updateSnapshot($blockResponse);
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
                     throw new AdsClientException('Cannot proceed importing data: ' . $ex->getMessage());
@@ -476,7 +469,6 @@ class Importer
 
         $calculated = [];
         foreach ($blockIds as $blockId) {
-            $this->logger->info(sprintf('Calculating SNAPSHOT %s', $blockId));
             if (!Block::validateId($blockId)) {
                 throw new AdsImporterException(sprintf('"%s" is not a valid block ID', $blockId));
             }
@@ -487,14 +479,10 @@ class Importer
             if (!$force && null !== $snapshot) {
                 continue;
             }
-            $block = $this->databaseMigration->getBlock($blockId);
-            if (null === $block) {
-                throw new AdsImporterException(sprintf('Cannot find "%s" block', $blockId));
-            }
-            if (!$force && $block['_id'] !== $this->databaseMigration->getLatestBlockId()) {
+            if (!$force && $blockId !== $this->databaseMigration->getLatestBlockId()) {
                 throw new AdsImporterException(sprintf('"%s" is not the latest block', $blockId));
             }
-            $this->calculateSnapshot($block);
+            $this->calculateSnapshot($blockId);
             ++$this->importerResult->snapshots;
             $calculated[] = $blockId;
         }
@@ -502,9 +490,10 @@ class Importer
         return $calculated;
     }
 
-    private function calculateSnapshot(array $block): Snapshot
+    private function calculateSnapshot(string $blockId): Snapshot
     {
-        $snapshot = Snapshot::create($block['_id'], $block['time']->toDateTime());
+        $this->logger->info(sprintf('Calculating SNAPSHOT %s', $blockId));
+        $snapshot = Snapshot::create($blockId);
         $this->databaseMigration->addOrUpdateSnapshot($snapshot);
 
         foreach ($this->databaseMigration->getNodes() as $node) {
@@ -524,6 +513,19 @@ class Importer
         return $snapshot;
     }
 
+    private function updateSnapshot(GetBlockResponse $blockResponse): void
+    {
+        $blockId = $blockResponse->getBlock()->getId();
+        if ($this->isDivBlock($blockId)) {
+            try {
+                $this->calculateSnapshot($blockId);
+                ++$this->importerResult->snapshots;
+            } catch (AdsImporterException $exception) {
+                $this->addExceptionToLog($exception, sprintf('Snapshot (%s)', $blockId));
+            }
+        }
+    }
+
     /**
      * @return int
      */
@@ -538,9 +540,6 @@ class Importer
         return $this->genesisTime;
     }
 
-    /**
-     * @param GetBlockResponse $blockResponse
-     */
     private function updateNodes(GetBlockResponse $blockResponse): void
     {
         $nodes = $blockResponse->getBlock()->getNodes();
@@ -562,13 +561,8 @@ class Importer
             $this->databaseMigration->addOrUpdateNode($node);
             ++$this->importerResult->nodes;
         }
-
-        return;
     }
 
-    /**
-     * @param Node $node
-     */
     private function updateAccounts(Node $node, Block $block): void
     {
         $accountResponse = $this->client->getAccounts($node->getId());
@@ -584,10 +578,6 @@ class Importer
         }
     }
 
-    /**
-     * @param Block $block
-     * @return int
-     */
     private function addMessagesFromBlock(Block $block): int
     {
         $blockTransactionsCount = 0;
