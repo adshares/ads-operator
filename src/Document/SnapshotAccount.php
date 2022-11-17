@@ -48,6 +48,11 @@ class SnapshotAccount extends Account
         return $this->accountId;
     }
 
+    public function getNodeId(): string
+    {
+        return $this->nodeId;
+    }
+
     public static function create(?string $address = null): self
     {
         $x = new self();

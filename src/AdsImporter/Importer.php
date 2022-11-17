@@ -449,7 +449,6 @@ class Importer
                 $blockResponse = $this->client->getBlock();
                 $this->updateNodes($blockResponse);
                 $this->updateInfo($blockResponse);
-                $this->updateInfo($blockResponse);
                 $this->updateSnapshot($blockResponse);
             } catch (CommandException $ex) {
                 if ($ex->getCode() !== CommandError::GET_BLOCK_INFO_UNAVAILABLE) {
