@@ -323,6 +323,14 @@ services:
         $timeout: '%env(EXCHANGE_PROVIDER_TIMEOUT)%'
       tags: ['adshares.adsoperator.exchange']
 
+    Adshares\AdsOperator\Exchange\Provider\Client\CoinMarketCap:
+      class: Adshares\AdsOperator\Exchange\Provider\Client\CoinMarketCap
+      arguments:
+        $serviceUrl: '%env(EXCHANGE_PROVIDER_CMP_SERVICE_URL)%'
+        $key: '%env(EXCHANGE_PROVIDER_CMP_KEY)%'
+        $timeout: '%env(EXCHANGE_PROVIDER_TIMEOUT)%'
+      tags: ['adshares.adsoperator.exchange']
+
     Adshares\AdsOperator\Exchange\Provider\Provider:
       arguments: [!tagged adshares.adsoperator.exchange]
 
