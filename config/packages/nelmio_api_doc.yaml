@@ -2,7 +2,7 @@ nelmio_api_doc:
     documentation:
         info:
             title: ADS Operator
-            description: REST API to communicate with ADS Client
+            description: REST API to communicate with ADS blockexplorer
             version: 1.0.0
     areas: # to filter documented areas
         path_patterns:

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) 2018-2022 Adshares sp. z o.o.
+ * Copyright (c) 2018-2023 Adshares sp. z o.o.
  *
  * This file is part of ADS Operator
  *
@@ -31,6 +31,8 @@ use Adshares\AdsOperator\Repository\SnapshotAccountRepositoryInterface;
 use Adshares\AdsOperator\Repository\SnapshotNodeRepositoryInterface;
 use Adshares\AdsOperator\Repository\SnapshotRepositoryInterface;
 use Swagger\Annotations as SWG;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -52,7 +54,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="List of snapshots",
      *     tags={"Blockexplorer"},
      *
@@ -100,7 +102,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="Returns snapshot resource",
      *     tags={"Blockexplorer"},
      *
@@ -142,7 +144,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="Returns nodes resource for given Snapshot",
      *     tags={"Blockexplorer"},
      *
@@ -216,7 +218,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="Returns snapshot node resource",
      *     tags={"Blockexplorer"},
      *
@@ -270,7 +272,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="Returns accounts resource for given Snapshot",
      *     tags={"Blockexplorer"},
      *
@@ -348,7 +350,7 @@ class SnapshotController extends ApiController
     }
 
     /**
-     * @SWG\Operation(
+     * @Operation(
      *     summary="Returns snapshot account resource",
      *     tags={"Blockexplorer"},
      *

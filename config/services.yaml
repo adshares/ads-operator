@@ -43,6 +43,12 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.exception }
 
+    Adshares\AdsOperator\EventListener\ResponseListener:
+      arguments:
+        $logger: '@logger'
+      tags:
+        - { name: kernel.event_listener, event: kernel.response }
+
     Adshares\AdsOperator\Controller\ApiController:
         calls:
             - [setSerializer, ['@jms_serializer']]
